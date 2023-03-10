@@ -5,12 +5,12 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.akjostudios.acsp</groupId>
-    <artifactId>ACSP-Backend</artifactId>
+    <artifactId>ACSP-Bot</artifactId>
     <version>2023.1</version>
     <packaging>jar</packaging>
 
-    <name>ACSP Backend</name>
-    <description>The backend service for Akjo's Computer Science Program.</description>
+    <name>ACSP Discord Bot</name>
+    <description>The discord bot for Akjo's Computer Science Program.</description>
     <inceptionYear>2023</inceptionYear>
 
     <developers>
@@ -36,8 +36,9 @@
 
         <spring-boot.version>3.0.3</spring-boot.version>
         <junit.version>5.9.2</junit.version>
+        <jackson.version>2.14.2</jackson.version>
 
-        <main.class>com.akjostudios.acsp.backend.AcspBackend</main.class>
+        <main.class>com.akjostudios.acsp.bot.AcspBot</main.class>
     </properties>
 
     <repositories>
@@ -67,6 +68,12 @@
             <version>1.18.26</version>
         </dependency>
 
+        <dependency>
+            <groupId>net.dv8tion</groupId>
+            <artifactId>JDA</artifactId>
+            <version>5.0.0-beta.4</version>
+        </dependency>
+
         <!--suppress VulnerableLibrariesLocal -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -79,16 +86,27 @@
                 </exclusion>
             </exclusions>
         </dependency>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-data-mongodb</artifactId>
-            <version>${spring-boot.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.apache.commons</groupId>
             <artifactId>commons-text</artifactId>
             <version>1.10.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.fasterxml.jackson.core</groupId>
+            <artifactId>jackson-databind</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jdk8</artifactId>
+            <version>${jackson.version}</version>
         </dependency>
 
         <dependency>

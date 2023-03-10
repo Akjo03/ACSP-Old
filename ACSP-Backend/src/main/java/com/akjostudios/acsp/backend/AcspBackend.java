@@ -1,4 +1,4 @@
-package com.akjostudios.acsp;
+package com.akjostudios.acsp.backend;
 
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import io.github.akjo03.lib.logging.Logger;
@@ -48,6 +48,7 @@ public class AcspBackend implements ApplicationListener<ApplicationReadyEvent> {
 	public static void shutdown() {
 		LOGGER.info("AcspBackend is shutting down...");
 		applicationContext.close();
+		Runtime.getRuntime().halt(0);
 	}
 
 	public static void restart() {
