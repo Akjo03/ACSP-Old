@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.akjostudios.acsp</groupId>
+    <artifactId>ACSP-Backend</artifactId>
+    <version>2023.1</version>
+    <packaging>jar</packaging>
+
+    <name>ACSP Backend</name>
+    <description>The backend service for Akjo's Computer Science Program.</description>
+    <inceptionYear>2023</inceptionYear>
+
+    <developers>
+        <developer>
+            <id>akjo03</id>
+            <name>Lukas Küffer</name>
+            <email>lukas.kueffer@outlook.com</email>
+            <organization>Akjo Studios</organization>
+            <organizationUrl>https://akjo03.github.io/</organizationUrl>
+            <timezone>Europe/Zurich</timezone>
+            <properties>
+                <github>Akjo03</github>
+                <discord>Akjo#3012</discord>
+            </properties>
+        </developer>
+    </developers>
+
+    <properties>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <spring-boot.version>3.0.3</spring-boot.version>
+        <junit.version>5.9.2</junit.version>
+
+        <main.class>com.akjostudios.acsp.AcspBackend</main.class>
+    </properties>
+
+    <repositories>
+        <repository>
+            <id>github</id>
+            <name>GitHub Akjo03 Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/akjo03/javautils</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!--suppress VulnerableLibrariesLocal -->
+        <dependency>
+            <groupId>io.github.akjo03.lib</groupId>
+            <artifactId>akjolib</artifactId>
+            <version>1.2.3</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jetbrains</groupId>
+            <artifactId>annotations</artifactId>
+            <version>24.0.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>1.18.26</version>
+        </dependency>
+
+        <!--suppress VulnerableLibrariesLocal -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter</artifactId>
+            <version>${spring-boot.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ch.qos.logback</groupId>
+                    <artifactId>logback-classic</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+            <version>${spring-boot.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-text</artifactId>
+            <version>1.10.0</version>
+        </dependency>
+
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <version>3.0.2</version>
+                <configuration>
+                    <mainClass>${main.class}</mainClass>
+                </configuration>
+
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>repackage</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
