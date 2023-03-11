@@ -32,12 +32,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 	private final LoggerHandler loggerHandler;
 
 	public static void main(String[] args) {
-		try {
-			SpringApplication.run(AcspBot.class, args);
-		} catch (Exception e) {
-			LOGGER.error("Failed to start application AcspBot!", e);
-			System.exit(1);
-		}
+		SpringApplication.run(AcspBot.class, args);
 	}
 
 	@Override
@@ -60,11 +55,10 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 		LOGGER.info("AcspBot is shutting down...");
 		jdaInstance.shutdownNow();
 		applicationContext.close();
-		Runtime.getRuntime().halt(0);
 	}
 
 	public static void restart() {
-		LOGGER.info("AcspBackend is restarting...");
+		LOGGER.info("AcspBot is restarting...");
 		ApplicationArguments args = applicationContext.getBean(ApplicationArguments.class);
 		Thread restartThread = new Thread(() -> {
 			shutdown();

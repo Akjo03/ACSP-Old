@@ -4,3 +4,8 @@ spring:
       uri: ${DB_HOST}
       username: ${DB_USER}
       password: ${DB_PASS}
+  application:
+    name: ACSP-Backend
+
+server:
+  port: 8080

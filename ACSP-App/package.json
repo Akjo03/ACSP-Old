@@ -1,5 +1,6 @@
 {
 	"name": "acsp_app",
+	"description": "The main web application for Akjo's Computer Science Program.",
 	"version": "2023.1",
 	"scripts": {
 		"dev": "nuxt dev",
@@ -10,7 +11,10 @@
 	"dependencies": {
 		"@headlessui/vue": "^1.7.12",
 		"@heroicons/vue": "^2.0.16",
-		"nuxt": "^3.2.3"
+		"@tailwindcss/aspect-ratio": "^0.4.2",
+		"@tailwindcss/forms": "^0.5.3",
+		"nuxt": "^3.2.3",
+		"tailwindcss-elevation": "^2.0.0"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.14",

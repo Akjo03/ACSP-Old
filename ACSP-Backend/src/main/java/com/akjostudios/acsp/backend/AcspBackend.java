@@ -29,12 +29,7 @@ public class AcspBackend implements ApplicationListener<ApplicationReadyEvent> {
 	private final LoggerHandler loggerHandler;
 
 	public static void main(String[] args) {
-		try {
-			SpringApplication.run(AcspBackend.class, args);
-		} catch (Exception e) {
-			LOGGER.error("Failed to start application AcspBackend!", e);
-			System.exit(1);
-		}
+		SpringApplication.run(AcspBackend.class, args);
 	}
 
 	@Override
@@ -48,7 +43,6 @@ public class AcspBackend implements ApplicationListener<ApplicationReadyEvent> {
 	public static void shutdown() {
 		LOGGER.info("AcspBackend is shutting down...");
 		applicationContext.close();
-		Runtime.getRuntime().halt(0);
 	}
 
 	public static void restart() {
