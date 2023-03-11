@@ -1,14 +1,17 @@
 package com.akjostudios.acsp.bot;
 
+import com.akjostudios.acsp.bot.constants.DeployMode;
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerHandler;
 import io.github.akjo03.lib.logging.LoggerManager;
 import jakarta.annotation.PreDestroy;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
@@ -31,21 +34,29 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 
 	private final LoggerHandler loggerHandler;
 
+	@Getter
+	private static DeployMode deployMode;
+
+	@Getter
+	private static String botName;
+
 	public static void main(String[] args) {
 		SpringApplication.run(AcspBot.class, args);
 	}
 
 	@Override
-	public void onApplicationEvent(ApplicationReadyEvent event) {
+	public void onApplicationEvent(@NotNull ApplicationReadyEvent event) {
 		loggerHandler.initialize(event.getApplicationContext());
 		applicationContext = event.getApplicationContext();
+		deployMode = DeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
 
 		jdaInstance = JDABuilder.create(
 				System.getenv("ACSP_TOKEN"),
 				GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS)
 		).build();
-
 		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
+
+		botName = jdaInstance.getSelfUser().getName();
 
 		LOGGER.success("AcspBot has successfully started!");
 	}

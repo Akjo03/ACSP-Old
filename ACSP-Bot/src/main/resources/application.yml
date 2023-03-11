@@ -1,0 +1,4 @@
+application:
+  locale:
+    resourceName: BotStrings
+    default: en
