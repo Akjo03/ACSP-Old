@@ -1,6 +1,7 @@
 package com.akjostudios.acsp.bot;
 
 import com.akjostudios.acsp.bot.constants.DeployMode;
+import com.akjostudios.acsp.bot.services.BotConfigService;
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerHandler;
@@ -32,13 +33,13 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 	private static ConfigurableApplicationContext applicationContext;
 	private static JDA jdaInstance;
 
-	private final LoggerHandler loggerHandler;
-
 	@Getter
 	private static DeployMode deployMode;
-
 	@Getter
 	private static String botName;
+
+	private final LoggerHandler loggerHandler;
+	private final BotConfigService botConfigService;
 
 	public static void main(String[] args) {
 		SpringApplication.run(AcspBot.class, args);
@@ -46,9 +47,10 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Override
 	public void onApplicationEvent(@NotNull ApplicationReadyEvent event) {
-		loggerHandler.initialize(event.getApplicationContext());
 		applicationContext = event.getApplicationContext();
+		loggerHandler.initialize(event.getApplicationContext());
 		deployMode = DeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
+		botConfigService.loadBotConfig();
 
 		jdaInstance = JDABuilder.create(
 				System.getenv("ACSP_TOKEN"),
@@ -58,18 +60,21 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 
 		botName = jdaInstance.getSelfUser().getName();
 
-		LOGGER.success("AcspBot has successfully started!");
+		LOGGER.success("AcspBot has successfully started in " + deployMode + " mode.");
 	}
 
 	@PreDestroy
 	public static void shutdown() {
-		LOGGER.info("AcspBot is shutting down...");
-		jdaInstance.shutdownNow();
-		applicationContext.close();
+		boolean shutdownFailed = false;
+
+		try { jdaInstance.shutdownNow(); } catch (Exception ignored) {
+			shutdownFailed = true;
+		} finally { applicationContext.close(); }
+
+		if (shutdownFailed) { Runtime.getRuntime().halt(1); }
 	}
 
 	public static void restart() {
-		LOGGER.info("AcspBot is restarting...");
 		ApplicationArguments args = applicationContext.getBean(ApplicationArguments.class);
 		Thread restartThread = new Thread(() -> {
 			shutdown();
