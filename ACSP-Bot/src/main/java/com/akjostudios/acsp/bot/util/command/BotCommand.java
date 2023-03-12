@@ -4,6 +4,8 @@ import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.services.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
+import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionParser;
+import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidator;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.JDA;
@@ -68,6 +70,26 @@ public abstract class BotCommand {
 					errorMessageService.getErrorMessage(
 							"errors.command_unavailable.title",
 							"errors.command_unavailable.description",
+							List.of(),
+							List.of(
+									name
+							),
+							Optional.empty()
+					)
+			)).queue();
+		}
+
+		// Parse and validate permissions for command
+		BotCommandPermissionParser permissionParser = new BotCommandPermissionParser(name, definition.getPermissions());
+		BotCommandPermissionValidator permissionValidator = permissionParser.parse();
+
+		if (!permissionValidator.validate(event.getGuildChannel(), event.getMember())) {
+			LOGGER.info("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but was denied!");
+
+			event.getChannel().sendMessage(discordMessageService.createMessage(
+					errorMessageService.getErrorMessage(
+							"errors.command_missing_permissions.title",
+							"errors.command_missing_permissions.description",
 							List.of(),
 							List.of(
 									name

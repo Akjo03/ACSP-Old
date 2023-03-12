@@ -25,7 +25,7 @@ public enum AcspDiscordChannels implements IdentifiableConstants {
 		this.category = category;
 	}
 
-	public static @Nullable AcspDiscordChannels getCategoryByName(String name) {
+	public static @Nullable AcspDiscordChannels getChannelByName(String name) {
 		return Arrays.stream(AcspDiscordChannels.values())
 				.filter(category -> category.name().equals(name))
 				.findFirst()

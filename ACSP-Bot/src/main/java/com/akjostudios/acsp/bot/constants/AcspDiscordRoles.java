@@ -18,7 +18,7 @@ public enum AcspDiscordRoles implements IdentifiableConstants {
 		this.prodId = prodId;
 	}
 
-	public static @Nullable AcspDiscordRoles getCategoryByName(String name) {
+	public static @Nullable AcspDiscordRoles getRoleByName(String name) {
 		return Arrays.stream(AcspDiscordRoles.values())
 				.filter(category -> category.name().equals(name))
 				.findFirst()
