@@ -1,11 +1,11 @@
 package com.akjostudios.acsp.bot.constants;
 
-public enum DeployMode {
+public enum BotDeployMode {
 	LOCAL,
 	PROD;
 
 	@SuppressWarnings("DuplicateBranchesInSwitch")
-	public static DeployMode getDeployMode(String deployMode) {
+	public static BotDeployMode getDeployMode(String deployMode) {
 		if (deployMode == null || deployMode.isEmpty()) {
 			return LOCAL;
 		}

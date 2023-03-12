@@ -23,16 +23,16 @@ public class BotConfigMessageEmbedFooter {
 
 	@JsonSerialize
 	@JsonDeserialize
-	private String iconURL;
+	private String iconUrl;
 
 	@JsonCreator
 	public BotConfigMessageEmbedFooter(
 			@JsonProperty("text") String text,
 			@JsonProperty("timestamp") String timestamp,
-			@JsonProperty("icon_url") String iconURL
+			@JsonProperty("icon_url") String iconUrl
 	) {
 		this.text = text;
 		this.timestamp = timestamp;
-		this.iconURL = iconURL;
+		this.iconUrl = iconUrl;
 	}
 }

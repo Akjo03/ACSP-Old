@@ -41,11 +41,11 @@ public class BotConfigMessageEmbed {
 
 	@JsonSerialize
 	@JsonDeserialize
-	private String imageURL;
+	private String imageUrl;
 
 	@JsonSerialize
 	@JsonDeserialize
-	private String thumbnailURL;
+	private String thumbnailUrl;
 
 	@JsonSerialize
 	@JsonDeserialize
@@ -59,8 +59,8 @@ public class BotConfigMessageEmbed {
 			@JsonProperty("url") String url,
 			@JsonProperty("color") String color,
 			@JsonProperty("fields") List<BotConfigMessageEmbedField> fields,
-			@JsonProperty("image_url") String imageURL,
-			@JsonProperty("thumbnail_url") String thumbnailURL,
+			@JsonProperty("image_url") String imageUrl,
+			@JsonProperty("thumbnail_url") String thumbnailUrl,
 			@JsonProperty("footer") BotConfigMessageEmbedFooter footer
 	) {
 		this.author = author;
@@ -69,8 +69,8 @@ public class BotConfigMessageEmbed {
 		this.url = url;
 		this.color = color;
 		this.fields = fields;
-		this.imageURL = imageURL;
-		this.thumbnailURL = thumbnailURL;
+		this.imageUrl = imageUrl;
+		this.thumbnailUrl = thumbnailUrl;
 		this.footer = footer;
 	}
 }

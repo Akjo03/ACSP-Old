@@ -1,7 +1,9 @@
 package com.akjostudios.acsp.bot;
 
-import com.akjostudios.acsp.bot.constants.DeployMode;
+import com.akjostudios.acsp.bot.constants.BotDeployMode;
+import com.akjostudios.acsp.bot.handlers.CommandsHandler;
 import com.akjostudios.acsp.bot.services.BotConfigService;
+import com.akjostudios.acsp.bot.util.command.BotCommand;
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerHandler;
@@ -34,7 +36,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 	private static JDA jdaInstance;
 
 	@Getter
-	private static DeployMode deployMode;
+	private static BotDeployMode botDeployMode;
 	@Getter
 	private static String botName;
 
@@ -47,20 +49,36 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Override
 	public void onApplicationEvent(@NotNull ApplicationReadyEvent event) {
+		// Retrieve the application context
 		applicationContext = event.getApplicationContext();
+		// Initialize the logger handler (needed for the EnableLogger annotation)
 		loggerHandler.initialize(event.getApplicationContext());
-		deployMode = DeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
+		// Retrieve the deploy mode from the environment variable
+		botDeployMode = BotDeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
+		// Load the bot configuration from the bot_config.json file
 		botConfigService.loadBotConfig();
 
+		// Create a JDA instance for interacting with the Discord API
 		jdaInstance = JDABuilder.create(
 				System.getenv("ACSP_TOKEN"),
 				GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS)
 		).build();
-		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
 
+		// Find all beans that implement the BotCommand class and add them to the CommandsHandler
+		CommandsHandler.setAvailableCommands(
+				applicationContext.getBeansOfType(BotCommand.class).values().stream().toList()
+		);
+		// For each command, initialize it and add the CommandsHandler to the JDA instance listeners
+		CommandsHandler.getAvailableCommands().forEach(command ->
+			command.initializeInternal(applicationContext, jdaInstance)
+		);
+		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class));
+
+		// Await the JDA instance to be ready and then set the bot name
+		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
 		botName = jdaInstance.getSelfUser().getName();
 
-		LOGGER.success("AcspBot has successfully started in " + deployMode + " mode.");
+		LOGGER.success("AcspBot has successfully started in " + botDeployMode + " mode.");
 	}
 
 	@PreDestroy

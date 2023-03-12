@@ -1,11 +1,14 @@
 package com.akjostudios.acsp.bot.config;
 
+import com.akjostudios.acsp.bot.constants.BotLanguages;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Component;
+
+import java.util.Optional;
 
 @Configuration
 @Component
@@ -24,5 +27,9 @@ public class LocaleConfiguration {
 		rs.setDefaultEncoding("UTF-8");
 		rs.setUseCodeAsDefaultMessage(true);
 		return rs;
+	}
+
+	public BotLanguages getLanguage(Optional<BotLanguages> language) {
+		return language.orElse(BotLanguages.fromCode(defaultLocale));
 	}
 }

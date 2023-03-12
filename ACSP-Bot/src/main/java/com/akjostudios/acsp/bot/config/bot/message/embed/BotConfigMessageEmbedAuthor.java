@@ -23,16 +23,16 @@ public class BotConfigMessageEmbedAuthor {
 
 	@JsonSerialize
 	@JsonDeserialize
-	private String iconURL;
+	private String iconUrl;
 
 	@JsonCreator
 	public BotConfigMessageEmbedAuthor(
 			@JsonProperty("name") String name,
 			@JsonProperty("url") String url,
-			@JsonProperty("icon_url") String iconURL
+			@JsonProperty("icon_url") String iconUrl
 	) {
 		this.name = name;
 		this.url = url;
-		this.iconURL = iconURL;
+		this.iconUrl = iconUrl;
 	}
 }

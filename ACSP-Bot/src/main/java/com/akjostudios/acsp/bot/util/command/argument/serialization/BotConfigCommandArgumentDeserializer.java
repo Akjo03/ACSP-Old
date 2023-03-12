@@ -4,7 +4,7 @@ import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgu
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentIntegerData;
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentStringData;
-import com.akjostudios.acsp.bot.constants.CommandArgumentTypes;
+import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationContext;
 import com.fasterxml.jackson.databind.JsonNode;
@@ -32,7 +32,7 @@ public class BotConfigCommandArgumentDeserializer extends StdDeserializer<BotCon
 		boolean required = node.get("required").asBoolean();
 		JsonNode dataNode = node.get("data");
 
-		CommandArgumentTypes argumentType = CommandArgumentTypes.fromString(type);
+		BotCommandArgumentTypes argumentType = BotCommandArgumentTypes.fromString(type);
 		if (argumentType == null) {
 			throw MismatchedInputException.from(jsonParser, BotConfigCommandArgument.class, "Invalid argument type: " + type + "!");
 		}
@@ -40,7 +40,7 @@ public class BotConfigCommandArgumentDeserializer extends StdDeserializer<BotCon
 		return new BotConfigCommandArgument<>(name, type, description, required, data);
 	}
 
-	private BotConfigCommandArgumentData<?> getDataDefinition(@NotNull JsonParser jsonParser, @NotNull JsonNode dataNode, @NotNull CommandArgumentTypes type) throws IOException {
+	private BotConfigCommandArgumentData<?> getDataDefinition(@NotNull JsonParser jsonParser, @NotNull JsonNode dataNode, @NotNull BotCommandArgumentTypes type) throws IOException {
 		return switch (type) {
 			case INTEGER -> jsonParser.getCodec().treeToValue(dataNode, BotConfigCommandArgumentIntegerData.class);
 			case STRING -> jsonParser.getCodec().treeToValue(dataNode, BotConfigCommandArgumentStringData.class);
