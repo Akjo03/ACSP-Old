@@ -1,11 +1,13 @@
 package com.akjostudios.acsp.bot.services;
 
+import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommands;
 import com.akjostudios.acsp.bot.handlers.CommandsHandler;
 import com.akjostudios.acsp.bot.util.command.BotCommand;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.text.similarity.LevenshteinDistance;
+import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
@@ -52,5 +54,12 @@ public class CommandHelperService {
 		}
 
 		return closest;
+	}
+
+	public @Nullable BotConfigSubcommand getSubcommandDefinitionFromCommand(BotConfigCommand commandDefinition, String subcommandName) {
+		return commandDefinition.getSubcommands().getDefinitions().stream()
+				.filter(subcommand -> subcommand.getName().equals(subcommandName))
+				.findFirst()
+				.orElse(null);
 	}
 }

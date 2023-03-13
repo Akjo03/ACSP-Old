@@ -27,6 +27,7 @@ public class CommandsHandler extends ListenerAdapter {
 	private final ErrorMessageService errorMessageService;
 	private final CommandHelperService commandHelperService;
 	private final DiscordMessageService discordMessageService;
+	private final BotCommandArgumentParserService botCommandArgumentParserService;
 
 	public static void setAvailableCommands(List<BotCommand> availableCommands) {
 		availableCommands.forEach(botCommand -> LOGGER.info("Registered command " + botCommand.getName()));
@@ -84,6 +85,7 @@ public class CommandsHandler extends ListenerAdapter {
 		}
 
 		// Execute the command
+		botCommand.setupServices(botConfigService, discordMessageService, errorMessageService, botCommandArgumentParserService, commandHelperService);
 		botCommand.executeInternal(event, commandArgStr);
 	}
 }

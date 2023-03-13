@@ -1,9 +1,9 @@
 package com.akjostudios.acsp.bot.util.command;
 
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
-import com.akjostudios.acsp.bot.services.BotConfigService;
-import com.akjostudios.acsp.bot.services.DiscordMessageService;
-import com.akjostudios.acsp.bot.services.ErrorMessageService;
+import com.akjostudios.acsp.bot.services.*;
+import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgumentParser;
+import com.akjostudios.acsp.bot.util.command.argument.BotCommandArguments;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionParser;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidator;
 import io.github.akjo03.lib.logging.Logger;
@@ -25,6 +25,8 @@ public abstract class BotCommand {
 	private BotConfigService botConfigService;
 	private DiscordMessageService discordMessageService;
 	private ErrorMessageService errorMessageService;
+	private BotCommandArgumentParserService botCommandArgumentParserService;
+	private CommandHelperService commandHelperService;
 
 	protected BotCommand(String name) {
 		LOGGER = LoggerManager.getLogger(getClass());
@@ -35,15 +37,19 @@ public abstract class BotCommand {
 	public void setupServices(
 			BotConfigService botConfigService,
 			DiscordMessageService discordMessageService,
-			ErrorMessageService errorMessageService
+			ErrorMessageService errorMessageService,
+			BotCommandArgumentParserService botCommandArgumentParserService,
+			CommandHelperService commandHelperService
 	) {
 		this.botConfigService = botConfigService;
 		this.discordMessageService = discordMessageService;
 		this.errorMessageService = errorMessageService;
+		this.botCommandArgumentParserService = botCommandArgumentParserService;
+		this.commandHelperService = commandHelperService;
 	}
 
 	public abstract void initialize(@NotNull BotCommandInitializer initializer);
-	public abstract void execute(@NotNull MessageReceivedEvent event);
+	public abstract void execute(@NotNull MessageReceivedEvent event, BotCommandArguments arguments);
 
 	public void initializeInternal(@NotNull ApplicationContext applicationContext, @NotNull JDA jdaInstance) {
 		// Get the definition of the command from the bot config
@@ -99,7 +105,22 @@ public abstract class BotCommand {
 			)).queue();
 		}
 
-		execute(event);
+		// Get the argument parser for the command
+		BotCommandArgumentParser argumentParser = botCommandArgumentParserService.getArgumentParser(name, definition, commandArgsStr, event);
+		if (argumentParser == null) {
+			LOGGER.warn("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but getting argument parser failed!");
+			return;
+		}
+		argumentParser.setupServices(botConfigService, discordMessageService, errorMessageService, commandHelperService);
+
+		// Parse the arguments
+		BotCommandArguments arguments = argumentParser.parse();
+		if (arguments == null) {
+			LOGGER.warn("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but parsing arguments failed!");
+			return;
+		}
+
+		execute(event, arguments);
 	}
 
 	// -------------- Getters --------------

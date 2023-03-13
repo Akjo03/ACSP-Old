@@ -23,6 +23,8 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.Collections;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -148,6 +150,11 @@ public class BotConfigService {
 		return result;
 	}
 
+	public String getCommandPrefix() {
+		loadBotConfig();
+		return botConfig.getCommandPrefix();
+	}
+
 	private @NotNull String replaceString(@NotNull String strName, @NotNull Optional<BotLanguages> strLanguage, String@NotNull... strPlaceholders) {
 		if (!strName.startsWith("$")) {
 			return strName;
@@ -160,10 +167,5 @@ public class BotConfigService {
 		}
 
 		return str;
-	}
-
-	public String getCommandPrefix() {
-		loadBotConfig();
-		return botConfig.getCommandPrefix();
 	}
 }
