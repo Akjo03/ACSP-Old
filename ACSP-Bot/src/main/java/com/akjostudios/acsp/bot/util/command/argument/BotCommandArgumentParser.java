@@ -3,21 +3,23 @@ package com.akjostudios.acsp.bot.util.command.argument;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommand;
 import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgument;
+import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
 import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
+import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
 import com.akjostudios.acsp.bot.services.BotConfigService;
 import com.akjostudios.acsp.bot.services.CommandHelperService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
+import com.akjostudios.acsp.bot.util.command.argument.transformation.BotCommandIntegerArgumentTransformer;
+import com.akjostudios.acsp.bot.util.command.argument.transformation.BotCommandStringArgumentTransformer;
 import com.google.common.collect.Lists;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 public class BotCommandArgumentParser {
 	private static final Logger LOGGER = LoggerManager.getLogger(BotCommandArgumentParser.class);
@@ -30,7 +32,6 @@ public class BotCommandArgumentParser {
 
 	private final MessageReceivedEvent event;
 
-	private BotConfigService botConfigService;
 	private DiscordMessageService discordMessageService;
 	private ErrorMessageService errorMessageService;
 	private CommandHelperService commandHelperService;
@@ -54,12 +55,10 @@ public class BotCommandArgumentParser {
 	}
 
 	public void setupServices(
-			BotConfigService botConfigService,
 			DiscordMessageService discordMessageService,
 			ErrorMessageService errorMessageService,
 			CommandHelperService commandHelperService
 	) {
-		this.botConfigService = botConfigService;
 		this.discordMessageService = discordMessageService;
 		this.errorMessageService = errorMessageService;
 		this.commandHelperService = commandHelperService;
@@ -74,12 +73,15 @@ public class BotCommandArgumentParser {
 			return null;
 		}
 		List<BotCommandArgument<?>> commandArgs = parseArguments(suppliedArgs, commandDefinition.getArguments(), false);
+		if (commandArgs == null) {
+			return null;
+		}
 
 		BotConfigSubcommand subcommandDefinition = commandHelperService.getSubcommandDefinitionFromCommand(commandDefinition, subcommand);
 		if (subcommandDefinition == null) {
 			return null;
 		}
-		Map<String, String> suppliedSubcommandArgs = getSuppliedArguments(args, subcommandDefinition.getArguments(), true);
+		Map<String, String> suppliedSubcommandArgs = getSuppliedArguments(subcommandArgs, subcommandDefinition.getArguments(), true);
 		if (suppliedSubcommandArgs == null) {
 			return null;
 		}
@@ -87,6 +89,9 @@ public class BotCommandArgumentParser {
 			return null;
 		}
 		List<BotCommandArgument<?>> subcommandArgs = parseArguments(suppliedSubcommandArgs, subcommandDefinition.getArguments(), true);
+		if (subcommandArgs == null) {
+			return null;
+		}
 
 		return subcommand != null
 				? BotCommandArguments.of(commandName, commandArgs, subcommand, subcommandArgs)
@@ -98,7 +103,69 @@ public class BotCommandArgumentParser {
 			List<BotConfigCommandArgument<?>> argumentDefinitions,
 			boolean isSubcommand
 	) {
-		return null;
+		Map<String, String> suppliedArguments = new HashMap<>();
+		// Used to check if key-value pairs are given exclusively or at the end of the argument list
+		Map<Integer, Boolean> indexTypeMap = new HashMap<>();
+
+		if (argsList == null || argsList.isEmpty()) {
+			return suppliedArguments;
+		}
+
+		for (int i = 0; i < argsList.size(); i++) {
+			String arg = argsList.get(i);
+
+			if (indexTypeMap.containsValue(true) && !arg.contains("=")) {
+				event.getChannel().sendMessage(discordMessageService.createMessage(
+						errorMessageService.getErrorMessage(
+								"errors.command_arguments_invalid_order.title",
+								"errors.command_arguments_invalid_order.description",
+								List.of(),
+								List.of(),
+								Optional.empty()
+						)
+				)).queue();
+				return null;
+			}
+
+			if (argsList.size() > argumentDefinitions.size() && !indexTypeMap.containsValue(true)) {
+				event.getChannel().sendMessage(discordMessageService.createMessage(getErrorMessage(
+						"errors.command_arguments_too_many" + (argumentDefinitions.size() == 0 ? "_none" : ""),
+						"errors.subcommand_arguments_too_many" + (argumentDefinitions.size() == 0 ? "_none" : ""),
+						Lists.newArrayList(),
+						Lists.newArrayList(
+								commandName,
+								String.valueOf(argumentDefinitions.size())
+						),
+						Lists.newArrayList(),
+						Lists.newArrayList(
+								subcommand,
+								commandName,
+								String.valueOf(argumentDefinitions.size())
+						),
+						isSubcommand,
+						null
+				))).queue();
+				return null;
+			}
+
+			if (arg.contains("=")) {
+				Map.Entry<String, String> namedArg = getNamedArgument(arg, suppliedArguments, argumentDefinitions, isSubcommand);
+				if (namedArg == null) {
+					return null;
+				}
+				suppliedArguments.put(namedArg.getKey(), namedArg.getValue());
+				indexTypeMap.put(i, false);
+			} else {
+				Map.Entry<String, String> indexedArg = getIndexedArgument(arg, i, suppliedArguments, argumentDefinitions, isSubcommand);
+				if (indexedArg == null) {
+					return null;
+				}
+				suppliedArguments.put(indexedArg.getKey(), indexedArg.getValue());
+				indexTypeMap.put(i, true);
+			}
+		}
+
+		return suppliedArguments;
 	}
 
 	private boolean checkRequiredArguments(
@@ -106,15 +173,81 @@ public class BotCommandArgumentParser {
 			List<BotConfigCommandArgument<?>> argumentDefinitions,
 			boolean isSubcommand
 	) {
+		if (isSubcommand && subcommand == null) {
+			return false;
+		}
+
+		for (BotConfigCommandArgument<?> argumentDefinition : argumentDefinitions) {
+			if (argumentDefinition.isRequired() && !suppliedArguments.containsKey(argumentDefinition.getName())) {
+				event.getChannel().sendMessage(discordMessageService.createMessage(getErrorMessage(
+						"errors.command_required_argument_missing",
+						"errors.subcommand_required_argument_missing",
+						Lists.newArrayList(),
+						Lists.newArrayList(
+								commandName,
+								argumentDefinition.getName()
+						),
+						Lists.newArrayList(),
+						Lists.newArrayList(
+								subcommand,
+								commandName,
+								argumentDefinition.getName()
+						),
+						isSubcommand,
+						null
+				))).queue();
+				return true;
+			}
+		}
+
 		return false;
 	}
 
-	private @Nullable List<BotCommandArgument<?>> parseArguments(
+	@SuppressWarnings("unchecked")
+	private List<BotCommandArgument<?>> parseArguments(
 			Map<String, String> suppliedArguments,
 			List<BotConfigCommandArgument<?>> argumentDefinitions,
 			boolean isSubcommand
 	) {
-		return null;
+		if (isSubcommand && subcommand == null) {
+			return List.of();
+		}
+
+		List<BotCommandArgument<?>> parsedArguments = new ArrayList<>();
+
+		for (BotConfigCommandArgument<?> argumentDefinition : argumentDefinitions) {
+			BotCommandArgumentTypes argumentType = BotCommandArgumentTypes.fromString(argumentDefinition.getType());
+			if (argumentType == null) {
+				LOGGER.error("Failed to parse argument type for command " + commandName + " and subcommand " + subcommand + " with argument " + argumentDefinition.getName() + ": " + argumentDefinition.getType());
+				return null;
+			}
+
+			String argumentValue = suppliedArguments.get(argumentDefinition.getName());
+
+			BotCommandArgument<?> parsedArgument = switch (argumentType) {
+				case INTEGER -> BotCommandIntegerArgumentTransformer.of(
+						commandName,
+						(BotConfigCommandArgument<Integer>) argumentDefinition,
+						argumentValue
+				).transform().ifError(e -> {
+					// TODO: Handle error
+				}).getOrNull();
+				case STRING -> BotCommandStringArgumentTransformer.of(
+						commandName,
+						(BotConfigCommandArgument<String>) argumentDefinition,
+						argumentValue
+				).transform().ifError(e -> {
+					// TODO: Handle error
+				}).getOrNull();
+			};
+			if (parsedArgument == null) {
+				return null;
+			}
+
+			parsedArguments.add(parsedArgument);
+		}
+
+		return parsedArguments;
 	}
 
 	private @Nullable Map.Entry<String, String> getNamedArgument(

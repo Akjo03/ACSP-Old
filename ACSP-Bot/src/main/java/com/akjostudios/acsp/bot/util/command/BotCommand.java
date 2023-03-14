@@ -111,7 +111,7 @@ public abstract class BotCommand {
 			LOGGER.warn("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but getting argument parser failed!");
 			return;
 		}
-		argumentParser.setupServices(botConfigService, discordMessageService, errorMessageService, commandHelperService);
+		argumentParser.setupServices(discordMessageService, errorMessageService, commandHelperService);
 
 		// Parse the arguments
 		BotCommandArguments arguments = argumentParser.parse();
