@@ -95,6 +95,7 @@ public abstract class BotCommand {
 							Optional.empty()
 					)
 			)).queue();
+			return;
 		}
 
 		// Parse and validate permissions for command

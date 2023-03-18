@@ -131,6 +131,7 @@ public class BotConfigService {
 
 		BotConfigCommand result = new BotConfigCommand();
 		result.setName(commandDefinition.getName());
+		result.setAvailable(commandDefinition.isAvailable());
 		result.setDescription(replaceString(commandDefinition.getDescription(), language, placeholders));
 		result.setArguments(commandDefinition.getArguments());
 		result.setSubcommands(commandDefinition.getSubcommands());
