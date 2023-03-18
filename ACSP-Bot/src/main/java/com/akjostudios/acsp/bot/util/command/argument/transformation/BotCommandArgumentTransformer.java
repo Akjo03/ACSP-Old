@@ -12,7 +12,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 public abstract class BotCommandArgumentTransformer<T, D extends BotConfigCommandArgumentData<T>> {
 	protected final BotConfigCommandArgument<T> argumentDefinition;
 	protected final String commandName;
-	protected String argumentValue;
+	protected final String argumentValue;
 
 	protected DiscordMessageService discordMessageService;
 	protected BotConfigService botConfigService;
@@ -46,7 +46,7 @@ public abstract class BotCommandArgumentTransformer<T, D extends BotConfigComman
 		return (D) argumentDefinition.getData();
 	}
 
-	protected boolean checkIfOptional() {
+	protected boolean checkIfRequired() {
 		if (argumentValue == null || argumentValue.isEmpty()) {
 			return argumentDefinition.isRequired();
 		}

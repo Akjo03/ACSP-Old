@@ -13,7 +13,8 @@ public class BotCommandPermissionValidator {
 		this.channelPermissions = channelPermissions;
 	}
 
-	public boolean validate(GuildMessageChannelUnion channel, Member member) {
+	@SuppressWarnings("CodeBlock2Expr")
+	public boolean isInvalid(GuildMessageChannelUnion channel, Member member) {
 		AtomicBoolean isAllowed = new AtomicBoolean(false);
 
 		channelPermissions.stream()
@@ -26,6 +27,6 @@ public class BotCommandPermissionValidator {
 							));
 				});
 
-		return isAllowed.get();
+		return !isAllowed.get();
 	}
 }

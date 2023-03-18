@@ -28,6 +28,7 @@ public abstract class BotCommand {
 	private DiscordMessageService discordMessageService;
 	private ErrorMessageService errorMessageService;
 	private BotCommandArgumentParserService botCommandArgumentParserService;
+	private BotCommandArgumentParsingReportService botCommandArgumentParsingReportService;
 	private CommandHelperService commandHelperService;
 
 	protected BotCommand(String name) {
@@ -41,12 +42,14 @@ public abstract class BotCommand {
 			DiscordMessageService discordMessageService,
 			ErrorMessageService errorMessageService,
 			BotCommandArgumentParserService botCommandArgumentParserService,
+			BotCommandArgumentParsingReportService botCommandArgumentParsingReportService,
 			CommandHelperService commandHelperService
 	) {
 		this.botConfigService = botConfigService;
 		this.discordMessageService = discordMessageService;
 		this.errorMessageService = errorMessageService;
 		this.botCommandArgumentParserService = botCommandArgumentParserService;
+		this.botCommandArgumentParsingReportService = botCommandArgumentParsingReportService;
 		this.commandHelperService = commandHelperService;
 	}
 
@@ -98,7 +101,7 @@ public abstract class BotCommand {
 		BotCommandPermissionParser permissionParser = new BotCommandPermissionParser(name, definition.getPermissions());
 		BotCommandPermissionValidator permissionValidator = permissionParser.parse();
 
-		if (!permissionValidator.validate(event.getGuildChannel(), event.getMember())) {
+		if (permissionValidator.isInvalid(event.getGuildChannel(), event.getMember())) {
 			LOGGER.info("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but was denied!");
 
 			event.getChannel().sendMessage(discordMessageService.createMessage(
@@ -120,7 +123,7 @@ public abstract class BotCommand {
 			LOGGER.warn("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but getting argument parser failed!");
 			return;
 		}
-		argumentParser.setupServices(discordMessageService, errorMessageService, commandHelperService, botConfigService);
+		argumentParser.setupServices(discordMessageService, errorMessageService, commandHelperService, botConfigService, botCommandArgumentParsingReportService);
 
 		// Parse the arguments
 		BotCommandArguments arguments = argumentParser.parse();

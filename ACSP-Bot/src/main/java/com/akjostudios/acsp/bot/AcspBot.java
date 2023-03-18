@@ -107,6 +107,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 					applicationContext.getBean(DiscordMessageService.class),
 					applicationContext.getBean(ErrorMessageService.class),
 					applicationContext.getBean(BotCommandArgumentParserService.class),
+					applicationContext.getBean(BotCommandArgumentParsingReportService.class),
 					applicationContext.getBean(CommandHelperService.class)
 			);
 			try { command.initializeInternal(applicationContext, jdaInstance); } catch (Exception e) {

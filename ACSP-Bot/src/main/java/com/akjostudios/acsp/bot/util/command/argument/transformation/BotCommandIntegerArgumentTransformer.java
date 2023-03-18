@@ -10,10 +10,13 @@ import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgument;
 import com.akjostudios.acsp.bot.util.command.argument.conversion.BotCommandArgumentConverterProvider;
 import com.akjostudios.acsp.bot.util.command.argument.conversion.BotCommandArgumentIntegerConverter;
 import com.akjostudios.acsp.bot.util.command.argument.validation.BotCommandIntegerArgumentValidator;
+import com.akjostudios.acsp.bot.util.exception.AcspBotCommandArgumentParseException;
 import io.github.akjo03.lib.result.Result;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 public class BotCommandIntegerArgumentTransformer extends BotCommandArgumentTransformer<Integer, BotConfigCommandArgumentIntegerData> {
 	protected BotCommandIntegerArgumentTransformer(
@@ -42,8 +45,14 @@ public class BotCommandIntegerArgumentTransformer extends BotCommandArgumentTran
 
 	@Override
 	public Result<BotCommandArgument<Integer>> transform(MessageReceivedEvent event) {
-		if (checkIfOptional()) {
-			// TODO: Handle error
+		if (checkIfRequired()) {
+			return Result.fail(new AcspBotCommandArgumentParseException(
+					argumentDefinition.getName(),
+					"errors.command_argument_parsing_report.fields.reason.required_missing",
+					List.of(),
+					null,
+					discordMessageService, botConfigService
+			));
 		}
 
 		BotConfigCommandArgumentIntegerData argumentData = getArgumentData();
@@ -61,10 +70,7 @@ public class BotCommandIntegerArgumentTransformer extends BotCommandArgumentTran
 				discordMessageService,
 				botConfigService,
 				errorMessageService
-		).validate(convertedValue, event)
-				.ifError(e -> {
-					// TODO: Handle error
-				});
+		).validate(convertedValue, event);
 
 		return validationResult.isError() ? Result.fail(validationResult.getError()) : Result.success(BotCommandArgument.of(
 				argumentDefinition.getName(),

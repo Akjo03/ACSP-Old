@@ -22,6 +22,8 @@ public class DiscordMessageService {
 	public MessageCreateData createMessage(BotConfigMessage message) {
 		MessageCreateBuilder messageBuilder = new MessageCreateBuilder();
 
+		if (message == null) { return messageBuilder.build(); }
+
 		messageBuilder.setContent(message.getContent());
 		messageBuilder.setEmbeds(message.getEmbeds().stream().map(this::toMessageEmbed).toList());
 

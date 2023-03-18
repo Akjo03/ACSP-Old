@@ -6,12 +6,10 @@ import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgu
 import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
 import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
-import com.akjostudios.acsp.bot.services.BotConfigService;
-import com.akjostudios.acsp.bot.services.CommandHelperService;
-import com.akjostudios.acsp.bot.services.DiscordMessageService;
-import com.akjostudios.acsp.bot.services.ErrorMessageService;
+import com.akjostudios.acsp.bot.services.*;
 import com.akjostudios.acsp.bot.util.command.argument.transformation.BotCommandIntegerArgumentTransformer;
 import com.akjostudios.acsp.bot.util.command.argument.transformation.BotCommandStringArgumentTransformer;
+import com.akjostudios.acsp.bot.util.exception.AcspBotCommandArgumentParseException;
 import com.google.common.collect.Lists;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
@@ -19,6 +17,7 @@ import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class BotCommandArgumentParser {
 	private static final Logger LOGGER = LoggerManager.getLogger(BotCommandArgumentParser.class);
@@ -35,6 +34,7 @@ public class BotCommandArgumentParser {
 	private ErrorMessageService errorMessageService;
 	private CommandHelperService commandHelperService;
 	private BotConfigService botConfigService;
+	private BotCommandArgumentParsingReportService botCommandArgumentParsingReportService;
 
 	public BotCommandArgumentParser(String commandName, BotConfigCommand commandDefinition, List<String> args, MessageReceivedEvent event) {
 		this.commandName = commandName;
@@ -58,12 +58,14 @@ public class BotCommandArgumentParser {
 			DiscordMessageService discordMessageService,
 			ErrorMessageService errorMessageService,
 			CommandHelperService commandHelperService,
-			BotConfigService botConfigService
+			BotConfigService botConfigService,
+			BotCommandArgumentParsingReportService botCommandArgumentParsingReportService
 	) {
 		this.discordMessageService = discordMessageService;
 		this.errorMessageService = errorMessageService;
 		this.commandHelperService = commandHelperService;
 		this.botConfigService = botConfigService;
+		this.botCommandArgumentParsingReportService = botCommandArgumentParsingReportService;
 	}
 
 	public BotCommandArguments parse() {
@@ -216,6 +218,8 @@ public class BotCommandArgumentParser {
 		}
 
 		List<BotCommandArgument<?>> parsedArguments = new ArrayList<>();
+		List<AcspBotCommandArgumentParseException> parseExceptions = new ArrayList<>();
+		AtomicBoolean parsingFailed = new AtomicBoolean(false);
 
 		for (BotConfigCommandArgument<?> argumentDefinition : argumentDefinitions) {
 			BotCommandArgumentTypes argumentType = BotCommandArgumentTypes.fromString(argumentDefinition.getType());
@@ -233,7 +237,8 @@ public class BotCommandArgumentParser {
 						argumentValue,
 						discordMessageService, botConfigService, errorMessageService
 				).transform(event).ifError(e -> {
-					// TODO: Handle error
+					handleParseException(e, parseExceptions, argumentDefinition);
+					parsingFailed.set(true);
 				}).getOrNull();
 				case STRING -> BotCommandStringArgumentTransformer.of(
 						commandName,
@@ -241,7 +246,8 @@ public class BotCommandArgumentParser {
 						argumentValue,
 						discordMessageService, botConfigService, errorMessageService
 				).transform(event).ifError(e -> {
-					// TODO: Handle error
+					handleParseException(e, parseExceptions, argumentDefinition);
+					parsingFailed.set(true);
 				}).getOrNull();
 			};
 			if (parsedArgument == null) {
@@ -249,6 +255,16 @@ public class BotCommandArgumentParser {
 			}
 
 			parsedArguments.add(parsedArgument);
+		}
+
+		if (parsingFailed.get()) {
+			if (!parseExceptions.isEmpty()) {
+				event.getChannel().sendMessage(discordMessageService.createMessage(
+						botCommandArgumentParsingReportService.getReportMessage(commandName, parseExceptions)
+				)).queue();
+			}
+
+			return null;
 		}
 
 		return parsedArguments;
@@ -334,6 +350,14 @@ public class BotCommandArgumentParser {
 		}
 
 		return false;
+	}
+
+	private void handleParseException(Exception e, List<AcspBotCommandArgumentParseException> parseExceptions, BotConfigCommandArgument<?> argumentDefinition) {
+		if (e instanceof AcspBotCommandArgumentParseException parseException) {
+			parseExceptions.add(parseException);
+		} else {
+			LOGGER.error("Failed to parse argument " + argumentDefinition.getName() + " for command " + commandName + " and subcommand " + subcommand + ": " + e.getMessage());
+		}
 	}
 
 	private BotConfigMessage getErrorMessage(

@@ -110,7 +110,7 @@ public class BotCommandArgumentParserService {
 		// Check permissions for subcommand and send error message if user doesn't have permission
 		BotCommandPermissionParser permissionParser = new BotCommandPermissionParser(subcommandName, subcommandDefinition.getPermissions());
 		BotCommandPermissionValidator permissionValidator = permissionParser.parse();
-		if (!permissionValidator.validate(event.getGuildChannel(), event.getMember())) {
+		if (permissionValidator.isInvalid(event.getGuildChannel(), event.getMember())) {
 			LOGGER.info("User " + event.getAuthor().getAsTag() + " tried to execute subcommand \"" + subcommandName + "\" of command \"" + commandName + "\" but doesn't have permission!");
 
 			event.getChannel().sendMessage(discordMessageService.createMessage(
