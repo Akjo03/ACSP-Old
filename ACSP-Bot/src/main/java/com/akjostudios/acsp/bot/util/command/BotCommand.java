@@ -119,6 +119,7 @@ public abstract class BotCommand {
 							Optional.empty()
 					)
 			)).queue();
+			return;
 		}
 
 		// Get the argument parser for the command
