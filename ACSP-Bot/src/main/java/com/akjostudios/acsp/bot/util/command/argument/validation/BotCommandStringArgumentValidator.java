@@ -9,7 +9,6 @@ import io.github.akjo03.lib.result.Result;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class BotCommandStringArgumentValidator extends BotCommandArgumentValidator<String, BotConfigCommandArgumentStringData> {

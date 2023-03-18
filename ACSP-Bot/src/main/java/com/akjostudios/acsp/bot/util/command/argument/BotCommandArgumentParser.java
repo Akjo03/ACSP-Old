@@ -3,7 +3,6 @@ package com.akjostudios.acsp.bot.util.command.argument;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommand;
 import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgument;
-import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
 import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
 import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
