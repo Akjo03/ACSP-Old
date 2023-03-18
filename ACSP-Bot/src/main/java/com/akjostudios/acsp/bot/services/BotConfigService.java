@@ -23,6 +23,7 @@ import org.jetbrains.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Service
@@ -55,7 +56,7 @@ public class BotConfigService {
 
 		BotConfigMessageWrapper messageWrapper = botConfig.getMessages().stream()
 				.filter(message -> message.getLabel().equals(label))
-				.filter(message -> message.getLanguage().equals(localeConfiguration.getLanguage(language).getCode()))
+				.filter(message -> message.getLanguage().equals(localeConfiguration.getLanguage(language).name()))
 				.findFirst().orElse(null);
 		if (messageWrapper == null) {
 			LOGGER.error("Could not find message with label " + label + " and language " + language + "!");
@@ -67,6 +68,7 @@ public class BotConfigService {
 				messageWrapper.getMessage().getContent(),
 				placeholders
 		));
+		result.setEmbeds(new ArrayList<>());
 		for (BotConfigMessageEmbed embed : messageWrapper.getMessage().getEmbeds()) {
 			BotConfigMessageEmbed resultEmbed = new BotConfigMessageEmbed();
 			resultEmbed.setAuthor(new BotConfigMessageEmbedAuthor(
@@ -78,6 +80,7 @@ public class BotConfigService {
 			resultEmbed.setDescription(stringPlaceholderService.replacePlaceholders(embed.getDescription(), placeholders));
 			resultEmbed.setUrl(stringPlaceholderService.replacePlaceholders(embed.getUrl(), placeholders));
 			resultEmbed.setColor(stringPlaceholderService.replacePlaceholders(embed.getColor(), placeholders));
+			resultEmbed.setFields(new ArrayList<>());
 			for (BotConfigMessageEmbedField field : embed.getFields()) {
 				BotConfigMessageEmbedField resultField = new BotConfigMessageEmbedField();
 				resultField.setName(stringPlaceholderService.replacePlaceholders(field.getName(), placeholders));
@@ -102,7 +105,7 @@ public class BotConfigService {
 
 		BotConfigFieldWrapper fieldWrapper = botConfig.getFields().stream()
 				.filter(field -> field.getLabel().equals(label))
-				.filter(field -> field.getLanguage().equals(localeConfiguration.getLanguage(language).getCode()))
+				.filter(field -> field.getLanguage().equals(localeConfiguration.getLanguage(language).name()))
 				.findFirst().orElse(null);
 		if (fieldWrapper == null) {
 			LOGGER.error("Could not find field with label " + label + " and language " + language + "!");
@@ -123,7 +126,6 @@ public class BotConfigService {
 				.filter(command -> command.getName().equals(name))
 				.findFirst().orElse(null);
 		if (commandDefinition == null) {
-			LOGGER.error("Could not find command with name " + name + "!");
 			return null;
 		}
 

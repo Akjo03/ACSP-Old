@@ -2,7 +2,7 @@ package com.akjostudios.acsp.bot;
 
 import com.akjostudios.acsp.bot.constants.BotDeployMode;
 import com.akjostudios.acsp.bot.handlers.CommandsHandler;
-import com.akjostudios.acsp.bot.services.BotConfigService;
+import com.akjostudios.acsp.bot.services.*;
 import com.akjostudios.acsp.bot.util.command.BotCommand;
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import io.github.akjo03.lib.logging.Logger;
@@ -93,18 +93,27 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 				applicationContext.getBeansOfType(BotCommand.class).values().stream().toList()
 		);
 
-		// For each command, initialize it and add the CommandsHandler to the JDA instance listeners
-		CommandsHandler.getAvailableCommands().forEach(command -> {
-			try { command.initializeInternal(applicationContext, jdaInstance); } catch (Exception e) {
-				LOGGER.error("An error occurred while initializing the command " + command.getName() + ": " + e.getMessage());
-				shutdown();
-			}
-		});
+		// Add the CommandsHandler to the JDA instance listeners
 		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class));
 
 		// Await the JDA instance to be ready and then set the bot name
 		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
 		botName = jdaInstance.getSelfUser().getName();
+
+		// Initialize all commands
+		CommandsHandler.getAvailableCommands().forEach(command -> {
+			command.setupServices(
+					applicationContext.getBean(BotConfigService.class),
+					applicationContext.getBean(DiscordMessageService.class),
+					applicationContext.getBean(ErrorMessageService.class),
+					applicationContext.getBean(BotCommandArgumentParserService.class),
+					applicationContext.getBean(CommandHelperService.class)
+			);
+			try { command.initializeInternal(applicationContext, jdaInstance); } catch (Exception e) {
+				LOGGER.error("An error occurred while initializing the command " + command.getName() + ": " + e.getMessage());
+				shutdown();
+			}
+		});
 
 		LOGGER.success("AcspBot has successfully started in " + botDeployMode + " mode.");
 	}

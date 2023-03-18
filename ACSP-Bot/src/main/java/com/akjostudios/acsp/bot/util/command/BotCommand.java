@@ -62,6 +62,7 @@ public abstract class BotCommand {
 					null,
 					discordMessageService, errorMessageService, LOGGER
 			).sendMessage(jdaInstance, AcspDiscordChannels.ADMIN_CHANNEL);
+			return;
 		}
 		this.definition = definition;
 
