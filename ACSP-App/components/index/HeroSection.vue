@@ -10,7 +10,10 @@
           <img class="h-11" src="~/assets/img/logo_512_transparent.png" alt="" />
         </a>
         <div class="flex flex-1 justify-end">
-          <a href="#" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-themeText hover:bg-themeHover hover:text-themeTextHover transition-all">Log in <span aria-hidden="true">&rarr;</span></a>
+          <a href="#" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-themeText hover:bg-themeHover hover:text-themeTextHover transition-all">
+            Log in
+            <span class="pl-2" aria-hidden="true">&rarr;</span>
+          </a>
         </div>
       </nav>
     </header>
@@ -37,7 +40,7 @@
             Get started
           </a>
           <a href="#" class="text-sm font-semibold leading-6 rounded-md px-3.5 py-2.5 text-themeText hover:text-themeTextHover hover:bg-themeHover transition-all">
-            Learn more <span aria-hidden="true">→</span>
+            Learn more <span class="pl-2" aria-hidden="true">→</span>
           </a>
         </div>
       </div>
