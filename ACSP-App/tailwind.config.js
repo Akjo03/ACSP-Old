@@ -23,6 +23,11 @@ module.exports = {
       colors: {
         themeBackground: 'var(--background)',
         themeText: 'var(--text)',
+        themeBorder: 'var(--border)',
+        themePrimary: 'var(--primary)',
+        themeHover: 'var(--hover)',
+        themeTextHover: 'var(--textHover)',
+        themePrimaryHover: 'var(--primaryHover)',
       },
     },
   },

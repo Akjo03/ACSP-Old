@@ -5,8 +5,19 @@
 .theme-light {
     --background: #f8f8f8;
     --text: #313131;
+    --border: #f1f1f1;
+    --primary: #6366f1;
+    --hover: #e2e8f0;
+    --textHover: #2d2d2d;
+    --primaryHover: #4f46e5;
 }
+
 .theme-dark {
     --background: #313131;
     --text: #f8f8f8;
+    --border: #2d2d2d;
+    --primary: #6366f1;
+    --hover: #2d2d2d;
+    --textHover: #f1f1f1;
+    --primaryHover: #4f46e5;
 }

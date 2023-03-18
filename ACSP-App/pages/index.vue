@@ -3,8 +3,8 @@
     'theme-light': !darkMode,
     'theme-dark': darkMode
   }"
-  class="min-h-screen bg-themeBackground p-5">
-
+  class="min-h-screen bg-themeBackground">
+    <HeroSection />
   </div>
 </template>
 
@@ -12,6 +12,7 @@
 <script setup lang="ts">
   import {useState} from "nuxt/app";
   import {onMounted, watch} from "vue";
+  import HeroSection from "../components/index/HeroSection.vue";
 
   type Theme = 'light' | 'dark';
 
