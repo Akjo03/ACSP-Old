@@ -19,7 +19,11 @@ module.exports = {
       },
       fontFamily: {
         sans: ['Inter var', ...defaultTheme.fontFamily.sans],
-      }
+      },
+      colors: {
+        themeBackground: 'var(--background)',
+        themeText: 'var(--text)',
+      },
     },
   },
   plugins: [
