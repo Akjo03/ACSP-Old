@@ -7,7 +7,6 @@ import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import io.github.akjo03.lib.logging.Logger;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.entities.channel.middleman.GuildMessageChannel;
-import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.Serial;
