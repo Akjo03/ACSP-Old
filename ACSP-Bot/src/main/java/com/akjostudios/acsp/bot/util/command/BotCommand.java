@@ -1,11 +1,13 @@
 package com.akjostudios.acsp.bot.util.command;
 
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
+import com.akjostudios.acsp.bot.constants.AcspDiscordChannels;
 import com.akjostudios.acsp.bot.services.*;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgumentParser;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArguments;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionParser;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidator;
+import com.akjostudios.acsp.bot.util.exception.AcspBotConfigException;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.JDA;
@@ -55,7 +57,11 @@ public abstract class BotCommand {
 		// Get the definition of the command from the bot config
 		BotConfigCommand definition = botConfigService.getCommandDefinition(name, Optional.empty());
 		if (definition == null) {
-			LOGGER.error("Command definition for " + name + " not found!");
+			new AcspBotConfigException(
+					"Command definition for " + name + " not found!",
+					null,
+					discordMessageService, errorMessageService, LOGGER
+			).sendMessage(jdaInstance, AcspDiscordChannels.ADMIN_CHANNEL);
 		}
 		this.definition = definition;
 

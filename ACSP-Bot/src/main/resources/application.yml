@@ -1,6 +1,9 @@
 spring:
   application:
     name: ACSP-Bot
+  jackson:
+    deserialization:
+      wrap-exceptions: false
 
 application:
   locale:

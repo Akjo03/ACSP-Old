@@ -4,8 +4,10 @@ import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgu
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
 import com.akjostudios.acsp.bot.services.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
+import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgument;
 import io.github.akjo03.lib.result.Result;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public abstract class BotCommandArgumentTransformer<T, D extends BotConfigCommandArgumentData<T>> {
 	protected final BotConfigCommandArgument<T> argumentDefinition;
@@ -14,6 +16,7 @@ public abstract class BotCommandArgumentTransformer<T, D extends BotConfigComman
 
 	protected DiscordMessageService discordMessageService;
 	protected BotConfigService botConfigService;
+	protected ErrorMessageService errorMessageService;
 
 	protected BotCommandArgumentTransformer(
 			String commandName,
@@ -25,13 +28,18 @@ public abstract class BotCommandArgumentTransformer<T, D extends BotConfigComman
 		this.argumentValue = argumentValue;
 	}
 
-	protected void setupServices(DiscordMessageService discordMessageService, BotConfigService botConfigService) {
+	protected void setupServices(
+			DiscordMessageService discordMessageService,
+			BotConfigService botConfigService,
+			ErrorMessageService errorMessageService
+	) {
 		this.discordMessageService = discordMessageService;
 		this.botConfigService = botConfigService;
+		this.errorMessageService = errorMessageService;
 	}
 
 	@SuppressWarnings("unused")
-	protected abstract Result<BotCommandArgument<T>> transform();
+	protected abstract Result<BotCommandArgument<T>> transform(MessageReceivedEvent event);
 
 	@SuppressWarnings("unchecked")
 	protected D getArgumentData() {

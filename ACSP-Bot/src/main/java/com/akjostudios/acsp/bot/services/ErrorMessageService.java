@@ -32,4 +32,16 @@ public class ErrorMessageService {
 				BotConstants.DATE_TIME_FORMATTER.format(Instant.now())
 		);
 	}
+
+	public BotConfigMessage getInternalErrorMessage(
+			String message,
+			Optional<BotLanguages> language
+	) {
+		return botConfigService.getMessageDefinition(
+				"INTERNAL_ERROR_MESSAGE", language,
+				message,
+				AcspBot.getBotName(),
+				BotConstants.DATE_TIME_FORMATTER.format(Instant.now())
+		);
+	}
 }

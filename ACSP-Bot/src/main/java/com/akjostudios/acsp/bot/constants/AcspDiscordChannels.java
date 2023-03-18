@@ -2,6 +2,9 @@ package com.akjostudios.acsp.bot.constants;
 
 import com.akjostudios.acsp.bot.util.constants.IdentifiableConstants;
 import lombok.Getter;
+import net.dv8tion.jda.api.JDA;
+import net.dv8tion.jda.api.entities.channel.middleman.GuildChannel;
+import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;

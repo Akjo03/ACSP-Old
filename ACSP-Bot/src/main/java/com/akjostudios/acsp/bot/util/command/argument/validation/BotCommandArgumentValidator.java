@@ -3,7 +3,9 @@ package com.akjostudios.acsp.bot.util.command.argument.validation;
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
 import com.akjostudios.acsp.bot.services.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
+import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import io.github.akjo03.lib.result.Result;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 
 public abstract class BotCommandArgumentValidator<T, D extends BotConfigCommandArgumentData<T>> {
 	protected final D validationData;
@@ -12,6 +14,7 @@ public abstract class BotCommandArgumentValidator<T, D extends BotConfigCommandA
 
 	protected DiscordMessageService discordMessageService;
 	protected BotConfigService botConfigService;
+	protected ErrorMessageService errorMessageService;
 
 	protected BotCommandArgumentValidator(D validationData, String commandName, String argumentName) {
 		this.validationData = validationData;
@@ -19,10 +22,11 @@ public abstract class BotCommandArgumentValidator<T, D extends BotConfigCommandA
 		this.argumentName = argumentName;
 	}
 
-	protected void setupServices(DiscordMessageService discordMessageService, BotConfigService botConfigService) {
+	protected void setupServices(DiscordMessageService discordMessageService, BotConfigService botConfigService, ErrorMessageService errorMessageService) {
 		this.discordMessageService = discordMessageService;
 		this.botConfigService = botConfigService;
+		this.errorMessageService = errorMessageService;
 	}
 
-	public abstract Result<Void> validate(T value);
+	public abstract Result<Void> validate(T value, MessageReceivedEvent event);
 }

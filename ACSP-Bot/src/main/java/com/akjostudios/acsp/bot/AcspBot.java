@@ -44,34 +44,62 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 	private final BotConfigService botConfigService;
 
 	public static void main(String[] args) {
-		SpringApplication.run(AcspBot.class, args);
+		try {
+			SpringApplication.run(AcspBot.class, args);
+		} catch (Exception e) {
+			LOGGER.error("An error occurred while starting the bot: " + e.getMessage());
+			shutdown();
+		}
 	}
 
 	@Override
 	public void onApplicationEvent(@NotNull ApplicationReadyEvent event) {
 		// Retrieve the application context
 		applicationContext = event.getApplicationContext();
+
 		// Initialize the logger handler (needed for the EnableLogger annotation)
 		loggerHandler.initialize(event.getApplicationContext());
+
 		// Retrieve the deploy mode from the environment variable
-		botDeployMode = BotDeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
+		try {
+			botDeployMode = BotDeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
+		} catch (Exception e) {
+			LOGGER.error("An error occurred while retrieving the deploy mode: " + e.getMessage());
+			shutdown();
+		}
+
 		// Load the bot configuration from the bot_config.json file
-		botConfigService.loadBotConfig();
+		try {
+			botConfigService.loadBotConfig();
+		} catch (Exception e) {
+			LOGGER.error("An error occurred while loading the bot configuration: " + e.getMessage());
+			shutdown();
+		}
 
 		// Create a JDA instance for interacting with the Discord API
-		jdaInstance = JDABuilder.create(
-				System.getenv("ACSP_TOKEN"),
-				GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS)
-		).build();
+		try {
+			jdaInstance = JDABuilder.create(
+					System.getenv("ACSP_TOKEN"),
+					GatewayIntent.getIntents(GatewayIntent.ALL_INTENTS)
+			).build();
+		} catch (Exception e) {
+			LOGGER.error("An error occurred while creating the JDA instance: " + e.getMessage());
+			shutdown();
+		}
+
 
 		// Find all beans that implement the BotCommand class and add them to the CommandsHandler
 		CommandsHandler.setAvailableCommands(
 				applicationContext.getBeansOfType(BotCommand.class).values().stream().toList()
 		);
+
 		// For each command, initialize it and add the CommandsHandler to the JDA instance listeners
-		CommandsHandler.getAvailableCommands().forEach(command ->
-			command.initializeInternal(applicationContext, jdaInstance)
-		);
+		CommandsHandler.getAvailableCommands().forEach(command -> {
+			try { command.initializeInternal(applicationContext, jdaInstance); } catch (Exception e) {
+				LOGGER.error("An error occurred while initializing the command " + command.getName() + ": " + e.getMessage());
+				shutdown();
+			}
+		});
 		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class));
 
 		// Await the JDA instance to be ready and then set the bot name

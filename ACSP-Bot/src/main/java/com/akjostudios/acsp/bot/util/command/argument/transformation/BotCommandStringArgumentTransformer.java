@@ -5,11 +5,13 @@ import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigComman
 import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.akjostudios.acsp.bot.services.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
+import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgument;
 import com.akjostudios.acsp.bot.util.command.argument.conversion.BotCommandArgumentConverterProvider;
 import com.akjostudios.acsp.bot.util.command.argument.conversion.BotCommandArgumentStringConverter;
 import com.akjostudios.acsp.bot.util.command.argument.validation.BotCommandStringArgumentValidator;
 import io.github.akjo03.lib.result.Result;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,25 +22,26 @@ public class BotCommandStringArgumentTransformer extends BotCommandArgumentTrans
 			String argumentValue
 	) { super(commandName, argumentDefinition, argumentValue); }
 
-	@Contract("_, _, _, _, _ -> new")
+	@Contract("_, _, _, _, _, _ -> new")
 	public static @NotNull BotCommandStringArgumentTransformer of(
 			String commandName,
 			BotConfigCommandArgument<String> argumentDefinition,
 			String argumentValue,
 			DiscordMessageService discordMessageService,
-			BotConfigService botConfigService
+			BotConfigService botConfigService,
+			ErrorMessageService errorMessageService
 	) {
 		BotCommandStringArgumentTransformer transformer = new BotCommandStringArgumentTransformer(
 				commandName,
 				argumentDefinition,
 				argumentValue
 		);
-		transformer.setupServices(discordMessageService, botConfigService);
+		transformer.setupServices(discordMessageService, botConfigService, errorMessageService);
 		return transformer;
 	}
 
 	@Override
-	public Result<BotCommandArgument<String>> transform() {
+	public Result<BotCommandArgument<String>> transform(MessageReceivedEvent event) {
 		if (checkIfOptional()) {
 			// TODO: Handle error
 		}
@@ -56,8 +59,9 @@ public class BotCommandStringArgumentTransformer extends BotCommandArgumentTrans
 						commandName,
 						argumentDefinition.getName(),
 						discordMessageService,
-						botConfigService
-				).validate(convertedValue)
+						botConfigService,
+						errorMessageService
+				).validate(convertedValue, event)
 				.ifError(e -> {
 					// TODO: Handle error
 				});

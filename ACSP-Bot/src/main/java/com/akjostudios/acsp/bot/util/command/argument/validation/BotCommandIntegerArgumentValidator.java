@@ -3,8 +3,10 @@ package com.akjostudios.acsp.bot.util.command.argument.validation;
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentIntegerData;
 import com.akjostudios.acsp.bot.services.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
+import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.exception.AcspBotCommandArgumentParseException;
 import io.github.akjo03.lib.result.Result;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -17,21 +19,22 @@ public class BotCommandIntegerArgumentValidator extends BotCommandArgumentValida
 			String argumentName
 	) { super(validationData, commandName, argumentName); }
 
-	@Contract("_, _, _, _, _ -> new")
+	@Contract("_, _, _, _, _, _ -> new")
 	public static @NotNull BotCommandIntegerArgumentValidator of(
 			BotConfigCommandArgumentIntegerData validationData,
 			String commandName,
 			String argumentName,
 			DiscordMessageService discordMessageService,
-			BotConfigService botConfigService
+			BotConfigService botConfigService,
+			ErrorMessageService errorMessageService
 	) {
 		BotCommandIntegerArgumentValidator validator = new BotCommandIntegerArgumentValidator(validationData, commandName, argumentName);
-		validator.setupServices(discordMessageService, botConfigService);
+		validator.setupServices(discordMessageService, botConfigService, errorMessageService);
 		return validator;
 	}
 
 	@Override
-	public Result<Void> validate(Integer value) {
+	public Result<Void> validate(Integer value, MessageReceivedEvent event) {
 		if (value != null) {
 			if (value < validationData.getMinValue()) {
 				return Result.fail(new AcspBotCommandArgumentParseException(

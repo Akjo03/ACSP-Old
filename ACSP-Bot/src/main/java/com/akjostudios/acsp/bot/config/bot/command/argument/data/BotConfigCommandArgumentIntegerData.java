@@ -1,5 +1,6 @@
 package com.akjostudios.acsp.bot.config.bot.command.argument.data;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
@@ -10,6 +11,7 @@ import lombok.*;
 @Setter
 @ToString
 @EqualsAndHashCode(callSuper = false)
+@JsonIgnoreProperties(ignoreUnknown = true)
 @SuppressWarnings("unused")
 public class BotConfigCommandArgumentIntegerData extends BotConfigCommandArgumentData<Integer> {
 	@JsonSerialize

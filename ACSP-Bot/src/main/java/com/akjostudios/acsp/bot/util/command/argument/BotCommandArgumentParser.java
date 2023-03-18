@@ -231,18 +231,16 @@ public class BotCommandArgumentParser {
 						commandName,
 						(BotConfigCommandArgument<Integer>) argumentDefinition,
 						argumentValue,
-						discordMessageService,
-						botConfigService
-				).transform().ifError(e -> {
+						discordMessageService, botConfigService, errorMessageService
+				).transform(event).ifError(e -> {
 					// TODO: Handle error
 				}).getOrNull();
 				case STRING -> BotCommandStringArgumentTransformer.of(
 						commandName,
 						(BotConfigCommandArgument<String>) argumentDefinition,
 						argumentValue,
-						discordMessageService,
-						botConfigService
-				).transform().ifError(e -> {
+						discordMessageService, botConfigService, errorMessageService
+				).transform(event).ifError(e -> {
 					// TODO: Handle error
 				}).getOrNull();
 			};
