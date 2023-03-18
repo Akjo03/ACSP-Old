@@ -24,9 +24,9 @@ public class BotCommandArgumentParser {
 
 	private final String commandName;
 	private final BotConfigCommand commandDefinition;
-	private final List<String> args;
+	private final List<String> argsStr;
 	private final String subcommand;
-	private final List<String> subcommandArgs;
+	private final List<String> subcommandArgsStr;
 
 	private final MessageReceivedEvent event;
 
@@ -35,22 +35,23 @@ public class BotCommandArgumentParser {
 	private CommandHelperService commandHelperService;
 	private BotConfigService botConfigService;
 	private BotCommandArgumentParsingReportService botCommandArgumentParsingReportService;
+	private BotStringsService botStringsService;
 
-	public BotCommandArgumentParser(String commandName, BotConfigCommand commandDefinition, List<String> args, MessageReceivedEvent event) {
+	public BotCommandArgumentParser(String commandName, BotConfigCommand commandDefinition, List<String> argsStr, MessageReceivedEvent event) {
 		this.commandName = commandName;
 		this.commandDefinition = commandDefinition;
-		this.args = args;
+		this.argsStr = argsStr;
 		this.subcommand = null;
-		this.subcommandArgs = null;
+		this.subcommandArgsStr = null;
 		this.event = event;
 	}
 
-	public BotCommandArgumentParser(String commandName, BotConfigCommand commandDefinition, List<String> args, String subcommand, List<String> subcommandArgs, MessageReceivedEvent event) {
+	public BotCommandArgumentParser(String commandName, BotConfigCommand commandDefinition, List<String> argsStr, String subcommand, List<String> subcommandArgsStr, MessageReceivedEvent event) {
 		this.commandName = commandName;
 		this.commandDefinition = commandDefinition;
-		this.args = args;
+		this.argsStr = argsStr;
 		this.subcommand = subcommand;
-		this.subcommandArgs = subcommandArgs;
+		this.subcommandArgsStr = subcommandArgsStr;
 		this.event = event;
 	}
 
@@ -59,17 +60,19 @@ public class BotCommandArgumentParser {
 			ErrorMessageService errorMessageService,
 			CommandHelperService commandHelperService,
 			BotConfigService botConfigService,
-			BotCommandArgumentParsingReportService botCommandArgumentParsingReportService
+			BotCommandArgumentParsingReportService botCommandArgumentParsingReportService,
+			BotStringsService botStringsService
 	) {
 		this.discordMessageService = discordMessageService;
 		this.errorMessageService = errorMessageService;
 		this.commandHelperService = commandHelperService;
 		this.botConfigService = botConfigService;
 		this.botCommandArgumentParsingReportService = botCommandArgumentParsingReportService;
+		this.botStringsService = botStringsService;
 	}
 
 	public BotCommandArguments parse() {
-		Map<String, String> suppliedArgs = getSuppliedArguments(args, commandDefinition.getArguments(), false);
+		Map<String, String> suppliedArgs = getSuppliedArguments(argsStr, commandDefinition.getArguments(), false);
 		if (suppliedArgs == null) {
 			return null;
 		}
@@ -81,20 +84,23 @@ public class BotCommandArgumentParser {
 			return null;
 		}
 
-		BotConfigSubcommand subcommandDefinition = commandHelperService.getSubcommandDefinitionFromCommand(commandDefinition, subcommand);
-		if (subcommandDefinition == null) {
-			return null;
-		}
-		Map<String, String> suppliedSubcommandArgs = getSuppliedArguments(subcommandArgs, subcommandDefinition.getArguments(), true);
-		if (suppliedSubcommandArgs == null) {
-			return null;
-		}
-		if (checkRequiredArguments(suppliedSubcommandArgs, subcommandDefinition.getArguments(), true)) {
-			return null;
-		}
-		List<BotCommandArgument<?>> subcommandArgs = parseArguments(suppliedSubcommandArgs, subcommandDefinition.getArguments(), true);
-		if (subcommandArgs == null) {
-			return null;
+		List<BotCommandArgument<?>> subcommandArgs = new ArrayList<>();
+		if (subcommand != null) {
+			BotConfigSubcommand subcommandDefinition = commandHelperService.getSubcommandDefinitionFromCommand(commandDefinition, subcommand);
+			if (subcommandDefinition == null) {
+				return null;
+			}
+			Map<String, String> suppliedSubcommandArgs = getSuppliedArguments(subcommandArgsStr, subcommandDefinition.getArguments(), true);
+			if (suppliedSubcommandArgs == null) {
+				return null;
+			}
+			if (checkRequiredArguments(suppliedSubcommandArgs, subcommandDefinition.getArguments(), true)) {
+				return null;
+			}
+			subcommandArgs = parseArguments(suppliedSubcommandArgs, subcommandDefinition.getArguments(), true);
+			if (subcommandArgs == null) {
+				return null;
+			}
 		}
 
 		return subcommand != null
@@ -235,7 +241,7 @@ public class BotCommandArgumentParser {
 						commandName,
 						(BotConfigCommandArgument<Integer>) argumentDefinition,
 						argumentValue,
-						discordMessageService, botConfigService, errorMessageService
+						discordMessageService, botConfigService, errorMessageService, botStringsService
 				).transform(event).ifError(e -> {
 					handleParseException(e, parseExceptions, argumentDefinition);
 					parsingFailed.set(true);
@@ -244,14 +250,14 @@ public class BotCommandArgumentParser {
 						commandName,
 						(BotConfigCommandArgument<String>) argumentDefinition,
 						argumentValue,
-						discordMessageService, botConfigService, errorMessageService
+						discordMessageService, botConfigService, errorMessageService, botStringsService
 				).transform(event).ifError(e -> {
 					handleParseException(e, parseExceptions, argumentDefinition);
 					parsingFailed.set(true);
 				}).getOrNull();
 			};
 			if (parsedArgument == null) {
-				return null;
+				continue;
 			}
 
 			parsedArguments.add(parsedArgument);

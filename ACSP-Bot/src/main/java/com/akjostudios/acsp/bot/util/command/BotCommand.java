@@ -30,6 +30,7 @@ public abstract class BotCommand {
 	private BotCommandArgumentParserService botCommandArgumentParserService;
 	private BotCommandArgumentParsingReportService botCommandArgumentParsingReportService;
 	private CommandHelperService commandHelperService;
+	private BotStringsService botStringsService;
 
 	protected BotCommand(String name) {
 		LOGGER = LoggerManager.getLogger(getClass());
@@ -43,7 +44,8 @@ public abstract class BotCommand {
 			ErrorMessageService errorMessageService,
 			BotCommandArgumentParserService botCommandArgumentParserService,
 			BotCommandArgumentParsingReportService botCommandArgumentParsingReportService,
-			CommandHelperService commandHelperService
+			CommandHelperService commandHelperService,
+			BotStringsService botStringsService
 	) {
 		this.botConfigService = botConfigService;
 		this.discordMessageService = discordMessageService;
@@ -51,6 +53,7 @@ public abstract class BotCommand {
 		this.botCommandArgumentParserService = botCommandArgumentParserService;
 		this.botCommandArgumentParsingReportService = botCommandArgumentParsingReportService;
 		this.commandHelperService = commandHelperService;
+		this.botStringsService = botStringsService;
 	}
 
 	public abstract void initialize(@NotNull BotCommandInitializer initializer);
@@ -124,7 +127,14 @@ public abstract class BotCommand {
 			LOGGER.warn("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but getting argument parser failed!");
 			return;
 		}
-		argumentParser.setupServices(discordMessageService, errorMessageService, commandHelperService, botConfigService, botCommandArgumentParsingReportService);
+		argumentParser.setupServices(
+				discordMessageService,
+				errorMessageService,
+				commandHelperService,
+				botConfigService,
+				botCommandArgumentParsingReportService,
+				botStringsService
+		);
 
 		// Parse the arguments
 		BotCommandArguments arguments = argumentParser.parse();

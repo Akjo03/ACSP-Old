@@ -4,6 +4,7 @@ import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgu
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentStringData;
 import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.akjostudios.acsp.bot.services.BotConfigService;
+import com.akjostudios.acsp.bot.services.BotStringsService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgument;
@@ -25,25 +26,27 @@ public class BotCommandStringArgumentTransformer extends BotCommandArgumentTrans
 			String argumentValue
 	) { super(commandName, argumentDefinition, argumentValue); }
 
-	@Contract("_, _, _, _, _, _ -> new")
+	@Contract("_, _, _, _, _, _, _ -> new")
 	public static @NotNull BotCommandStringArgumentTransformer of(
 			String commandName,
 			BotConfigCommandArgument<String> argumentDefinition,
 			String argumentValue,
 			DiscordMessageService discordMessageService,
 			BotConfigService botConfigService,
-			ErrorMessageService errorMessageService
+			ErrorMessageService errorMessageService,
+			BotStringsService botStringsService
 	) {
 		BotCommandStringArgumentTransformer transformer = new BotCommandStringArgumentTransformer(
 				commandName,
 				argumentDefinition,
 				argumentValue
 		);
-		transformer.setupServices(discordMessageService, botConfigService, errorMessageService);
+		transformer.setupServices(discordMessageService, botConfigService, errorMessageService, botStringsService);
 		return transformer;
 	}
 
 	@Override
+	@SuppressWarnings("DuplicatedCode")
 	public Result<BotCommandArgument<String>> transform(MessageReceivedEvent event) {
 		if (checkIfRequired()) {
 			return Result.fail(new AcspBotCommandArgumentParseException(
@@ -57,7 +60,15 @@ public class BotCommandStringArgumentTransformer extends BotCommandArgumentTrans
 
 		BotConfigCommandArgumentStringData argumentData = getArgumentData();
 		BotCommandArgumentStringConverter converter = BotCommandArgumentConverterProvider.STRING.provide();
-		String convertedValue = converter.convertForward(argumentValue);
+		Result<String> convertedValueResult = convert(converter, event);
+		String convertedValue = null;
+
+		if (convertedValueResult != null) {
+			if (convertedValueResult.isError()) {
+				return Result.fail(convertedValueResult.getError());
+			}
+			convertedValue = convertedValueResult.get();
+		}
 
 		if (convertedValue == null && argumentData.getDefaultValue() != null) {
 			convertedValue = argumentData.getDefaultValue();
@@ -67,6 +78,7 @@ public class BotCommandStringArgumentTransformer extends BotCommandArgumentTrans
 				argumentData,
 				commandName,
 				argumentDefinition.getName(),
+				argumentDefinition.isRequired(),
 				discordMessageService,
 				botConfigService,
 				errorMessageService

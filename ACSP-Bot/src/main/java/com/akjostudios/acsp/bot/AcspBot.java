@@ -108,7 +108,8 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 					applicationContext.getBean(ErrorMessageService.class),
 					applicationContext.getBean(BotCommandArgumentParserService.class),
 					applicationContext.getBean(BotCommandArgumentParsingReportService.class),
-					applicationContext.getBean(CommandHelperService.class)
+					applicationContext.getBean(CommandHelperService.class),
+					applicationContext.getBean(BotStringsService.class)
 			);
 			try { command.initializeInternal(applicationContext, jdaInstance); } catch (Exception e) {
 				LOGGER.error("An error occurred while initializing the command " + command.getName() + ": " + e.getMessage());
@@ -127,7 +128,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			shutdownFailed = true;
 		} finally { applicationContext.close(); }
 
-		if (shutdownFailed) { Runtime.getRuntime().halt(1); }
+		if (shutdownFailed) { Runtime.getRuntime().halt(1); } else { Runtime.getRuntime().halt(0); }
 	}
 
 	public static void restart() {

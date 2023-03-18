@@ -11,15 +11,17 @@ public abstract class BotCommandArgumentValidator<T, D extends BotConfigCommandA
 	protected final D validationData;
 	protected final String commandName;
 	protected final String argumentName;
+	protected final boolean isRequired;
 
 	protected DiscordMessageService discordMessageService;
 	protected BotConfigService botConfigService;
 	protected ErrorMessageService errorMessageService;
 
-	protected BotCommandArgumentValidator(D validationData, String commandName, String argumentName) {
+	protected BotCommandArgumentValidator(D validationData, String commandName, String argumentName, boolean isRequired) {
 		this.validationData = validationData;
 		this.commandName = commandName;
 		this.argumentName = argumentName;
+		this.isRequired = isRequired;
 	}
 
 	protected void setupServices(DiscordMessageService discordMessageService, BotConfigService botConfigService, ErrorMessageService errorMessageService) {

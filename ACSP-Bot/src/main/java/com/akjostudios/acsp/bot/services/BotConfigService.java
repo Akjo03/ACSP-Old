@@ -135,10 +135,14 @@ public class BotConfigService {
 		result.setDescription(replaceString(commandDefinition.getDescription(), language, placeholders));
 		result.setArguments(commandDefinition.getArguments());
 		result.setSubcommands(commandDefinition.getSubcommands());
+		result.setPermissions(commandDefinition.getPermissions());
 
 		for (BotConfigCommandArgument<?> argument : result.getArguments()) {
 			argument.setDescription(replaceString(argument.getDescription(), language, placeholders));
 		}
+		result.getSubcommands().setRequired(commandDefinition.getSubcommands().isRequired());
+		result.getSubcommands().setAvailable(commandDefinition.getSubcommands().isAvailable());
+		result.getSubcommands().setDefinitions(commandDefinition.getSubcommands().getDefinitions());
 		if (commandDefinition.getSubcommands().isAvailable()) {
 			for (BotConfigSubcommand subcommand : result.getSubcommands().getDefinitions()) {
 				subcommand.setDescription(replaceString(subcommand.getDescription(), language, placeholders));

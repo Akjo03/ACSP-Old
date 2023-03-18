@@ -22,19 +22,21 @@ public class BotCommandStringArgumentValidator extends BotCommandArgumentValidat
 	protected BotCommandStringArgumentValidator(
 			BotConfigCommandArgumentStringData validationData,
 			String commandName,
-			String argumentName
-	) { super(validationData, commandName, argumentName); }
+			String argumentName,
+			boolean isRequired
+	) { super(validationData, commandName, argumentName, isRequired); }
 
-	@Contract("_, _, _, _, _, _ -> new")
+	@Contract("_, _, _, _, _, _, _ -> new")
 	public static @NotNull BotCommandStringArgumentValidator of(
 			BotConfigCommandArgumentStringData validationData,
 			String commandName,
 			String argumentName,
+			boolean isRequired,
 			DiscordMessageService discordMessageService,
 			BotConfigService botConfigService,
 			ErrorMessageService errorMessageService
 	) {
-		BotCommandStringArgumentValidator validator = new BotCommandStringArgumentValidator(validationData, commandName, argumentName);
+		BotCommandStringArgumentValidator validator = new BotCommandStringArgumentValidator(validationData, commandName, argumentName, isRequired);
 		validator.setupServices(discordMessageService, botConfigService, errorMessageService);
 		return validator;
 	}
@@ -42,7 +44,14 @@ public class BotCommandStringArgumentValidator extends BotCommandArgumentValidat
 	@Override
 	public Result<Void> validate(String value, MessageReceivedEvent event) {
 		if (value == null) {
-			return Result.empty();
+			return isRequired ? Result.fail(new AcspBotCommandArgumentParseException(
+					argumentName,
+					"errors.command_argument_parsing_report.fields.reason.required_missing",
+					List.of(),
+					null,
+					discordMessageService,
+					botConfigService
+			)) : Result.empty();
 		}
 
 		if (value.length() < validationData.getMinLength()) {

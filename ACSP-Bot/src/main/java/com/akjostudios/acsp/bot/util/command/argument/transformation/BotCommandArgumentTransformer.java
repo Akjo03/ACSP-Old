@@ -2,12 +2,21 @@ package com.akjostudios.acsp.bot.util.command.argument.transformation;
 
 import com.akjostudios.acsp.bot.config.bot.command.argument.BotConfigCommandArgument;
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
+import com.akjostudios.acsp.bot.constants.BotCommandArgumentTypes;
 import com.akjostudios.acsp.bot.services.BotConfigService;
+import com.akjostudios.acsp.bot.services.BotStringsService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgument;
+import com.akjostudios.acsp.bot.util.command.argument.conversion.BotCommandArgumentConverter;
+import com.akjostudios.acsp.bot.util.exception.AcspBotCommandArgumentParseException;
 import io.github.akjo03.lib.result.Result;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
+import java.util.Objects;
+import java.util.Optional;
 
 public abstract class BotCommandArgumentTransformer<T, D extends BotConfigCommandArgumentData<T>> {
 	protected final BotConfigCommandArgument<T> argumentDefinition;
@@ -17,6 +26,7 @@ public abstract class BotCommandArgumentTransformer<T, D extends BotConfigComman
 	protected DiscordMessageService discordMessageService;
 	protected BotConfigService botConfigService;
 	protected ErrorMessageService errorMessageService;
+	protected BotStringsService botStringsService;
 
 	protected BotCommandArgumentTransformer(
 			String commandName,
@@ -31,11 +41,13 @@ public abstract class BotCommandArgumentTransformer<T, D extends BotConfigComman
 	protected void setupServices(
 			DiscordMessageService discordMessageService,
 			BotConfigService botConfigService,
-			ErrorMessageService errorMessageService
+			ErrorMessageService errorMessageService,
+			BotStringsService botStringsService
 	) {
 		this.discordMessageService = discordMessageService;
 		this.botConfigService = botConfigService;
 		this.errorMessageService = errorMessageService;
+		this.botStringsService = botStringsService;
 	}
 
 	@SuppressWarnings("unused")
@@ -51,5 +63,31 @@ public abstract class BotCommandArgumentTransformer<T, D extends BotConfigComman
 			return argumentDefinition.isRequired();
 		}
 		return false;
+	}
+
+	protected @Nullable Result<T> convert(BotCommandArgumentConverter<T> converter, MessageReceivedEvent event) {
+		if (argumentValue == null) { return null; }
+
+		try {
+			return Result.success(converter.convertForward(argumentValue));
+		} catch (Exception e) {
+			return Result.fail(new AcspBotCommandArgumentParseException(
+					argumentDefinition.getName(),
+					"errors.command_argument_parsing_report.fields.reason.invalid_type",
+					List.of(
+							botStringsService.getString(
+									Objects.requireNonNull(BotCommandArgumentTypes.fromString(argumentDefinition.getType())).getKey(),
+									Optional.empty()
+							),
+							event.getJumpUrl(),
+							botStringsService.getString(
+									Objects.requireNonNull(BotCommandArgumentTypes.fromString(argumentDefinition.getType())).getTooltipKey(),
+									Optional.empty()
+							)
+					),
+					null,
+					discordMessageService, botConfigService
+			));
+		}
 	}
 }

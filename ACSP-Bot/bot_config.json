@@ -243,7 +243,7 @@
 					"description": "$commands.shutdown.argument.delay.description",
 					"required": false,
 					"data": {
-						"min": 1,
+						"min": 0,
 						"max": 3600,
 						"default": 0
 					}
@@ -276,7 +276,7 @@
 					"description": "$commands.restart.argument.delay.description",
 					"required": false,
 					"data": {
-						"min": 1,
+						"min": 0,
 						"max": 3600,
 						"default": 0
 					}
