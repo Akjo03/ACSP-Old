@@ -61,6 +61,8 @@ public abstract class BotCommand {
 
 		// Call the initialize method of the command
 		initialize(BotCommandInitializer.of(applicationContext, jdaInstance));
+
+		LOGGER.success("Initialized command with name \"" + name + "\"!");
 	}
 
 	public void executeInternal(MessageReceivedEvent event, String commandArgsStr) {
@@ -111,7 +113,7 @@ public abstract class BotCommand {
 			LOGGER.warn("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but getting argument parser failed!");
 			return;
 		}
-		argumentParser.setupServices(discordMessageService, errorMessageService, commandHelperService);
+		argumentParser.setupServices(discordMessageService, errorMessageService, commandHelperService, botConfigService);
 
 		// Parse the arguments
 		BotCommandArguments arguments = argumentParser.parse();

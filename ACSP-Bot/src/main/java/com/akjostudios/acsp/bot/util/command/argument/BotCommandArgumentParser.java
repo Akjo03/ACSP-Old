@@ -35,6 +35,7 @@ public class BotCommandArgumentParser {
 	private DiscordMessageService discordMessageService;
 	private ErrorMessageService errorMessageService;
 	private CommandHelperService commandHelperService;
+	private BotConfigService botConfigService;
 
 	public BotCommandArgumentParser(String commandName, BotConfigCommand commandDefinition, List<String> args, MessageReceivedEvent event) {
 		this.commandName = commandName;
@@ -57,11 +58,13 @@ public class BotCommandArgumentParser {
 	public void setupServices(
 			DiscordMessageService discordMessageService,
 			ErrorMessageService errorMessageService,
-			CommandHelperService commandHelperService
+			CommandHelperService commandHelperService,
+			BotConfigService botConfigService
 	) {
 		this.discordMessageService = discordMessageService;
 		this.errorMessageService = errorMessageService;
 		this.commandHelperService = commandHelperService;
+		this.botConfigService = botConfigService;
 	}
 
 	public BotCommandArguments parse() {
@@ -228,14 +231,18 @@ public class BotCommandArgumentParser {
 				case INTEGER -> BotCommandIntegerArgumentTransformer.of(
 						commandName,
 						(BotConfigCommandArgument<Integer>) argumentDefinition,
-						argumentValue
+						argumentValue,
+						discordMessageService,
+						botConfigService
 				).transform().ifError(e -> {
 					// TODO: Handle error
 				}).getOrNull();
 				case STRING -> BotCommandStringArgumentTransformer.of(
 						commandName,
 						(BotConfigCommandArgument<String>) argumentDefinition,
-						argumentValue
+						argumentValue,
+						discordMessageService,
+						botConfigService
 				).transform().ifError(e -> {
 					// TODO: Handle error
 				}).getOrNull();
