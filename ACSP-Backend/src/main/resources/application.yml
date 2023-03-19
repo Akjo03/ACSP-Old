@@ -8,30 +8,12 @@ spring:
       username: ${DB_USER}
       password: ${DB_PASS}
 
-  security:
-    oauth2:
-      client:
-        registration:
-          discord:
-            client-id: ${OAUTH_CLIENT_ID}
-            client-secret: ${OAUTH_CLIENT_SECRET}
-            client-authentication-method: post
-            authorization-grant-type: authorization_code
-            scope:
-              - identify
-            redirect-uri: "{baseUrl}/login/oauth2/code/discord"
-            client-name: Discord Auth
-        provider:
-          discord:
-            authorization-uri: https://discordapp.com/api/oauth2/authorize
-            token-uri: https://discordapp.com/api/oauth2/token
-            user-info-uri: https://discordapp.com/api/users/@me
-            user-name-attribute: username
-
-    user:
-      name: ${SECURITY_USER_NAME}
-      password: ${SECURITY_USER_PASSWORD}
-      roles: [ USER, DEVELOPER, ADMIN ]
-
 server:
   port: 8080
+
+application:
+  oauth2:
+    discord:
+      client-id: ${OAUTH_CLIENT_ID}
+      client-secret: ${OAUTH_CLIENT_SECRET}
+      redirect-uri: ${OAUTH_REDIRECT_URI}
