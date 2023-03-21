@@ -2,9 +2,11 @@ package com.akjostudios.acsp.bot.services;
 
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommand;
+import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgumentParser;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionParser;
+import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidation;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidator;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
@@ -110,18 +112,27 @@ public class BotCommandArgumentParserService {
 		// Check permissions for subcommand and send error message if user doesn't have permission
 		BotCommandPermissionParser permissionParser = new BotCommandPermissionParser(subcommandName, subcommandDefinition.getPermissions());
 		BotCommandPermissionValidator permissionValidator = permissionParser.parse();
-		if (permissionValidator.isInvalid(event.getGuildChannel(), event.getMember())) {
-			LOGGER.info("User " + event.getAuthor().getAsTag() + " tried to execute subcommand \"" + subcommandName + "\" of command \"" + commandName + "\" but doesn't have permission!");
+		BotCommandPermissionValidation permissionValidation = permissionValidator.getValidation(event.getGuildChannel(), event.getMember());
 
-			event.getChannel().sendMessage(discordMessageService.createMessage(
-					errorMessageService.getErrorMessage(
-							"errors.subcommand_missing_permissions.title",
-							"errors.subcommand_missing_permissions.description",
-							List.of(),
-							List.of(subcommandName, commandName),
-							Optional.empty()
-					)
-			)).queue();
+		if (!permissionValidation.isAllowed()) {
+			LOGGER.info("User " + event.getAuthor().getAsTag() + " tried to use subcommand \"" + subcommandName + "\" of command \"" + commandName + "\" but was denied!");
+
+			BotConfigMessage errorMessage = errorMessageService.getErrorMessage(
+					"errors.subcommand_missing_permissions.title",
+					"errors.subcommand_missing_permissions.description",
+					List.of(),
+					List.of(
+							subcommandName,
+							commandName
+					),
+					Optional.empty()
+			);
+
+			errorMessage.getEmbeds().get(0).setDescription(
+					errorMessage.getEmbeds().get(0).getDescription() + " " + permissionValidation.getReason(botStringsService)
+			);
+
+			event.getChannel().sendMessage(discordMessageService.createMessage(errorMessage)).queue();
 
 			return null;
 		}

@@ -15,14 +15,14 @@ public class BotCommandPermissionValidator {
 		this.channelPermissions = channelPermissions;
 	}
 
-	public boolean isInvalid(GuildMessageChannelUnion channel, Member member) {
+	public BotCommandPermissionValidation getValidation(GuildMessageChannelUnion channel, Member member) {
 		AtomicBoolean isAllowed = new AtomicBoolean(false);
 
-		for (BotCommandChannelPermissions permissionDefinition : channelPermissions) {
-			if (permissionDefinition.getChannel().getId() != channel.getIdLong()) {
-				continue;
-			}
+		if (channelPermissions.stream().map(BotCommandChannelPermissions::getChannel).noneMatch(channelP -> channelP.getId() == channel.getIdLong())) {
+			return BotCommandPermissionValidation.denied("errors.command_missing_permissions.reason.channel");
+		}
 
+		for (BotCommandChannelPermissions permissionDefinition : channelPermissions) {
 			if (permissionDefinition.getAllowedRoles().contains(AcspDiscordRoles.EVERYONE_ROLE)) {
 				isAllowed.set(true);
 				break;
@@ -39,6 +39,8 @@ public class BotCommandPermissionValidator {
 			}
 		}
 
-		return !isAllowed.get();
+		return isAllowed.get()
+				? BotCommandPermissionValidation.allowed()
+				: BotCommandPermissionValidation.denied("errors.command_missing_permissions.reason.role");
 	}
 }

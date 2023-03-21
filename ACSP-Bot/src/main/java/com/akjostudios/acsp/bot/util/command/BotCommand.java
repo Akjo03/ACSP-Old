@@ -1,11 +1,13 @@
 package com.akjostudios.acsp.bot.util.command;
 
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
+import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
 import com.akjostudios.acsp.bot.constants.AcspDiscordChannels;
 import com.akjostudios.acsp.bot.services.*;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgumentParser;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArguments;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionParser;
+import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidation;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidator;
 import com.akjostudios.acsp.bot.util.exception.AcspBotConfigException;
 import io.github.akjo03.lib.logging.Logger;
@@ -104,21 +106,27 @@ public abstract class BotCommand {
 		// Parse and validate permissions for command
 		BotCommandPermissionParser permissionParser = new BotCommandPermissionParser(name, definition.getPermissions());
 		BotCommandPermissionValidator permissionValidator = permissionParser.parse();
+		BotCommandPermissionValidation permissionValidation = permissionValidator.getValidation(event.getGuildChannel(), event.getMember());
 
-		if (permissionValidator.isInvalid(event.getGuildChannel(), event.getMember())) {
+		if (!permissionValidation.isAllowed()) {
 			LOGGER.info("User " + event.getAuthor().getAsTag() + " tried to use command \"" + name + "\" but was denied!");
 
-			event.getChannel().sendMessage(discordMessageService.createMessage(
-					errorMessageService.getErrorMessage(
-							"errors.command_missing_permissions.title",
-							"errors.command_missing_permissions.description",
-							List.of(),
-							List.of(
-									name
-							),
-							Optional.empty()
-					)
-			)).queue();
+			BotConfigMessage errorMessage = errorMessageService.getErrorMessage(
+					"errors.command_missing_permissions.title",
+					"errors.command_missing_permissions.description",
+					List.of(),
+					List.of(
+							name
+					),
+					Optional.empty()
+			);
+
+			errorMessage.getEmbeds().get(0).setDescription(
+					errorMessage.getEmbeds().get(0).getDescription() + " " + permissionValidation.getReason(botStringsService)
+			);
+
+			event.getChannel().sendMessage(discordMessageService.createMessage(errorMessage)).queue();
+
 			return;
 		}
 
