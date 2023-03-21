@@ -128,7 +128,9 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			shutdownFailed = true;
 		} finally { applicationContext.close(); }
 
-		if (shutdownFailed) { Runtime.getRuntime().halt(1); } else { Runtime.getRuntime().halt(0); }
+		if (shutdownFailed) {
+			Runtime.getRuntime().halt(1);
+		}
 	}
 
 	public static void restart() {

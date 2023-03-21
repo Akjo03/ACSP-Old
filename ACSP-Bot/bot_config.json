@@ -228,6 +228,27 @@
 	"components": [],
 	"commands": [
 		{
+			"name": "begin",
+			"available": true,
+			"subcommands": {
+				"available": false,
+				"definitions": [],
+				"required": false
+			},
+			"description": "$commands.begin.description",
+			"arguments": [],
+			"permissions": [
+				{
+					"channels": [
+						">BEGIN_CATEGORY"
+					],
+					"roles": [
+						"EVERYONE_ROLE"
+					]
+				}
+			]
+		},
+		{
 			"name": "shutdown",
 			"available": true,
 			"subcommands": {
