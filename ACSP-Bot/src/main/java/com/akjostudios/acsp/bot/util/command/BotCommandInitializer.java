@@ -19,4 +19,8 @@ public class BotCommandInitializer {
 	public static @NotNull BotCommandInitializer of(ApplicationContext applicationContext, JDA jdaInstance) {
 		return new BotCommandInitializer(applicationContext, jdaInstance);
 	}
+
+	public <T> T getBean(Class<T> beanClass) {
+		return applicationContext.getBean(beanClass);
+	}
 }

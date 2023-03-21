@@ -11,10 +11,9 @@ import org.springframework.stereotype.Component;
 import java.util.Optional;
 
 @Configuration
-@Component
 @Getter
 public class LocaleConfiguration {
-	@Value("${application.locale.resourceName}")
+	@Value("${application.locale.resource-name}")
 	private String resourceName;
 
 	@Value("${application.locale.default}")

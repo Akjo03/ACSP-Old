@@ -1,7 +1,8 @@
-package com.akjostudios.acsp.bot.services;
+package com.akjostudios.acsp.bot.services.bot;
 
 import com.akjostudios.acsp.bot.config.LocaleConfiguration;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
+import com.akjostudios.acsp.bot.services.StringPlaceholderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.support.ResourceBundleMessageSource;
 import org.springframework.stereotype.Service;

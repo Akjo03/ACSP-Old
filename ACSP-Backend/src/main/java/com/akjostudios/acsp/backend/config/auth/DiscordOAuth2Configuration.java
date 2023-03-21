@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.backend.config.oauth2;
+package com.akjostudios.acsp.backend.config.auth;
 
 import lombok.Getter;
 import lombok.Setter;

@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.bot.services;
+package com.akjostudios.acsp.bot.services.command;
 
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommand;

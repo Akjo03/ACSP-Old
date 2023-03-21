@@ -1,7 +1,7 @@
 package com.akjostudios.acsp.bot.handlers;
 
 import com.akjostudios.acsp.bot.constants.AcspDiscordChannels;
-import com.akjostudios.acsp.bot.services.BotConfigService;
+import com.akjostudios.acsp.bot.services.bot.BotConfigService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import lombok.RequiredArgsConstructor;

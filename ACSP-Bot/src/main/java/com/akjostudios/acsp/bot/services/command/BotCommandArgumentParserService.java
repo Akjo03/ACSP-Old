@@ -1,9 +1,12 @@
-package com.akjostudios.acsp.bot.services;
+package com.akjostudios.acsp.bot.services.command;
 
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigCommand;
 import com.akjostudios.acsp.bot.config.bot.command.BotConfigSubcommand;
 import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
+import com.akjostudios.acsp.bot.services.bot.BotStringsService;
+import com.akjostudios.acsp.bot.services.DiscordMessageService;
+import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.command.argument.BotCommandArgumentParser;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionParser;
 import com.akjostudios.acsp.bot.util.command.permission.BotCommandPermissionValidation;

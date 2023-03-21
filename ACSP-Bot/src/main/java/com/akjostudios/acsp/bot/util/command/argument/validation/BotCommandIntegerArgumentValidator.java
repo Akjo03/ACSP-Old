@@ -1,7 +1,7 @@
 package com.akjostudios.acsp.bot.util.command.argument.validation;
 
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentIntegerData;
-import com.akjostudios.acsp.bot.services.BotConfigService;
+import com.akjostudios.acsp.bot.services.bot.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.util.exception.AcspBotCommandArgumentParseException;

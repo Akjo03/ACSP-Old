@@ -2,7 +2,14 @@ spring:
   application:
     name: ACSP-Bot
 
+server:
+  port: 6700
+
 application:
   locale:
-    resourceName: BotStrings
+    resource-name: BotStrings
     default: en
+  services:
+    backend-base-url: ${ACSP_BACKEND_URL}
+  secrets:
+    acsp-begin-secret: ${ACSP_BEGIN_KEY}

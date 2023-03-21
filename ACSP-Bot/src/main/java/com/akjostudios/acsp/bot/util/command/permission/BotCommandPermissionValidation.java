@@ -1,6 +1,6 @@
 package com.akjostudios.acsp.bot.util.command.permission;
 
-import com.akjostudios.acsp.bot.services.BotStringsService;
+import com.akjostudios.acsp.bot.services.bot.BotStringsService;
 import lombok.Getter;
 
 import java.util.Optional;
