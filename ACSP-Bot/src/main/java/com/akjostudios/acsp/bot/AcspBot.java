@@ -1,6 +1,7 @@
 package com.akjostudios.acsp.bot;
 
 import com.akjostudios.acsp.bot.constants.BotDeployMode;
+import com.akjostudios.acsp.bot.handlers.BeginChannelHandler;
 import com.akjostudios.acsp.bot.handlers.CommandsHandler;
 import com.akjostudios.acsp.bot.services.*;
 import com.akjostudios.acsp.bot.util.command.BotCommand;
@@ -116,6 +117,9 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 				shutdown();
 			}
 		});
+
+		// Add all other handlers
+		jdaInstance.addEventListener(applicationContext.getBean(BeginChannelHandler.class));
 
 		LOGGER.success("AcspBot has successfully started in " + botDeployMode + " mode.");
 	}

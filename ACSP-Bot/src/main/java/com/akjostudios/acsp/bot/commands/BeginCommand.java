@@ -22,6 +22,6 @@ public class BeginCommand extends BotCommand {
 
 	@Override
 	public void execute(@NotNull MessageReceivedEvent event, BotCommandArguments arguments) {
-		LOGGER.info("Executing being command...");
+		LOGGER.info("Executing begin command...");
 	}
 }
