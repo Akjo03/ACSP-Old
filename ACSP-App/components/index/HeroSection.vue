@@ -27,7 +27,7 @@
           What the title says.
         </p>
         <div class="mt-10 flex items-center gap-x-6">
-          <a href="#" class="inline-flex items-center gap-x-2 rounded-md bg-themePrimary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themePrimaryHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themePrimaryHover transition-all">
+          <a :href="discordOAuthUrl" class="inline-flex items-center gap-x-2 rounded-md bg-themePrimary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themePrimaryHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themePrimaryHover transition-all">
             <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 256.00 200.00" fill="#000000">
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -53,6 +53,8 @@
   </div>
 </template>
 
-<script setup>
-
+<script setup lang="ts">
+  import { useRuntimeConfig } from "nuxt/app";
+  const config = useRuntimeConfig();
+  const discordOAuthUrl = "https://discord.com/api/oauth2/authorize?client_id=" + config.public.discordClientId + "&redirect_uri=" + config.public.discordRedirectUri + "&response_type=code&scope=identify%20email%20guilds";
 </script>

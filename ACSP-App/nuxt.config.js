@@ -14,7 +14,15 @@ export default {
     postcss: {
         plugins: {
             tailwindcss: {},
-            autoprefixer: {},
-        },
+            autoprefixer: {}
+        }
     },
+    runtimeConfig: {
+        public: {
+            baseUrl: '',
+
+            discordClientId: '',
+            discordRedirectUri: ''
+        }
+    }
 }
