@@ -1,6 +1,6 @@
 package com.akjostudios.acsp.backend.controller.oauth2;
 
-import com.akjostudios.acsp.backend.dto.oauth2.discord.DiscordLoginResponse;
+import com.akjostudios.acsp.backend.dto.oauth2.discord.DiscordAuthResponse;
 import com.akjostudios.acsp.backend.service.oauth2.LoginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -17,11 +17,12 @@ public class LoginController {
 	private final LoginService LoginService;
 
 	@GetMapping("/discord")
-	public ResponseEntity<DiscordLoginResponse> loginDiscord(String code) {
-		return ResponseEntity.ok(LoginService.loginDiscord(code, List.of(
+	public ResponseEntity<String> loginDiscord(String code) {
+		DiscordAuthResponse authResponse = LoginService.loginDiscord(code, List.of(
 				"identify",
 				"email",
 				"guilds"
-		)));
+		));
+		return ResponseEntity.ok("Logged in successfully!");
 	}
 }

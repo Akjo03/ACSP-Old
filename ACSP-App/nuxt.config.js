@@ -22,7 +22,8 @@ export default {
             baseUrl: '',
 
             discordClientId: '',
-            discordRedirectUri: ''
+            discordRedirectUri: '',
+            discordServerLink: ''
         }
     }
 }

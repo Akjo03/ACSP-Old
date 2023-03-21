@@ -1,6 +1,6 @@
 package com.akjostudios.acsp.backend.service.oauth2;
 
-import com.akjostudios.acsp.backend.dto.oauth2.discord.DiscordLoginResponse;
+import com.akjostudios.acsp.backend.dto.oauth2.discord.DiscordAuthResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -27,7 +27,7 @@ public class LoginService {
 		this.discordClient = webClientBuilder.baseUrl("https://discord.com/api").build();
 	}
 
-	public DiscordLoginResponse loginDiscord(String code, List<String> scope) {
+	public DiscordAuthResponse loginDiscord(String code, List<String> scope) {
 		MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
 		formData.add("client_id", discordClientId);
 		formData.add("client_secret", discordClientSecret);
@@ -44,7 +44,7 @@ public class LoginService {
 					if (response.statusCode().isError()) {
 						return response.bodyToMono(String.class).flatMap(body -> Mono.error(new RuntimeException(body)));
 					} else {
-						return response.bodyToMono(DiscordLoginResponse.class);
+						return response.bodyToMono(DiscordAuthResponse.class);
 					}
 				}).block();
 	}

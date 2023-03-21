@@ -13,7 +13,7 @@ import lombok.ToString;
 @ToString
 @EqualsAndHashCode
 @SuppressWarnings("unused")
-public class DiscordLoginResponse {
+public class DiscordAuthResponse {
 	@JsonDeserialize
 	private String accessToken;
 
@@ -30,7 +30,7 @@ public class DiscordLoginResponse {
 	private String scope;
 
 	@JsonCreator
-	public DiscordLoginResponse(
+	public DiscordAuthResponse(
 			@JsonProperty("access_token") String accessToken,
 			@JsonProperty("token_type") String tokenType,
 			@JsonProperty("expires_in") int expiresIn,

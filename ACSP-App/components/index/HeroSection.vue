@@ -20,14 +20,14 @@
     <div class="mx-auto max-w-7xl px-6 pt-10 pb-24 sm:pb-32 lg:flex lg:py-40 lg:px-8">
       <div class="mx-auto max-w-2xl flex-shrink-0 lg:mx-0 lg:max-w-xl lg:pt-8">
         <img class="h-11" src="~/assets/img/logo_512_transparent.png" alt="ACSP Logo" />
-        <h1 class="mt-10 text-4xl font-bold tracking-tight text-themeText sm:text-6xl">
+        <h1 class="mt-10 text-4xl leading-[1.1] tracking-tight font-bold text-themeText sm:text-6xl">
           Akjo's Computer Science Program
         </h1>
-        <p class="mt-6 text-lg leading-8 text-themeText">
+        <p class="mt-6 text-lg leading-[1.8] text-themeText">
           What the title says.
         </p>
         <div class="mt-10 flex items-center gap-x-6">
-          <a :href="discordOAuthUrl" class="inline-flex items-center gap-x-2 rounded-md bg-themePrimary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themePrimaryHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themePrimaryHover transition-all">
+          <a :href="config.public.discordServerLink" class="inline-flex items-center gap-x-2 rounded-md bg-themePrimary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themePrimaryHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themePrimaryHover transition-all">
             <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 256.00 200.00" fill="#000000">
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -56,5 +56,4 @@
 <script setup lang="ts">
   import { useRuntimeConfig } from "nuxt/app";
   const config = useRuntimeConfig();
-  const discordOAuthUrl = "https://discord.com/api/oauth2/authorize?client_id=" + config.public.discordClientId + "&redirect_uri=" + config.public.discordRedirectUri + "&response_type=code&scope=identify%20email%20guilds";
 </script>
