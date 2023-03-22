@@ -4,6 +4,7 @@ import com.akjostudios.acsp.backend.dto.BeginAuthResponseDto;
 import com.akjostudios.acsp.backend.model.BeginRequest;
 import com.akjostudios.acsp.backend.repository.BeginRequestRepository;
 import com.akjostudios.acsp.backend.services.SecurityService;
+import com.akjostudios.acsp.backend.services.auth.BeginService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import lombok.RequiredArgsConstructor;
@@ -23,11 +24,9 @@ import java.util.Base64;
 public class BeginController {
 	private static final Logger LOGGER = LoggerManager.getLogger(BeginController.class);
 
+	private final BeginService beginService;
 	private final SecurityService securityService;
 	private final BeginRequestRepository beginRequestRepository;
-
-	@Value("${application.base-url}")
-	private String baseUrl;
 
 	@Value("${application.secrets.acsp-begin-secret}")
 	private String acspBeginSecret;
@@ -40,7 +39,7 @@ public class BeginController {
 
 		BeginRequest beginRequest = beginRequestRepository.findByUserId(userId);
 		if (beginRequest != null) {
-			return ResponseEntity.ok(getBeginAuthReponseDto(beginRequest));
+			return ResponseEntity.ok(beginService.getBeginAuthReponseDto(beginRequest));
 		}
 
 		String salt = securityService.generateSalt();
@@ -66,15 +65,10 @@ public class BeginController {
 		newBeginRequest.setCode(code);
 		beginRequestRepository.save(newBeginRequest);
 
-		return ResponseEntity.ok(getBeginAuthReponseDto(newBeginRequest));
+		return ResponseEntity.ok(beginService.getBeginAuthReponseDto(newBeginRequest));
 	}
 
-	private BeginAuthResponseDto getBeginAuthReponseDto(BeginRequest beginRequest) {
-		String link = baseUrl + "/api/auth/begin/authenticate?userId=" + beginRequest.getUserId() + "&code=" + beginRequest.getCode();
-		BeginAuthResponseDto beginAuthResponseDto = new BeginAuthResponseDto();
-		beginAuthResponseDto.setAuthLink(link);
-		return beginAuthResponseDto;
-	}
+
 
 	@GetMapping("/authenticate")
 	public ResponseEntity<String> authenticate(String userId, String code) {
