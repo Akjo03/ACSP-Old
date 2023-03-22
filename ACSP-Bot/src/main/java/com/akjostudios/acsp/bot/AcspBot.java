@@ -102,7 +102,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 		);
 
 		// Add the CommandsHandler to the JDA instance listeners
-		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class));
+		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class).setup(jdaInstance));
 
 		// Await the JDA instance to be ready and then set the bot name
 		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
@@ -126,7 +126,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 		});
 
 		// Add all other handlers
-		jdaInstance.addEventListener(applicationContext.getBean(BeginChannelHandler.class));
+		jdaInstance.addEventListener(applicationContext.getBean(BeginChannelHandler.class).setup(jdaInstance));
 
 		// Add all the controllers
 		applicationContext.getBean(BeginController.class).setup(jdaInstance);

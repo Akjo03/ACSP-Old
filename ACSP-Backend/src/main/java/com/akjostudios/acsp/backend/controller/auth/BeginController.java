@@ -23,7 +23,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -66,6 +65,13 @@ public class BeginController {
 		if (secret == null || !secret.equals(acspBeginSecret)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		discordBotClient.delete()
+				.uri("/begin?messageId=" +  messageId)
+				.retrieve()
+				.bodyToMono(Void.class)
+				.block();
+
 		AcspUser acspUser = userRepository.findByUserId(userId);
 		if (acspUser != null) {
 			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
@@ -99,12 +105,6 @@ public class BeginController {
 		newBeginRequest.setCode(code);
 		newBeginRequest.setAuthState("begin");
 		beginRequestRepository.save(newBeginRequest);
-
-		discordBotClient.delete()
-				.uri("/begin?messageId=" +  messageId)
-				.retrieve()
-				.bodyToMono(Void.class)
-				.block();
 
 		return ResponseEntity.ok(beginService.getBeginAuthReponseDto(newBeginRequest));
 	}

@@ -15,8 +15,8 @@ public class BeginController extends AcspBotController {
 	@DeleteMapping("")
 	public void delete(String messageId) {
 		TextChannel beginChannel = jdaInstance.getTextChannelById(AcspDiscordChannels.BEGIN_CHANNEL.getId());
-		if (beginChannel != null) {
-			beginChannel.deleteMessageById(messageId).queue();
-		}
+		if (beginChannel == null) { return; }
+
+		beginChannel.deleteMessageById(messageId).queue();
 	}
 }

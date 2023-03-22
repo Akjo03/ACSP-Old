@@ -7,9 +7,11 @@ import com.akjostudios.acsp.bot.services.bot.BotStringsService;
 import com.akjostudios.acsp.bot.services.command.BotCommandArgumentParserService;
 import com.akjostudios.acsp.bot.services.command.CommandHelperService;
 import com.akjostudios.acsp.bot.util.command.BotCommand;
+import com.akjostudios.acsp.bot.util.handlers.AcspBotHandler;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import lombok.RequiredArgsConstructor;
+import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +24,7 @@ import java.util.Optional;
 
 @Component
 @RequiredArgsConstructor
-public class CommandsHandler extends ListenerAdapter {
+public class CommandsHandler extends ListenerAdapter implements AcspBotHandler<CommandsHandler> {
 	private static final Logger LOGGER = LoggerManager.getLogger(CommandsHandler.class);
 
 	private static final List<BotCommand> availableCommands = new ArrayList<>();
@@ -41,6 +43,9 @@ public class CommandsHandler extends ListenerAdapter {
 	public static List<BotCommand> getAvailableCommands() {
 		return availableCommands;
 	}
+
+	@Override
+	public CommandsHandler setup(JDA jdaInstance) { return this; }
 
 	@Override
 	public void onMessageReceived(@NotNull MessageReceivedEvent event) {

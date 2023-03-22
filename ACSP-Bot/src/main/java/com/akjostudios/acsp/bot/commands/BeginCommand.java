@@ -56,48 +56,51 @@ public class BeginCommand extends BotCommand {
 	public void execute(@NotNull MessageReceivedEvent event, BotCommandArguments arguments) {
 		LOGGER.info("Executing begin command...");
 
-		BeginAuthResponseDto beginAuthResponseDto = webClient.get()
-				.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
-				.retrieve()
-				.onStatus(httpStatus -> httpStatus.value() == 208, clientResponse -> {
-					event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-						privateChannel.sendMessage(discordMessageService.createMessage(
-								errorMessageService.getErrorMessage(
-										"errors.command.begin.already_linked.title",
-										"errors.command.begin.already_linked.description",
-										List.of(),
-										List.of(),
-										Optional.empty()
-								)
-						)).queue();
-					});
-					return null;
-				})
-				.onStatus(HttpStatusCode::isError, clientResponse -> {
-					event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-						privateChannel.sendMessage(discordMessageService.createMessage(
-								errorMessageService.getErrorMessage(
-										"errors.command.begin.link_generation_failed.title",
-										"errors.command.begin.link_generation_failed.description",
-										List.of(),
-										List.of(),
-										Optional.empty()
-								)
-						)).queue();
-					});
-					return null;
-				}).bodyToMono(BeginAuthResponseDto.class).block();
-
+		BeginAuthResponseDto beginAuthResponseDto = null;
+		try {
+			beginAuthResponseDto = webClient.get()
+					.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
+					.retrieve()
+					.onStatus(httpStatus -> httpStatus.value() == 208, clientResponse -> {
+						event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+							privateChannel.sendMessage(discordMessageService.createMessage(
+									errorMessageService.getErrorMessage(
+											"errors.command.begin.already_linked.title",
+											"errors.command.begin.already_linked.description",
+											List.of(),
+											List.of(),
+											Optional.empty()
+									)
+							)).queue();
+						});
+						return null;
+					})
+					.onStatus(HttpStatusCode::isError, clientResponse -> {
+						event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+							privateChannel.sendMessage(discordMessageService.createMessage(
+									errorMessageService.getErrorMessage(
+											"errors.command.begin.link_generation_failed.title",
+											"errors.command.begin.link_generation_failed.description",
+											List.of(),
+											List.of(),
+											Optional.empty()
+									)
+							)).queue();
+						});
+						return null;
+					}).bodyToMono(BeginAuthResponseDto.class).block();
+		} catch (Exception ignored) {}
 		if (beginAuthResponseDto == null) {
 			return;
 		}
 
+		BeginAuthResponseDto finalBeginAuthResponseDto = beginAuthResponseDto;
 		event.getAuthor().openPrivateChannel().queue(privateChannel -> {
 			privateChannel.sendMessage(discordMessageService.createMessage(
 					botConfigService.getMessageDefinition(
 							"BEGIN_LINK_MESSAGE",
 							Optional.empty(),
-							beginAuthResponseDto.getAuthLink(),
+							finalBeginAuthResponseDto.getAuthLink(),
 							AcspBot.getBotName(),
 							BotConstants.DATE_TIME_FORMATTER.format(Instant.now())
 					)
