@@ -6,13 +6,23 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("users")
+@Document("usersessions")
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class AcspUser {
+public class AcspUserSession {
 	@Id
 	private String id;
 
-	private String userId;
+	private AcspUser user;
+	private String status;
+
+	private String accessToken;
+	private String refreshToken;
+
+	private String sessionId;
+	private String sessionToken;
+	private String sessionRefreshToken;
+
+	private String salt;
 }

@@ -200,7 +200,7 @@ public class BeginController {
 			LOGGER.error("Error while getting Discord user", e);
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		if (!discordUserResponse.isPresent()) {
+		if (discordUserResponse.isEmpty()) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
