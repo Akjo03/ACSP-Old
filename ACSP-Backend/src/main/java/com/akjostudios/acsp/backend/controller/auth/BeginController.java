@@ -199,7 +199,7 @@ public class BeginController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		AcspUser user = beginService.createUserFromUserResponse(discordUser);
+		AcspUser user = beginService.createUserFromUserResponse(discordUser, discordAuthTokenResponse.getAccessToken());
 		userRepository.save(user);
 
 		beginRequestRepository.delete(beginRequest);
