@@ -57,7 +57,7 @@ public class BeginCommand extends BotCommand {
 		LOGGER.info("Executing begin command...");
 
 		BeginAuthResponseDto beginAuthResponseDto = webClient.get()
-				.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret)
+				.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
 				.retrieve()
 				.onStatus(httpStatus -> httpStatus.value() == 208, clientResponse -> {
 					event.getAuthor().openPrivateChannel().queue(privateChannel -> {

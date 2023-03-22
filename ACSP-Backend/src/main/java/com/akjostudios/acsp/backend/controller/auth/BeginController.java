@@ -23,6 +23,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.BodyInserters;
@@ -61,7 +62,7 @@ public class BeginController {
 	private String acspBeginSecret;
 
 	@GetMapping("")
-	public ResponseEntity<BeginAuthResponseDto> beginAuth(String userId, String secret) {
+	public ResponseEntity<BeginAuthResponseDto> beginAuth(String userId, String secret, String messageId) {
 		if (secret == null || !secret.equals(acspBeginSecret)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -99,6 +100,12 @@ public class BeginController {
 		newBeginRequest.setAuthState("begin");
 		beginRequestRepository.save(newBeginRequest);
 
+		discordBotClient.delete()
+				.uri("/begin?messageId=" +  messageId)
+				.retrieve()
+				.bodyToMono(Void.class)
+				.block();
+
 		return ResponseEntity.ok(beginService.getBeginAuthReponseDto(newBeginRequest));
 	}
 
@@ -124,8 +131,6 @@ public class BeginController {
 		if (!realCode.equals(beginRequest.getCode())) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
-
-		// TODO: Send delete request to discord bot to remove message
 
 		DiscordAuthCodeRequest discordAuthCodeRequest = beginService.getDiscordAuthCodeRequest(code);
 		if (discordAuthCodeRequest == null) {

@@ -1,6 +1,7 @@
 package com.akjostudios.acsp.bot;
 
 import com.akjostudios.acsp.bot.constants.BotDeployMode;
+import com.akjostudios.acsp.bot.controller.BeginController;
 import com.akjostudios.acsp.bot.handlers.BeginChannelHandler;
 import com.akjostudios.acsp.bot.handlers.CommandsHandler;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
@@ -126,6 +127,9 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 
 		// Add all other handlers
 		jdaInstance.addEventListener(applicationContext.getBean(BeginChannelHandler.class));
+
+		// Add all the controllers
+		applicationContext.getBean(BeginController.class).setup(jdaInstance);
 
 		LOGGER.success("AcspBot has successfully started in " + botDeployMode + " mode.");
 	}
