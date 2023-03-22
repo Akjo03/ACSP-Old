@@ -14,6 +14,7 @@ import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 
@@ -58,19 +59,35 @@ public class BeginCommand extends BotCommand {
 		BeginAuthResponseDto beginAuthResponseDto = webClient.get()
 				.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret)
 				.retrieve()
-				.bodyToMono(BeginAuthResponseDto.class)
-				.onErrorMap(throwable -> {
-					event.getChannel().sendMessage(discordMessageService.createMessage(
-							errorMessageService.getErrorMessage(
-									"errors.command.begin.link_generation_failed.title",
-									"errors.command.begin.link_generation_failed.description",
-									List.of(),
-									List.of(),
-									Optional.empty()
-							)
-					)).queue();
-					return throwable;
-				}).block();
+				.onStatus(httpStatus -> httpStatus.value() == 208, clientResponse -> {
+					event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+						privateChannel.sendMessage(discordMessageService.createMessage(
+								errorMessageService.getErrorMessage(
+										"errors.command.begin.already_linked.title",
+										"errors.command.begin.already_linked.description",
+										List.of(),
+										List.of(),
+										Optional.empty()
+								)
+						)).queue();
+					});
+					return null;
+				})
+				.onStatus(HttpStatusCode::isError, clientResponse -> {
+					event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+						privateChannel.sendMessage(discordMessageService.createMessage(
+								errorMessageService.getErrorMessage(
+										"errors.command.begin.link_generation_failed.title",
+										"errors.command.begin.link_generation_failed.description",
+										List.of(),
+										List.of(),
+										Optional.empty()
+								)
+						)).queue();
+					});
+					return null;
+				}).bodyToMono(BeginAuthResponseDto.class).block();
+
 		if (beginAuthResponseDto == null) {
 			return;
 		}

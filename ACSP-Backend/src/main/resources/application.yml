@@ -11,6 +11,7 @@ server:
 
 application:
   base-url: ${BACKEND_BASE_URL}
+  discord-bot-url: ${DISCORD_BOT_URL}
   oauth2:
     discord:
       client-id: ${OAUTH_CLIENT_ID}

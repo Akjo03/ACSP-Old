@@ -9,6 +9,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 @Configuration
 @RequiredArgsConstructor
 public class WebClientConfig {
+	private final ApplicationConfig applicationConfig;
 	private final WebClient.Builder webClientBuilder;
 
 	@Bean
@@ -21,5 +22,11 @@ public class WebClientConfig {
 	@Qualifier("discordApiClient")
 	public WebClient discordApiClient() {
 		return webClientBuilder.baseUrl("https://discord.com/api").build();
+	}
+
+	@Bean
+	@Qualifier("discordBotClient")
+	public WebClient discordBotClient() {
+		return webClientBuilder.baseUrl(applicationConfig.getDiscordBotUrl()).build();
 	}
 }

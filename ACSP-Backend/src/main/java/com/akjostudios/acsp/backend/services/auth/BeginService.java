@@ -61,8 +61,7 @@ public class BeginService {
 		AcspUser acspUser = new AcspUser();
 		acspUser.setUserId(userResponse.getId());
 
-		// TODO
-
+		// TODO: Encrypt the access token and store it in the database. Also add additional fields to the AcspUser model.
 
 		return acspUser;
 	}

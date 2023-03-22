@@ -54,6 +54,9 @@ public class BeginController {
 	@Qualifier("discordApiClient")
 	private final WebClient discordApiClient;
 
+	@Qualifier("discordBotClient")
+	private final WebClient discordBotClient;
+
 	@Value("${application.secrets.acsp-begin-secret}")
 	private String acspBeginSecret;
 
@@ -64,7 +67,7 @@ public class BeginController {
 		}
 		AcspUser acspUser = userRepository.findByUserId(userId);
 		if (acspUser != null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
 		}
 
 		BeginRequest beginRequest = beginRequestRepository.findByUserId(userId);
@@ -106,7 +109,7 @@ public class BeginController {
 		}
 		AcspUser acspUser = userRepository.findByUserId(userId);
 		if (acspUser != null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
 		}
 
 		BeginRequest beginRequest = beginRequestRepository.findByUserId(userId);
@@ -121,6 +124,8 @@ public class BeginController {
 		if (!realCode.equals(beginRequest.getCode())) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
+
+		// TODO: Send delete request to discord bot to remove message
 
 		DiscordAuthCodeRequest discordAuthCodeRequest = beginService.getDiscordAuthCodeRequest(code);
 		if (discordAuthCodeRequest == null) {
