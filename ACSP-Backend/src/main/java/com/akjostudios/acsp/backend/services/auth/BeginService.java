@@ -19,11 +19,11 @@ public class BeginService {
 		return beginAuthResponseDto;
 	}
 
-	private String makeUrlSafe(String input) {
-		return input.replace("/", "_").replace("+", "-");
+	public String makeUrlSafe(String input) {
+		return input.replace("/", "_").replace("+", "-").replace("=", "~");
 	}
 
-	private String makeUrlUnsafe(String input) {
-		return input.replace("_", "/").replace("-", "+");
+	public String makeUrlUnsafe(String input) {
+		return input.replace("_", "/").replace("-", "+").replace("~", "=");
 	}
 }

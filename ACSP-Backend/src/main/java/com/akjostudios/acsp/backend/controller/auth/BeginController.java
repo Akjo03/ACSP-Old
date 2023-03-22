@@ -72,6 +72,6 @@ public class BeginController {
 
 	@GetMapping("/authenticate")
 	public ResponseEntity<String> authenticate(String userId, String code) {
-		return ResponseEntity.ok("Test");
+		return ResponseEntity.ok(beginService.makeUrlUnsafe(code));
 	}
 }
