@@ -6,15 +6,14 @@ import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document("beginrequests")
+@Document("users")
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class BeginRequest {
+public class AcspUser {
 	@Id
 	private String id;
 
 	private String userId;
-	private String code;
-	private String authState;
+	private String accessToken;
 }

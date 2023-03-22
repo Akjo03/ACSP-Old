@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.backend.dto;
+package com.akjostudios.acsp.backend.dto.auth;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;

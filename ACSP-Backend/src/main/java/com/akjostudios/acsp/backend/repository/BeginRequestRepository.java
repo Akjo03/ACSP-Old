@@ -8,5 +8,8 @@ public interface BeginRequestRepository extends MongoRepository<BeginRequest, St
 	@Query("{ 'userId': '?0' }")
 	BeginRequest findByUserId(String userId);
 
+	@Query("{ 'code': '?0' }")
+	BeginRequest findByCode(String code);
+
 	long count();
 }

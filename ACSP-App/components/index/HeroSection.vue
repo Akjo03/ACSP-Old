@@ -54,6 +54,7 @@
 </template>
 
 <script setup lang="ts">
-  import { useRuntimeConfig } from "nuxt/app";
-  const config = useRuntimeConfig();
+import {useRuntimeConfig} from "nuxt/app";
+
+const config = useRuntimeConfig();
 </script>

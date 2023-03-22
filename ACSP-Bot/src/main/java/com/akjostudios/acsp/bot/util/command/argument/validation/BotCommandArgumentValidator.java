@@ -1,9 +1,9 @@
 package com.akjostudios.acsp.bot.util.command.argument.validation;
 
 import com.akjostudios.acsp.bot.config.bot.command.argument.data.BotConfigCommandArgumentData;
-import com.akjostudios.acsp.bot.services.bot.BotConfigService;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
+import com.akjostudios.acsp.bot.services.bot.BotConfigService;
 import io.github.akjo03.lib.result.Result;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 

@@ -18,3 +18,5 @@ application:
       redirect-uri: ${OAUTH_REDIRECT_URI}
   secrets:
     acsp-begin-secret: ${ACSP_BEGIN_KEY}
+  security:
+    discord-encryption-key: ${DISCORD_ACCESS_KEY}
