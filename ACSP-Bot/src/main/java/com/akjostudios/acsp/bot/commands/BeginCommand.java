@@ -14,6 +14,7 @@ import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -61,7 +62,7 @@ public class BeginCommand extends BotCommand {
 			beginAuthResponseDto = webClient.get()
 					.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
 					.retrieve()
-					.onStatus(httpStatus -> httpStatus.value() == 208, clientResponse -> {
+					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.ALREADY_REPORTED.value(), clientResponse -> {
 						event.getAuthor().openPrivateChannel().queue(privateChannel -> {
 							privateChannel.sendMessage(discordMessageService.createMessage(
 									errorMessageService.getErrorMessage(
