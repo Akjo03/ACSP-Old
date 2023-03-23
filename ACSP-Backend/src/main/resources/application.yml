@@ -4,16 +4,20 @@ spring:
 
   data:
     mongodb:
-      uri: ${DB_HOST}
-      username: ${DB_USER}
-      password: ${DB_PASS}
+      uri: mongodb://${DB_USER}:${DB_PASS}@${DB_HOST}:27017/acsp
 
 server:
   port: 8080
 
 application:
+  base-url: ${BACKEND_BASE_URL}
+  discord-bot-url: ${DISCORD_BOT_URL}
   oauth2:
     discord:
       client-id: ${OAUTH_CLIENT_ID}
       client-secret: ${OAUTH_CLIENT_SECRET}
       redirect-uri: ${OAUTH_REDIRECT_URI}
+  secrets:
+    acsp-begin-secret: ${ACSP_BEGIN_KEY}
+  security:
+    discord-encryption-key: ${DISCORD_ACCESS_KEY}

@@ -1,8 +1,16 @@
 package com.akjostudios.acsp.bot;
 
 import com.akjostudios.acsp.bot.constants.BotDeployMode;
+import com.akjostudios.acsp.bot.controller.BeginController;
+import com.akjostudios.acsp.bot.handlers.BeginChannelHandler;
 import com.akjostudios.acsp.bot.handlers.CommandsHandler;
-import com.akjostudios.acsp.bot.services.*;
+import com.akjostudios.acsp.bot.services.DiscordMessageService;
+import com.akjostudios.acsp.bot.services.ErrorMessageService;
+import com.akjostudios.acsp.bot.services.bot.BotConfigService;
+import com.akjostudios.acsp.bot.services.bot.BotStringsService;
+import com.akjostudios.acsp.bot.services.command.BotCommandArgumentParserService;
+import com.akjostudios.acsp.bot.services.command.BotCommandArgumentParsingReportService;
+import com.akjostudios.acsp.bot.services.command.CommandHelperService;
 import com.akjostudios.acsp.bot.util.command.BotCommand;
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import io.github.akjo03.lib.logging.Logger;
@@ -94,7 +102,7 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 		);
 
 		// Add the CommandsHandler to the JDA instance listeners
-		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class));
+		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class).setup(jdaInstance));
 
 		// Await the JDA instance to be ready and then set the bot name
 		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
@@ -117,6 +125,12 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			}
 		});
 
+		// Add all other handlers
+		jdaInstance.addEventListener(applicationContext.getBean(BeginChannelHandler.class).setup(jdaInstance));
+
+		// Add all the controllers
+		applicationContext.getBean(BeginController.class).setup(jdaInstance);
+
 		LOGGER.success("AcspBot has successfully started in " + botDeployMode + " mode.");
 	}
 
@@ -128,7 +142,9 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			shutdownFailed = true;
 		} finally { applicationContext.close(); }
 
-		if (shutdownFailed) { Runtime.getRuntime().halt(1); } else { Runtime.getRuntime().halt(0); }
+		if (shutdownFailed) {
+			Runtime.getRuntime().halt(1);
+		}
 	}
 
 	public static void restart() {

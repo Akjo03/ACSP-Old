@@ -10,11 +10,11 @@
 
 
 <script setup lang="ts">
-  import {useState} from "nuxt/app";
-  import {onMounted, watch} from "vue";
-  import HeroSection from "../components/index/HeroSection.vue";
+import {useState} from "nuxt/app";
+import {onMounted, watch} from "vue";
+import HeroSection from "../components/index/HeroSection.vue";
 
-  type Theme = 'light' | 'dark';
+type Theme = 'light' | 'dark';
 
   const LOCAL_STORAGE_THEME_KEY = 'theme';
 

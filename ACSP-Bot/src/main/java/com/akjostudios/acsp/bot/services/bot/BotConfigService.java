@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.bot.services;
+package com.akjostudios.acsp.bot.services.bot;
 
 import com.akjostudios.acsp.bot.AcspBot;
 import com.akjostudios.acsp.bot.config.LocaleConfiguration;
@@ -14,6 +14,8 @@ import com.akjostudios.acsp.bot.config.bot.message.embed.BotConfigMessageEmbedAu
 import com.akjostudios.acsp.bot.config.bot.message.embed.BotConfigMessageEmbedField;
 import com.akjostudios.acsp.bot.config.bot.message.embed.BotConfigMessageEmbedFooter;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
+import com.akjostudios.acsp.bot.services.JsonService;
+import com.akjostudios.acsp.bot.services.StringPlaceholderService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import io.github.akjo03.lib.path.ProjectDirectory;

@@ -6,15 +6,13 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.support.ResourceBundleMessageSource;
-import org.springframework.stereotype.Component;
 
 import java.util.Optional;
 
 @Configuration
-@Component
 @Getter
 public class LocaleConfiguration {
-	@Value("${application.locale.resourceName}")
+	@Value("${application.locale.resource-name}")
 	private String resourceName;
 
 	@Value("${application.locale.default}")

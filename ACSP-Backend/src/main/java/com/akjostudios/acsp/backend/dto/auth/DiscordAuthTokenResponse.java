@@ -1,41 +1,39 @@
-package com.akjostudios.acsp.backend.dto.oauth2.discord;
+package com.akjostudios.acsp.backend.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import lombok.EqualsAndHashCode;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 
-@NoArgsConstructor
+@RequiredArgsConstructor
 @Getter
-@ToString
-@EqualsAndHashCode
-@SuppressWarnings("unused")
-public class DiscordAuthResponse {
-	@JsonDeserialize
+@Setter
+public class DiscordAuthTokenResponse {
+	@JsonSerialize
 	private String accessToken;
 
-	@JsonDeserialize
+	@JsonSerialize
 	private String tokenType;
 
-	@JsonDeserialize
+	@JsonSerialize
 	private int expiresIn;
 
-	@JsonDeserialize
+	@JsonSerialize
 	private String refreshToken;
 
-	@JsonDeserialize
+	@JsonSerialize
 	private String scope;
 
 	@JsonCreator
-	public DiscordAuthResponse(
+	public DiscordAuthTokenResponse(
 			@JsonProperty("access_token") String accessToken,
 			@JsonProperty("token_type") String tokenType,
 			@JsonProperty("expires_in") int expiresIn,
 			@JsonProperty("refresh_token") String refreshToken,
-			@JsonProperty("scope") String scope) {
+			@JsonProperty("scope") String scope
+	) {
 		this.accessToken = accessToken;
 		this.tokenType = tokenType;
 		this.expiresIn = expiresIn;

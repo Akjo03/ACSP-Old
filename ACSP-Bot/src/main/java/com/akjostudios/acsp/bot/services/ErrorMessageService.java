@@ -4,6 +4,8 @@ import com.akjostudios.acsp.bot.AcspBot;
 import com.akjostudios.acsp.bot.config.bot.message.BotConfigMessage;
 import com.akjostudios.acsp.bot.constants.BotConstants;
 import com.akjostudios.acsp.bot.constants.BotLanguages;
+import com.akjostudios.acsp.bot.services.bot.BotConfigService;
+import com.akjostudios.acsp.bot.services.bot.BotStringsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

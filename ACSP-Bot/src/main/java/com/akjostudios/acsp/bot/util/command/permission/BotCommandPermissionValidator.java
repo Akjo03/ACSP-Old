@@ -1,6 +1,8 @@
 package com.akjostudios.acsp.bot.util.command.permission;
 
+import com.akjostudios.acsp.bot.constants.AcspDiscordRoles;
 import net.dv8tion.jda.api.entities.Member;
+import net.dv8tion.jda.api.entities.Role;
 import net.dv8tion.jda.api.entities.channel.unions.GuildMessageChannelUnion;
 
 import java.util.List;
@@ -13,20 +15,32 @@ public class BotCommandPermissionValidator {
 		this.channelPermissions = channelPermissions;
 	}
 
-	@SuppressWarnings("CodeBlock2Expr")
-	public boolean isInvalid(GuildMessageChannelUnion channel, Member member) {
+	public BotCommandPermissionValidation getValidation(GuildMessageChannelUnion channel, Member member) {
 		AtomicBoolean isAllowed = new AtomicBoolean(false);
 
-		channelPermissions.stream()
-				.filter(channelPermission -> channelPermission.getChannel().getId() == channel.getIdLong())
-				.findFirst()
-				.ifPresent(channelPermission -> {
-					isAllowed.set(channelPermission.getAllowedRoles().stream()
-							.anyMatch(role -> member.getRoles().stream()
-									.anyMatch(memberRole -> memberRole.getIdLong() == role.getId())
-							));
-				});
+		if (channelPermissions.stream().map(BotCommandChannelPermissions::getChannel).noneMatch(channelP -> channelP.getId() == channel.getIdLong())) {
+			return BotCommandPermissionValidation.denied("errors.command_missing_permissions.reason.channel");
+		}
 
-		return !isAllowed.get();
+		for (BotCommandChannelPermissions permissionDefinition : channelPermissions) {
+			if (permissionDefinition.getAllowedRoles().contains(AcspDiscordRoles.EVERYONE_ROLE)) {
+				isAllowed.set(true);
+				break;
+			}
+
+			for (AcspDiscordRoles role : permissionDefinition.getAllowedRoles()) {
+				List<Role> memberRoles = member.getRoles();
+				for (Role memberRole : memberRoles) {
+					if (memberRole.getIdLong() == role.getId()) {
+						isAllowed.set(true);
+						break;
+					}
+				}
+			}
+		}
+
+		return isAllowed.get()
+				? BotCommandPermissionValidation.allowed()
+				: BotCommandPermissionValidation.denied("errors.command_missing_permissions.reason.role");
 	}
 }
