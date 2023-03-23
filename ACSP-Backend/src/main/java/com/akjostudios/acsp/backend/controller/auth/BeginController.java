@@ -1,6 +1,5 @@
 package com.akjostudios.acsp.backend.controller.auth;
 
-import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.dto.auth.BeginAuthResponseDto;
 import com.akjostudios.acsp.backend.dto.auth.DiscordAuthCodeRequest;
 import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenRequest;
@@ -49,8 +48,6 @@ public class BeginController {
 
 	private final BeginRequestRepository beginRequestRepository;
 	private final UserRepository userRepository;
-
-	private final SecurityConfig securityConfig;
 
 	@Qualifier("discordTokenClient")
 	private final WebClient discordTokenClient;
@@ -107,7 +104,7 @@ public class BeginController {
 		BeginRequest newBeginRequest = new BeginRequest();
 		newBeginRequest.setUserId(userId);
 		newBeginRequest.setCode(code);
-		newBeginRequest.setAuthState("begin");
+		newBeginRequest.setBegun(true);
 		beginRequestRepository.save(newBeginRequest);
 
 		return ResponseEntity.ok(beginService.getBeginAuthReponseDto(newBeginRequest));
@@ -120,14 +117,14 @@ public class BeginController {
 		}
 		AcspUser acspUser = userRepository.findByUserId(userId);
 		if (acspUser != null) {
-			return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+			return beginService.startOnboardingProcess();
 		}
 
 		BeginRequest beginRequest = beginRequestRepository.findByUserId(userId);
 		if (beginRequest == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("No begin request found for this user. Please issue the !begin command again.", HttpStatus.BAD_REQUEST);
 		}
-		if (!beginRequest.getAuthState().equals("begin")) {
+		if (!beginRequest.isBegun()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -161,7 +158,7 @@ public class BeginController {
 		if (beginRequest == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
-		if (!beginRequest.getAuthState().equals("begin")) {
+		if (!beginRequest.isBegun()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
@@ -231,6 +228,6 @@ public class BeginController {
 			createUserLock.unlock();
 		}
 
-		return ResponseEntity.ok("Success");
+		return beginService.startOnboardingProcess();
 	}
 }

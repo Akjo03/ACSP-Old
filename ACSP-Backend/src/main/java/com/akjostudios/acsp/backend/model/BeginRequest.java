@@ -16,5 +16,5 @@ public class BeginRequest {
 
 	private String userId;
 	private String code;
-	private String authState;
+	private boolean begun;
 }

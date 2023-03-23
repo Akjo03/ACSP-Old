@@ -9,6 +9,7 @@ import com.akjostudios.acsp.backend.model.BeginRequest;
 import com.akjostudios.acsp.backend.services.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.stream.Stream;
@@ -63,5 +64,9 @@ public class BeginService {
 
 
 		return acspUser;
+	}
+
+	public ResponseEntity<String> startOnboardingProcess() {
+		return ResponseEntity.ok("Onboarding process started");
 	}
 }
