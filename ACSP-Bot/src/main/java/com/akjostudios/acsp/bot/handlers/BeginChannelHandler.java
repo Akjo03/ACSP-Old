@@ -44,10 +44,18 @@ public class BeginChannelHandler extends ListenerAdapter implements AcspBotHandl
 					int endIndex = Math.min(i + messageBatchSize, messageIds.size());
 					List<String> batchIds = messageIds.subList(i, endIndex);
 
-					RestAction<Void> deleteMessages = beginChannel.deleteMessagesByIds(batchIds);
-					deleteMessages.queue(null, error -> {
-						LOGGER.error("Failed to delete messages in the begin channel.", error);
-					});
+					if (batchIds.isEmpty()) {
+						continue;
+					}
+					if (batchIds.size() == 1) {
+						beginChannel.deleteMessageById(batchIds.get(0)).queue(null, error -> {
+							LOGGER.error("Failed to delete message in the begin channel.", error);
+						});
+					} else {
+						beginChannel.deleteMessagesByIds(batchIds).queue(null, error -> {
+							LOGGER.error("Failed to delete messages in the begin channel.", error);
+						});
+					}
 				}
 
 				messages = history.submit().join();

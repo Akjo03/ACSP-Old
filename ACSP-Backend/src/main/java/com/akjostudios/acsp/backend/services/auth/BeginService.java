@@ -3,15 +3,21 @@ package com.akjostudios.acsp.backend.services.auth;
 import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.dto.auth.BeginAuthResponseDto;
 import com.akjostudios.acsp.backend.dto.auth.DiscordAuthCodeRequest;
+import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenResponse;
 import com.akjostudios.acsp.backend.dto.discord.DiscordUserResponse;
 import com.akjostudios.acsp.backend.model.AcspUser;
+import com.akjostudios.acsp.backend.model.AcspUserSession;
+import com.akjostudios.acsp.backend.model.AcspUserSessionStatus;
 import com.akjostudios.acsp.backend.model.BeginRequest;
 import com.akjostudios.acsp.backend.services.SecurityService;
+import io.github.akjo03.lib.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import javax.crypto.SecretKey;
+import javax.crypto.spec.IvParameterSpec;
 import java.util.stream.Stream;
 
 @Service
@@ -58,12 +64,34 @@ public class BeginService {
 		return discordAuthCodeRequest;
 	}
 
-	public AcspUser createUserFromUserResponse(DiscordUserResponse userResponse, String accessToken) {
+	public AcspUser createUserFromUserResponse(DiscordUserResponse userResponse ) {
 		AcspUser acspUser = new AcspUser();
 		acspUser.setUserId(userResponse.getId());
 
-
 		return acspUser;
+	}
+
+	public Result<AcspUserSession> createOnboardingSession(AcspUser user, DiscordAuthTokenResponse discordTokenResponse) {
+		AcspUserSession acspUserSession = new AcspUserSession();
+		acspUserSession.setUser(user);
+		acspUserSession.setStatus(AcspUserSessionStatus.ONBOARDING.getStatus());
+
+		String salt = securityService.generateSalt();
+		acspUserSession.setSalt(salt);
+
+		IvParameterSpec ivParameterSpec = securityService.generateIv();
+		try {
+			SecretKey secretKey = securityService.getKeyFromPassword(securityConfig.getDiscordEncryptionKey(), salt);
+			String encryptedAccessToken = securityService.encrypt(discordTokenResponse.getAccessToken(), secretKey, ivParameterSpec);
+			String encryptedRefreshToken = securityService.encrypt(discordTokenResponse.getRefreshToken(), secretKey, ivParameterSpec);
+
+			acspUserSession.setAccessToken(encryptedAccessToken);
+			acspUserSession.setRefreshToken(encryptedRefreshToken);
+		} catch (Exception e) {
+			return Result.fail(e);
+		}
+
+		return Result.success(acspUserSession);
 	}
 
 	public ResponseEntity<String> startOnboardingProcess() {

@@ -6,14 +6,17 @@ import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenRequest;
 import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenResponse;
 import com.akjostudios.acsp.backend.dto.discord.DiscordUserResponse;
 import com.akjostudios.acsp.backend.model.AcspUser;
+import com.akjostudios.acsp.backend.model.AcspUserSession;
 import com.akjostudios.acsp.backend.model.BeginRequest;
 import com.akjostudios.acsp.backend.repository.BeginRequestRepository;
 import com.akjostudios.acsp.backend.repository.UserRepository;
+import com.akjostudios.acsp.backend.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.SecurityService;
 import com.akjostudios.acsp.backend.services.auth.BeginService;
 import com.akjostudios.acsp.backend.services.auth.DiscordTokenService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
+import io.github.akjo03.lib.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -48,6 +51,7 @@ public class BeginController {
 
 	private final BeginRequestRepository beginRequestRepository;
 	private final UserRepository userRepository;
+	private final UserSessionRepository userSessionRepository;
 
 	@Qualifier("discordTokenClient")
 	private final WebClient discordTokenClient;
@@ -168,6 +172,12 @@ public class BeginController {
 			ResponseEntity.ok("You are already authenticated.");
 		}
 
+		AcspUserSession acspUserSession = userSessionRepository.findByUserId(beginRequest.getUserId());
+		if (acspUserSession != null) {
+			beginRequestRepository.delete(beginRequest);
+			return ResponseEntity.ok("You are already authenticated.");
+		}
+
 		DiscordAuthTokenRequest discordAuthTokenRequest = discordTokenService.getDiscordAuthTokenRequest(code);
 		if (discordAuthTokenRequest == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -220,9 +230,16 @@ public class BeginController {
 		try {
 			acspUser = userRepository.findByUserId(beginRequest.getUserId());
 			if (acspUser == null) {
-				AcspUser user = beginService.createUserFromUserResponse(discordUser, discordAuthTokenResponse.getAccessToken());
+				AcspUser user = beginService.createUserFromUserResponse(discordUser);
 				userRepository.save(user);
 			}
+
+			AcspUserSession userSession = beginService.createOnboardingSession(acspUser, discordAuthTokenResponse).getOrNull();
+			if (userSession == null) {
+				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			userSessionRepository.save(userSession);
+
 			beginRequestRepository.delete(beginRequest);
 		} finally {
 			createUserLock.unlock();
