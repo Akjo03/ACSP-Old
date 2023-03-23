@@ -32,12 +32,16 @@ import javax.crypto.SecretKey;
 import java.net.URI;
 import java.util.Base64;
 import java.util.Optional;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
 
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/auth/begin")
 public class BeginController {
 	private static final Logger LOGGER = LoggerManager.getLogger(BeginController.class);
+
+	private final Lock createUserLock = new ReentrantLock();
 
 	private final BeginService beginService;
 	private final SecurityService securityService;
@@ -161,6 +165,12 @@ public class BeginController {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
+		AcspUser acspUser = userRepository.findByUserId(beginRequest.getUserId());
+		if (acspUser != null) {
+			beginRequestRepository.delete(beginRequest);
+			ResponseEntity.ok("You are already authenticated.");
+		}
+
 		DiscordAuthTokenRequest discordAuthTokenRequest = discordTokenService.getDiscordAuthTokenRequest(code);
 		if (discordAuthTokenRequest == null) {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -209,10 +219,17 @@ public class BeginController {
 			return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 
-		AcspUser user = beginService.createUserFromUserResponse(discordUser, discordAuthTokenResponse.getAccessToken());
-		userRepository.save(user);
-
-		beginRequestRepository.delete(beginRequest);
+		createUserLock.lock();
+		try {
+			acspUser = userRepository.findByUserId(beginRequest.getUserId());
+			if (acspUser == null) {
+				AcspUser user = beginService.createUserFromUserResponse(discordUser, discordAuthTokenResponse.getAccessToken());
+				userRepository.save(user);
+			}
+			beginRequestRepository.delete(beginRequest);
+		} finally {
+			createUserLock.unlock();
+		}
 
 		return ResponseEntity.ok("Success");
 	}
