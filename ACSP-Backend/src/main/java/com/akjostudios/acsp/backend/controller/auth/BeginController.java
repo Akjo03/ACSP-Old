@@ -16,7 +16,6 @@ import com.akjostudios.acsp.backend.services.auth.BeginService;
 import com.akjostudios.acsp.backend.services.auth.DiscordTokenService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
-import io.github.akjo03.lib.result.Result;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,6 +25,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -66,7 +66,7 @@ public class BeginController {
 	private String acspBeginSecret;
 
 	@GetMapping("")
-	public ResponseEntity<BeginAuthResponseDto> beginAuth(String userId, String secret, String messageId) {
+	public ResponseEntity<BeginAuthResponseDto> beginAuth(@RequestParam String userId, @RequestParam String secret, @RequestParam String messageId) {
 		if (secret == null || !secret.equals(acspBeginSecret)) {
 			return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
 		}
@@ -115,7 +115,7 @@ public class BeginController {
 	}
 
 	@GetMapping("/authenticate")
-	public ResponseEntity<String> authenticate(String userId, String code) {
+	public ResponseEntity<String> authenticate(@RequestParam String userId, @RequestParam String code) {
 		if (userId == null || code == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -152,7 +152,7 @@ public class BeginController {
 	}
 
 	@GetMapping("/code")
-	public ResponseEntity<String> code(String code, String state) {
+	public ResponseEntity<String> code(@RequestParam String code, @RequestParam String state) {
 		if (code == null || state == null) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
@@ -160,20 +160,15 @@ public class BeginController {
 		String realState = beginService.makeUrlUnsafe(state);
 		BeginRequest beginRequest = beginRequestRepository.findByCode(realState);
 		if (beginRequest == null) {
-			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+			return new ResponseEntity<>("Authorization system overloaded or begin request invalid! Please use [onboarding link] to continue.", HttpStatus.I_AM_A_TEAPOT);
 		}
 		if (!beginRequest.isBegun()) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
 
 		AcspUser acspUser = userRepository.findByUserId(beginRequest.getUserId());
-		if (acspUser != null) {
-			beginRequestRepository.delete(beginRequest);
-			ResponseEntity.ok("You are already authenticated.");
-		}
-
 		AcspUserSession acspUserSession = userSessionRepository.findByUserId(beginRequest.getUserId());
-		if (acspUserSession != null) {
+		if (acspUser != null && acspUserSession != null) {
 			beginRequestRepository.delete(beginRequest);
 			return ResponseEntity.ok("You are already authenticated.");
 		}
@@ -229,22 +224,33 @@ public class BeginController {
 		createUserLock.lock();
 		try {
 			acspUser = userRepository.findByUserId(beginRequest.getUserId());
-			if (acspUser == null) {
-				AcspUser user = beginService.createUserFromUserResponse(discordUser);
-				userRepository.save(user);
-			}
+			acspUserSession = userSessionRepository.findByUserId(beginRequest.getUserId());
 
-			AcspUserSession userSession = beginService.createOnboardingSession(acspUser, discordAuthTokenResponse).getOrNull();
-			if (userSession == null) {
-				return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-			}
-			userSessionRepository.save(userSession);
+			boolean userExists = acspUser != null;
+			boolean sessionExists = acspUserSession != null;
+			boolean onboardingStatus = sessionExists && acspUserSession.getStatus().equals("onboarding");
 
-			beginRequestRepository.delete(beginRequest);
+			if (userExists && sessionExists) {
+				if (onboardingStatus) {
+					return beginService.startOnboardingProcess();
+				}
+				return new ResponseEntity<>("You are already authenticated. Use [login link] to log into ACSP!", HttpStatus.BAD_REQUEST);
+			} else if (userExists) {
+				acspUserSession = beginService.createOnboardingSession(acspUser, discordAuthTokenResponse);
+				userSessionRepository.save(acspUserSession);
+				return beginService.startOnboardingProcess();
+			} else if (sessionExists) {
+				userSessionRepository.delete(acspUserSession);
+				return new ResponseEntity<>("No user was found to start the onboarding process. Please retry by issuing the !begin command again.", HttpStatus.BAD_REQUEST);
+			} else { // !userExists && !sessionExists
+				acspUser = beginService.createUserFromUserResponse(discordUser);
+				acspUserSession = beginService.createOnboardingSession(acspUser, discordAuthTokenResponse);
+				userRepository.save(acspUser);
+				userSessionRepository.save(acspUserSession);
+				return beginService.startOnboardingProcess();
+			}
 		} finally {
 			createUserLock.unlock();
 		}
-
-		return beginService.startOnboardingProcess();
 	}
 }

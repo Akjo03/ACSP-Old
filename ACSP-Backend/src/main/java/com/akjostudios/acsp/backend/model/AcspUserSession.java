@@ -14,7 +14,7 @@ public class AcspUserSession {
 	@Id
 	private String id;
 
-	private AcspUser user;
+	private String userId;
 	private String status;
 
 	private String accessToken;

@@ -64,16 +64,16 @@ public class BeginService {
 		return discordAuthCodeRequest;
 	}
 
-	public AcspUser createUserFromUserResponse(DiscordUserResponse userResponse ) {
+	public AcspUser createUserFromUserResponse(DiscordUserResponse userResponse) {
 		AcspUser acspUser = new AcspUser();
 		acspUser.setUserId(userResponse.getId());
 
 		return acspUser;
 	}
 
-	public Result<AcspUserSession> createOnboardingSession(AcspUser user, DiscordAuthTokenResponse discordTokenResponse) {
+	public AcspUserSession createOnboardingSession(AcspUser user, DiscordAuthTokenResponse discordTokenResponse) {
 		AcspUserSession acspUserSession = new AcspUserSession();
-		acspUserSession.setUser(user);
+		acspUserSession.setUserId(user.getUserId());
 		acspUserSession.setStatus(AcspUserSessionStatus.ONBOARDING.getStatus());
 
 		String salt = securityService.generateSalt();
@@ -88,10 +88,10 @@ public class BeginService {
 			acspUserSession.setAccessToken(encryptedAccessToken);
 			acspUserSession.setRefreshToken(encryptedRefreshToken);
 		} catch (Exception e) {
-			return Result.fail(e);
+			return null;
 		}
 
-		return Result.success(acspUserSession);
+		return acspUserSession;
 	}
 
 	public ResponseEntity<String> startOnboardingProcess() {
