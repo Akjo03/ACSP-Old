@@ -15,4 +15,5 @@ public class AcspUser {
 	private String id;
 
 	private String userId;
+	private String email;
 }

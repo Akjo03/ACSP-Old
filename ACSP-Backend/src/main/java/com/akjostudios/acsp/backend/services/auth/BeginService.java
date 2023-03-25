@@ -1,5 +1,6 @@
 package com.akjostudios.acsp.backend.services.auth;
 
+import com.akjostudios.acsp.backend.config.ApplicationConfig;
 import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.dto.auth.BeginLinkResponseDto;
 import com.akjostudios.acsp.backend.dto.auth.DiscordAuthCodeRequest;
@@ -39,9 +40,6 @@ public class BeginService {
 	@Value("${application.oauth2.discord.client-id}")
 	private String discordClientId;
 
-	@Value("${application.oauth2.discord.client-secret}")
-	private String discordClientSecret;
-
 	@Value("${application.oauth2.discord.redirect-uri}")
 	private String discordRedirectUri;
 
@@ -57,6 +55,7 @@ public class BeginService {
 	@Qualifier("discordApiClient")
 	private final WebClient discordApiClient;
 
+	private final ApplicationConfig applicationConfig;
 
 	public String makeUrlSafe(String input) {
 		return input.replace("/", "_").replace("+", "-").replace("=", "~");
@@ -74,9 +73,8 @@ public class BeginService {
 	}
 
 	public BeginLinkResponseDto getBeginOnboardingLinkResponseDto(String userId) {
-		String link = "#"; // TODO: Add onboarding link
 		BeginLinkResponseDto beginOnboardingResponseDto = new BeginLinkResponseDto();
-		beginOnboardingResponseDto.setBeginLink(link);
+		beginOnboardingResponseDto.setBeginLink(applicationConfig.getAppBaseUrl() + "/onboarding?userId=" + userId);
 		return beginOnboardingResponseDto;
 	}
 
@@ -111,13 +109,13 @@ public class BeginService {
 		return null;
 	}
 
-	public ResponseEntity<String> getOnboardingRedirectResponse(AcspUser acspUser, AcspUserSession acspUserSession) {
+	public ResponseEntity<String> getOnboardingRedirectResponse(String userId) {
 		HttpHeaders redirectHeaders = new HttpHeaders();
-		redirectHeaders.add("Location", "#"); // TODO: Add onboarding link
-		return ResponseEntity.ok("Test");
+		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/onboarding?userId=" + userId);
+		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
-	public ResponseEntity<String> getDashboardRedirectResponse(AcspUser acspUser, AcspUserSession acspUserSession) {
+	public ResponseEntity<String> getDashboardRedirectResponse() {
 		HttpHeaders redirectHeaders = new HttpHeaders();
 		redirectHeaders.add("Location", "#"); // TODO: Add dashboard link
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
@@ -126,8 +124,8 @@ public class BeginService {
 	public ResponseEntity<String> getExistingUserAndSessionResponse(AcspUser acspUser, AcspUserSession acspUserSession) {
 		if (acspUser != null && acspUserSession != null) {
 			return acspUserSession.getStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())
-					? getOnboardingRedirectResponse(acspUser, acspUserSession)
-					: getDashboardRedirectResponse(acspUser, acspUserSession);
+					? getOnboardingRedirectResponse(acspUser.getUserId())
+					: getDashboardRedirectResponse();
 		}
 		return null;
 	}
@@ -149,13 +147,9 @@ public class BeginService {
 	}
 
 	public String getInvalidStateMessage() {
-		return "The auth system is either overloaded or the begin request is invalid. Please use <a href=\""
-				+ "#" // TODO: Add onboarding link
-				+ "\">this link</a> to continue."
+		return "The auth system is either overloaded or the begin request is invalid."
 				+ "<br /><br />"
-				+ "Das Authentifizierungssystem ist entweder überlastet oder die Beginn-Anfrage ist ungültig. Bitte benutze <a href=\""
-				+ "#" // TODO: Add onboarding link
-				+ "\">diesen Link</a> um fortzufahren.";
+				+ "Das Authentifizierungssystem ist entweder überlastet oder die Beginn-Anfrage ist ungültig.";
 	}
 
 	public DiscordAuthCodeRequest getDiscordAuthCodeRequest(String code) {
@@ -217,7 +211,7 @@ public class BeginService {
 			} else {
 				AcspUserSession newAcspUserSession = createOnboardingSession(acspUser, discordTokenResponse);
 				userSessionRepository.save(newAcspUserSession);
-				return getOnboardingRedirectResponse(acspUser, newAcspUserSession);
+				return getOnboardingRedirectResponse(acspUser.getUserId());
 			}
 		} else {
 			if (acspUserSession != null) {
@@ -230,15 +224,14 @@ public class BeginService {
 			AcspUserSession newAcspUserSession = createOnboardingSession(newAcspUser, discordTokenResponse);
 			userSessionRepository.save(newAcspUserSession);
 
-
-
-			return getOnboardingRedirectResponse(newAcspUser, newAcspUserSession);
+			return getOnboardingRedirectResponse(newAcspUser.getUserId());
 		}
 	}
 
 	public AcspUser createUserFromUserResponse(DiscordUserResponse userResponse) {
 		AcspUser acspUser = new AcspUser();
 		acspUser.setUserId(userResponse.getId());
+		acspUser.setEmail(userResponse.getEmail());
 
 		return acspUser;
 	}

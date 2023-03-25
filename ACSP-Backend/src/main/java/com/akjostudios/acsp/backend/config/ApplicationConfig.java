@@ -12,4 +12,5 @@ import org.springframework.context.annotation.Configuration;
 public class ApplicationConfig {
 	private String baseUrl;
 	private String discordBotUrl;
+	private String appBaseUrl;
 }

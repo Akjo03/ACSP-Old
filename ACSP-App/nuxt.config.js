@@ -20,9 +20,8 @@ export default {
     runtimeConfig: {
         public: {
             baseUrl: '',
+            backendUrl: '',
 
-            discordClientId: '',
-            discordRedirectUri: '',
             discordServerLink: ''
         }
     }

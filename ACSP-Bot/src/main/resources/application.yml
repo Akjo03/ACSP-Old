@@ -11,5 +11,7 @@ application:
     default: en
   services:
     backend-base-url: ${ACSP_BACKEND_URL}
+    app-base-url: ${ACSP_APP_URL}
   secrets:
     acsp-begin-secret: ${ACSP_BEGIN_KEY}
+    acsp-bot-api-secret: ${BOT_API_KEY}

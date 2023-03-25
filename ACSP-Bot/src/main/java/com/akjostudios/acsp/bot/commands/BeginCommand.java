@@ -3,6 +3,8 @@ package com.akjostudios.acsp.bot.commands;
 import com.akjostudios.acsp.bot.AcspBot;
 import com.akjostudios.acsp.bot.constants.BotConstants;
 import com.akjostudios.acsp.bot.dto.BeginLinkResponseDto;
+import com.akjostudios.acsp.bot.dto.UserSessionStatusDto;
+import com.akjostudios.acsp.bot.model.AcspUserSessionStatus;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.services.bot.BotConfigService;
@@ -14,6 +16,7 @@ import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -27,11 +30,16 @@ import java.util.Optional;
 public class BeginCommand extends BotCommand {
 	private static final Logger LOGGER = LoggerManager.getLogger(BeginCommand.class);
 
+	@Value("${application.services.app-base-url}")
+	private String appBaseUrl;
 	@Value("${application.services.backend-base-url}")
 	private String backendBaseUrl;
 
 	@Value("${application.secrets.acsp-begin-secret}")
 	private String acspBeginSecret;
+
+	@Value("${application.secrets.acsp-bot-api-secret}")
+	private String acspBotApiSecret;
 
 	private WebClient webClient;
 	private DiscordMessageService discordMessageService;
@@ -57,23 +65,54 @@ public class BeginCommand extends BotCommand {
 	public void execute(@NotNull MessageReceivedEvent event, BotCommandArguments arguments) {
 		LOGGER.info("Executing begin command...");
 
+		/*UserSessionStatusDto userSessionStatusDto = null;
+		try {
+			userSessionStatusDto = webClient.get()
+					.uri("/api/user/" + event.getAuthor().getId() + "/session/status")
+					.header(HttpHeaders.AUTHORIZATION, "Bearer " + acspBotApiSecret)
+					.retrieve()
+					.bodyToMono(UserSessionStatusDto.class).block();
+		} catch (Exception e) {
+			LOGGER.error("Failed to get user session status from backend", e);
+		}*/
+
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {
+			/*UserSessionStatusDto finalUserSessionStatusDto = userSessionStatusDto;*/
 			beginLinkResponseDto = webClient.get()
 					.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
 					.retrieve()
 					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.ALREADY_REPORTED.value(), clientResponse -> {
-						event.getAuthor().openPrivateChannel().queue(privateChannel -> {
-							privateChannel.sendMessage(discordMessageService.createMessage(
-									errorMessageService.getErrorMessage(
-											"errors.command.begin.already_linked.title",
-											"errors.command.begin.already_linked.description",
-											List.of(),
-											List.of(),
-											Optional.empty()
-									)
-							)).queue();
-						});
+						/*if (finalUserSessionStatusDto == null) {
+							return null;
+						}
+						if (finalUserSessionStatusDto.getSessionStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())) {
+							event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+								privateChannel.sendMessage(discordMessageService.createMessage(
+										errorMessageService.getErrorMessage(
+												"errors.command.begin.onboarding_in_progress.title",
+												"errors.command.begin.onboarding_in_progress.description",
+												List.of(),
+												List.of(
+														appBaseUrl + "/onboarding?userId=" + event.getAuthor().getId()
+												),
+												Optional.empty()
+										)
+								)).queue();
+							});
+						} else {*/
+							event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+								privateChannel.sendMessage(discordMessageService.createMessage(
+										errorMessageService.getErrorMessage(
+												"errors.command.begin.already_linked.title",
+												"errors.command.begin.already_linked.description",
+												List.of(),
+												List.of(),
+												Optional.empty()
+										)
+								)).queue();
+							});
+						/*}*/
 						return null;
 					})
 					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.GONE.value(), clientResponse -> {
