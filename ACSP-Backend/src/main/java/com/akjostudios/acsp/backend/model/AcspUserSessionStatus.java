@@ -4,7 +4,9 @@ import lombok.Getter;
 
 @Getter
 public enum AcspUserSessionStatus {
-	ONBOARDING("onboarding");
+	ONBOARDING("onboarding"),
+	ACTIVE("active"),
+	INACTIVE("inactive");
 
 	private final String status;
 

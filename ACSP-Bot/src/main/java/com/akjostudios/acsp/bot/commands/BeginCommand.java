@@ -2,7 +2,7 @@ package com.akjostudios.acsp.bot.commands;
 
 import com.akjostudios.acsp.bot.AcspBot;
 import com.akjostudios.acsp.bot.constants.BotConstants;
-import com.akjostudios.acsp.bot.dto.BeginAuthResponseDto;
+import com.akjostudios.acsp.bot.dto.BeginLinkResponseDto;
 import com.akjostudios.acsp.bot.services.DiscordMessageService;
 import com.akjostudios.acsp.bot.services.ErrorMessageService;
 import com.akjostudios.acsp.bot.services.bot.BotConfigService;
@@ -57,9 +57,9 @@ public class BeginCommand extends BotCommand {
 	public void execute(@NotNull MessageReceivedEvent event, BotCommandArguments arguments) {
 		LOGGER.info("Executing begin command...");
 
-		BeginAuthResponseDto beginAuthResponseDto = null;
+		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {
-			beginAuthResponseDto = webClient.get()
+			beginLinkResponseDto = webClient.get()
 					.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
 					.retrieve()
 					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.ALREADY_REPORTED.value(), clientResponse -> {
@@ -68,6 +68,20 @@ public class BeginCommand extends BotCommand {
 									errorMessageService.getErrorMessage(
 											"errors.command.begin.already_linked.title",
 											"errors.command.begin.already_linked.description",
+											List.of(),
+											List.of(),
+											Optional.empty()
+									)
+							)).queue();
+						});
+						return null;
+					})
+					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.GONE.value(), clientResponse -> {
+						event.getAuthor().openPrivateChannel().queue(privateChannel -> {
+							privateChannel.sendMessage(discordMessageService.createMessage(
+									errorMessageService.getErrorMessage(
+											"errors.command.begin.user_deleted.title",
+											"errors.command.begin.user_deleted.description",
 											List.of(),
 											List.of(),
 											Optional.empty()
@@ -89,19 +103,19 @@ public class BeginCommand extends BotCommand {
 							)).queue();
 						});
 						return null;
-					}).bodyToMono(BeginAuthResponseDto.class).block();
+					}).bodyToMono(BeginLinkResponseDto.class).block();
 		} catch (Exception ignored) {}
-		if (beginAuthResponseDto == null) {
+		if (beginLinkResponseDto == null) {
 			return;
 		}
 
-		BeginAuthResponseDto finalBeginAuthResponseDto = beginAuthResponseDto;
+		BeginLinkResponseDto finalBeginAuthResponseDto = beginLinkResponseDto;
 		event.getAuthor().openPrivateChannel().queue(privateChannel -> {
 			privateChannel.sendMessage(discordMessageService.createMessage(
 					botConfigService.getMessageDefinition(
 							"BEGIN_LINK_MESSAGE",
 							Optional.empty(),
-							finalBeginAuthResponseDto.getAuthLink(),
+							finalBeginAuthResponseDto.getBeginLink(),
 							AcspBot.getBotName(),
 							BotConstants.DATE_TIME_FORMATTER.format(Instant.now())
 					)
