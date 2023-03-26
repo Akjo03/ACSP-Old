@@ -30,8 +30,6 @@ import java.util.Optional;
 public class BeginCommand extends BotCommand {
 	private static final Logger LOGGER = LoggerManager.getLogger(BeginCommand.class);
 
-	@Value("${application.services.app-base-url}")
-	private String appBaseUrl;
 	@Value("${application.services.backend-base-url}")
 	private String backendBaseUrl;
 
@@ -72,9 +70,7 @@ public class BeginCommand extends BotCommand {
 					.header(HttpHeaders.AUTHORIZATION, "Bot " + acspBotApiSecret)
 					.retrieve()
 					.bodyToMono(UserSessionStatusDto.class).block();
-		} catch (Exception e) {
-			LOGGER.error("Failed to get user session status from backend", e);
-		}
+		} catch (Exception ignored) {}
 
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {
@@ -94,7 +90,7 @@ public class BeginCommand extends BotCommand {
 												"errors.command.begin.onboarding_in_progress.description",
 												List.of(),
 												List.of(
-														appBaseUrl + "/onboarding?userId=" + event.getAuthor().getId()
+														backendBaseUrl + "/api/user/onboarding?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret
 												),
 												Optional.empty()
 										)

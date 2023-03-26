@@ -23,3 +23,4 @@ application:
   security:
     discord-encryption-key: ${DISCORD_ACCESS_KEY}
     bot-api-key: ${BOT_API_KEY}
+    session-key-secret: ${SESSION_KEY_SECRET}

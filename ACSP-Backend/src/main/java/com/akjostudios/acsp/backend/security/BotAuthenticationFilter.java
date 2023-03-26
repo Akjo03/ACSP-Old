@@ -1,7 +1,5 @@
 package com.akjostudios.acsp.backend.security;
 
-import io.github.akjo03.lib.logging.Logger;
-import io.github.akjo03.lib.logging.LoggerManager;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -15,7 +13,6 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import java.io.IOException;
 import java.util.Collections;
-
 
 public class BotAuthenticationFilter extends GenericFilterBean {
 	private final String botApiKey;

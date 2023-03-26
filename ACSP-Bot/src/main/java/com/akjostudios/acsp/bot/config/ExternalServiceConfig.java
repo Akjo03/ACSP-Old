@@ -10,6 +10,5 @@ import org.springframework.context.annotation.Configuration;
 @Getter
 @Setter
 public class ExternalServiceConfig {
-	private String appBaseUrl;
 	private String backendBaseUrl;
 }

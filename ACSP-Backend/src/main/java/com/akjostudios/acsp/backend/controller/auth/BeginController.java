@@ -167,7 +167,7 @@ public class BeginController {
 		// Respond to existing user and session
 		AcspUser acspUser = userRepository.findByUserId(beginRequest.getUserId());
 		AcspUserSession acspUserSession = userSessionRepository.findByUserId(beginRequest.getUserId());
-		ResponseEntity<String> existingUserResponse = beginService.getExistingUserAndSessionResponse(acspUser, acspUserSession);
+		ResponseEntity<String> existingUserResponse = beginService.getExistingUserAndSessionResponse(acspUserSession);
 		if (existingUserResponse != null) {
 			return existingUserResponse;
 		}

@@ -17,6 +17,8 @@ public class BeginController extends AcspBotController {
 		TextChannel beginChannel = jdaInstance.getTextChannelById(AcspDiscordChannels.BEGIN_CHANNEL.getId());
 		if (beginChannel == null) { return; }
 
-		beginChannel.deleteMessageById(messageId).queue();
+		try {
+			beginChannel.deleteMessageById(messageId).queue();
+		} catch (Exception ignored) {}
 	}
 }
