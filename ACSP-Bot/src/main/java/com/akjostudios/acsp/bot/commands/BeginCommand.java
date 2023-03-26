@@ -65,25 +65,25 @@ public class BeginCommand extends BotCommand {
 	public void execute(@NotNull MessageReceivedEvent event, BotCommandArguments arguments) {
 		LOGGER.info("Executing begin command...");
 
-		/*UserSessionStatusDto userSessionStatusDto = null;
+		UserSessionStatusDto userSessionStatusDto = null;
 		try {
 			userSessionStatusDto = webClient.get()
 					.uri("/api/user/" + event.getAuthor().getId() + "/session/status")
-					.header(HttpHeaders.AUTHORIZATION, "Bearer " + acspBotApiSecret)
+					.header(HttpHeaders.AUTHORIZATION, "Bot " + acspBotApiSecret)
 					.retrieve()
 					.bodyToMono(UserSessionStatusDto.class).block();
 		} catch (Exception e) {
 			LOGGER.error("Failed to get user session status from backend", e);
-		}*/
+		}
 
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {
-			/*UserSessionStatusDto finalUserSessionStatusDto = userSessionStatusDto;*/
+			UserSessionStatusDto finalUserSessionStatusDto = userSessionStatusDto;
 			beginLinkResponseDto = webClient.get()
 					.uri("/api/auth/begin?userId=" + event.getAuthor().getId() + "&secret=" + acspBeginSecret + "&messageId=" + event.getMessageId())
 					.retrieve()
 					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.ALREADY_REPORTED.value(), clientResponse -> {
-						/*if (finalUserSessionStatusDto == null) {
+						if (finalUserSessionStatusDto == null) {
 							return null;
 						}
 						if (finalUserSessionStatusDto.getSessionStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())) {
@@ -100,7 +100,7 @@ public class BeginCommand extends BotCommand {
 										)
 								)).queue();
 							});
-						} else {*/
+						} else {
 							event.getAuthor().openPrivateChannel().queue(privateChannel -> {
 								privateChannel.sendMessage(discordMessageService.createMessage(
 										errorMessageService.getErrorMessage(
@@ -112,7 +112,7 @@ public class BeginCommand extends BotCommand {
 										)
 								)).queue();
 							});
-						/*}*/
+						}
 						return null;
 					})
 					.onStatus(httpStatus -> httpStatus.value() == HttpStatus.GONE.value(), clientResponse -> {
