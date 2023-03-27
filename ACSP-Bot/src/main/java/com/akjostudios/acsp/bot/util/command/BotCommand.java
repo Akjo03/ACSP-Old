@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.Optional;
 
 public abstract class BotCommand {
-	private static Logger LOGGER;
+	private final Logger LOGGER;
 
 	protected final String name;
 	private BotConfigCommand definition;
