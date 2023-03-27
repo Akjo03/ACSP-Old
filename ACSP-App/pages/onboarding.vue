@@ -20,7 +20,20 @@ const userEmail = ref('');
 onMounted(() => {
   sessionId.value = sessionIdCookie.value || '';
   sessionToken.value = sessionTokenCookie.value || '';
-});
 
-// TODO: Figure out how to make an authenticated request to the API to get the user's email
+  const headers = {
+    "Authorization": "Session " + sessionToken.value,
+    "Accept": "application/json",
+    "X-Session-ID": sessionId.value
+  };
+
+  $fetch(config.public.backendUrl + "/api/user/@me", {
+    headers: headers,
+    method: "GET"
+  }).then((response) => {
+    userEmail.value = response.user.email;
+  }).catch((error) => {
+    console.log(error);
+  });
+});
 </script>

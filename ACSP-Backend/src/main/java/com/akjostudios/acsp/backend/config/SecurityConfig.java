@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
 
 @Configuration
 @RequiredArgsConstructor
@@ -51,10 +52,18 @@ public class SecurityConfig {
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(new BotAuthenticationFilter(botApiKey), BasicAuthenticationFilter.class)
-				.addFilterBefore(new SessionTokenAuthenticationFilter(securityService, userRepository, userSessionRepository, roleRepository), BasicAuthenticationFilter.class)
+				.addFilterBefore(new SessionTokenAuthenticationFilter(this, securityService, userRepository, userSessionRepository, roleRepository), BasicAuthenticationFilter.class)
 				.httpBasic().disable()
 				.formLogin().disable()
-				.cors().disable() // TODO: Enable CORS
+				.cors().configurationSource(request -> {
+					CorsConfiguration corsConfiguration = new CorsConfiguration();
+					corsConfiguration.addAllowedOrigin(applicationConfig.getAppBaseUrl());
+					corsConfiguration.addAllowedOrigin(applicationConfig.getDiscordBotUrl());
+					corsConfiguration.addAllowedHeader("*");
+					corsConfiguration.addAllowedMethod("*");
+					corsConfiguration.setAllowCredentials(true);
+					return corsConfiguration;
+				}).and()
 				.exceptionHandling()
 				.and().build();
 	}

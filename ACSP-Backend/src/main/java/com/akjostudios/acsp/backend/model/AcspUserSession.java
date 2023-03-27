@@ -28,4 +28,5 @@ public class AcspUserSession {
 	private String sessionKey;
 
 	private String salt;
+	private String iv;
 }

@@ -20,4 +20,9 @@ public class AcspRole {
 
 	private String name;
 	private List<String> permissions;
+
+	public AcspRole(String name, List<String> permissions) {
+		this.name = name;
+		this.permissions = permissions;
+	}
 }

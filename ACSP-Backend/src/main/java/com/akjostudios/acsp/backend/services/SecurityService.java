@@ -90,6 +90,7 @@ public class SecurityService {
 				.setSubject(userId)
 				.setHeaderParam("kid", sessionId)
 				.setHeaderParam("typ", "JWT")
+				.setIssuer(userId)
 				.setIssuedAt(Date.from(now))
 				.setExpiration(Date.from(expiration))
 				.signWith(privateKey, SignatureAlgorithm.PS256)
@@ -104,10 +105,23 @@ public class SecurityService {
 				.getBody();
 	}
 
-	public PublicKey getPublicKey(String key) throws NoSuchAlgorithmException, InvalidKeySpecException {
-		byte[] keyBytes = Base64.getDecoder()
-				.decode(key);
-		X509EncodedKeySpec spec = new X509EncodedKeySpec(keyBytes);
+	public IvParameterSpec getIv(String iv) {
+		return new IvParameterSpec(Base64.getDecoder()
+				.decode(iv));
+	}
+
+	public PublicKey getPublicKey(String publicKey, SecretKey key, IvParameterSpec iv)
+			throws NoSuchAlgorithmException,
+			InvalidKeySpecException,
+			InvalidAlgorithmParameterException,
+			NoSuchPaddingException,
+			IllegalBlockSizeException,
+			BadPaddingException,
+			InvalidKeyException {
+		String decryptedKey = decrypt(publicKey, key, iv);
+
+		X509EncodedKeySpec spec = new X509EncodedKeySpec(Base64.getDecoder()
+				.decode(decryptedKey));
 		KeyFactory kf = KeyFactory.getInstance("RSA");
 		return kf.generatePublic(spec);
 	}

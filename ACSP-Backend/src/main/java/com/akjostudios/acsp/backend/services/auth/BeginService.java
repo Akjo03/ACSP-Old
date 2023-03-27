@@ -266,6 +266,7 @@ public class BeginService {
 		acspUserSession.setSalt(salt);
 
 		IvParameterSpec ivParameterSpec = securityService.generateIv();
+		acspUserSession.setIv(new String(Base64.getEncoder().encode(ivParameterSpec.getIV())));
 		try {
 			SecretKey secretKey = securityService.getKeyFromPassword(securityConfig.getDiscordEncryptionKey(), salt);
 			String encryptedAccessToken = securityService.encrypt(discordTokenResponse.getAccessToken(), secretKey, ivParameterSpec);
