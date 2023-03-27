@@ -20,7 +20,7 @@ public class RolesDbInitializer implements DbInitializer {
 		if (roles.isEmpty()) {
 			roleRepository.save(new AcspRole(AcspRoles.USER.getRole(), List.of(
 					"ME_USER:READ",
-					"ME_USER:WRITE"
+					"ME_USER.SESSION.REFRESH"
 			)));
 		}
 	}

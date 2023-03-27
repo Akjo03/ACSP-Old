@@ -28,7 +28,6 @@ import org.springframework.web.filter.GenericFilterBean;
 import javax.crypto.SecretKey;
 import java.io.IOException;
 import java.security.PublicKey;
-import java.time.Instant;
 import java.util.HashSet;
 
 @RequiredArgsConstructor
@@ -73,22 +72,13 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 
 									Claims claims = securityService.verifyToken(reqSessionToken, publicKey);
 									if (claims != null) {
-										Instant now = Instant.now();
-										Instant exp = claims.getExpiration().toInstant();
-										if (exp.isBefore(now)) {
-											response.getWriter().write("Session expired");
-											response.getWriter().flush();
-											response.getWriter().close();
-											LOGGER.info("Session for user " + user.getId() + " expired!");
-										} else {
-											if (claims.getIssuer().equals(user.getUserId())) {
-												AcspRole role = roleRepository.findByName(user.getRole());
-												HashSet<GrantedAuthority> authorities = new HashSet<>();
-												role.getPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));
-												UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUserId(), null, authorities);
-												SecurityContextHolder.getContext().setAuthentication(authentication);
-												LOGGER.info("User " + user.getUserId() + " authenticated successfully!");
-											}
+										if (claims.getIssuer().equals(user.getUserId())) {
+											AcspRole role = roleRepository.findByName(user.getRole());
+											HashSet<GrantedAuthority> authorities = new HashSet<>();
+											role.getPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));
+											UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUserId(), null, authorities);
+											SecurityContextHolder.getContext().setAuthentication(authentication);
+											LOGGER.info("User " + user.getUserId() + " authenticated successfully!");
 										}
 									}
 								}

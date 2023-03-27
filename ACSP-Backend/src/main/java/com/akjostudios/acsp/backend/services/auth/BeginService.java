@@ -37,7 +37,8 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class BeginService {
-	private static final Logger LOGGER = LoggerManager.getLogger(BeginService.class);
+	private static final int SESSION_TOKEN_EXPIRY = 60; // 1 minute
+	private static final int SESSION_REFRESH_TOKEN_EXPIRY = 60 * 60 * 24 * 7; // 1 week
 
 	@Value("${application.base-url}")
 	private String baseUrl;
@@ -287,8 +288,8 @@ public class BeginService {
 			SecretKey secretKey = securityService.getKeyFromPassword(sessionKeySecret, salt);
 			String encryptedSessionKey = securityService.encrypt(new String(Base64.getEncoder().encode(keyPair.getPublic().getEncoded())), secretKey, ivParameterSpec);
 
-			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), 60*60, (RSAPrivateKey) keyPair.getPrivate());
-			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), 60*60*24*7, (RSAPrivateKey) keyPair.getPrivate());
+			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_TOKEN_EXPIRY, (RSAPrivateKey) keyPair.getPrivate());
+			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_REFRESH_TOKEN_EXPIRY, (RSAPrivateKey) keyPair.getPrivate());
 
 			acspUserSession.setSessionId(sessionId);
 			acspUserSession.setSessionKey(encryptedSessionKey);
