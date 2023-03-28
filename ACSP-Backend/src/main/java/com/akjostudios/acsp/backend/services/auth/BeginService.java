@@ -9,7 +9,6 @@ import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenRequest;
 import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenResponse;
 import com.akjostudios.acsp.backend.data.dto.discord.DiscordUserResponse;
 import com.akjostudios.acsp.backend.data.model.*;
-import com.akjostudios.acsp.backend.model.*;
 import com.akjostudios.acsp.backend.data.repository.UserRepository;
 import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.security.KeystoreService;
