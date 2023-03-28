@@ -29,4 +29,10 @@ public class WebClientConfig {
 	public WebClient discordBotClient() {
 		return webClientBuilder.baseUrl(applicationConfig.getDiscordBotUrl()).build();
 	}
+
+	@Bean
+	@Qualifier("selfClient")
+	public WebClient selfClient() {
+		return webClientBuilder.baseUrl(applicationConfig.getBaseUrl() + "/api").build();
+	}
 }
