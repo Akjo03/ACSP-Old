@@ -1,5 +1,6 @@
 package com.akjostudios.acsp.backend;
 
+import com.akjostudios.acsp.backend.config.KeystoreConfig;
 import com.akjostudios.acsp.backend.util.DbInitializer;
 import io.github.akjo03.lib.config.AkjoLibSpringAutoConfiguration;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,10 @@ public class AcspBackend implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Override
 	public void onApplicationEvent(ApplicationReadyEvent event) {
+		event.getApplicationContext()
+				.getBean(KeystoreConfig.class)
+				.generateKeystore();
+
 		event.getApplicationContext()
 				.getBeansOfType(DbInitializer.class)
 				.forEach((s, dbInitializer) -> dbInitializer.init());

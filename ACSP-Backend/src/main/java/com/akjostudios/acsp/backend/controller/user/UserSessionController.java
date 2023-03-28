@@ -25,10 +25,4 @@ public class UserSessionController {
 		}
 		return ResponseEntity.ok(userSessionStatusDto);
 	}
-
-	@GetMapping("/@me/session/refresh/token")
-	@PreAuthorize("hasAuthority('ME_USER.SESSION.REFRESH')")
-	public ResponseEntity<UserSessionRefreshDto> refreshUserSession(@RequestHeader("X-Session-ID") String sessionId) {
-		return ResponseEntity.of(Optional.empty());
-	}
 }

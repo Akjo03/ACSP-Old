@@ -27,6 +27,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
 import java.security.KeyPair;
+import java.security.KeyStore;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Base64;
 import java.util.Objects;
@@ -288,8 +289,10 @@ public class BeginService {
 			SecretKey secretKey = securityService.getKeyFromPassword(sessionKeySecret, salt);
 			String encryptedSessionKey = securityService.encrypt(new String(Base64.getEncoder().encode(keyPair.getPublic().getEncoded())), secretKey, ivParameterSpec);
 
-			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_TOKEN_EXPIRY, (RSAPrivateKey) keyPair.getPrivate());
-			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_REFRESH_TOKEN_EXPIRY, (RSAPrivateKey) keyPair.getPrivate());
+			RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+
+			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_TOKEN_EXPIRY, privateKey);
+			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_REFRESH_TOKEN_EXPIRY, privateKey);
 
 			acspUserSession.setSessionId(sessionId);
 			acspUserSession.setSessionKey(encryptedSessionKey);

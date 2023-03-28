@@ -78,13 +78,12 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 											role.getPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));
 											UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUserId(), null, authorities);
 											SecurityContextHolder.getContext().setAuthentication(authentication);
-											LOGGER.info("User " + user.getUserId() + " authenticated successfully!");
 										}
 									}
 								}
 							}
 						} catch (Exception e) {
-							LOGGER.error("Error while validating session token", e);
+							LOGGER.error("Error while validating session token for user " + user.getUserId(), e);
 						}
 					}
 				}

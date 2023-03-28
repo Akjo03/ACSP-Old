@@ -37,6 +37,7 @@
         <spring-boot.version>3.0.4</spring-boot.version>
         <junit.version>5.9.2</junit.version>
         <jjwt.version>0.11.5</jjwt.version>
+        <bouncycastle.version>1.72</bouncycastle.version>
 
         <main.class>com.akjostudios.acsp.backend.AcspBackend</main.class>
     </properties>
@@ -60,7 +61,7 @@
         <dependency>
             <groupId>org.jetbrains</groupId>
             <artifactId>annotations</artifactId>
-            <version>24.0.0</version>
+            <version>24.0.1</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>
@@ -105,6 +106,18 @@
             <artifactId>jjwt-jackson</artifactId>
             <version>${jjwt.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcprov-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.bouncycastle</groupId>
+            <artifactId>bcpkix-jdk18on</artifactId>
+            <version>${bouncycastle.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.apache.commons</groupId>
