@@ -12,6 +12,7 @@ import com.akjostudios.acsp.backend.services.security.SecurityService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
@@ -46,6 +47,7 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 	private final RoleRepository roleRepository;
 
 	@Override
+	@SuppressWarnings("DuplicatedCode")
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
 		HttpServletRequest httpRequest = (HttpServletRequest) request;
 		String authHeader = httpRequest.getHeader(HttpHeaders.AUTHORIZATION);
@@ -93,8 +95,9 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 									}
 								}
 							}
+						} catch (ExpiredJwtException ignored) {
 						} catch (Exception e) {
-							LOGGER.error("Error while validating session token for user " + user.getUserId(), e);
+							LOGGER.error("Error while authenticating session token for user " + user.getUserId(), e);
 						}
 					}
 				}

@@ -38,8 +38,7 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class BeginService {
-	private static final int SESSION_TOKEN_EXPIRY = 60; // 1 minute
-	private static final int SESSION_REFRESH_TOKEN_EXPIRY = 60 * 60 * 24 * 7; // 1 week
+
 
 	@Value("${application.base-url}")
 	private String baseUrl;
@@ -121,8 +120,8 @@ public class BeginService {
 	public ResponseEntity<String> getOnboardingRedirectResponse(AcspUserSession acspUserSession) {
 		HttpHeaders redirectHeaders = new HttpHeaders();
 		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/onboarding");
-		redirectHeaders.add("Set-Cookie", "session=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; Secure");
-		redirectHeaders.add("Set-Cookie", "session_token=" + acspUserSession.getSessionToken() + "; Path=/; SameSite=Strict; Secure");
+		redirectHeaders.add("Set-Cookie", "session=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
+		redirectHeaders.add("Set-Cookie", "session_token=" + acspUserSession.getSessionToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
@@ -291,17 +290,17 @@ public class BeginService {
 			SecretKey secretKey = securityService.getKeyFromPassword(sessionKeySecret, salt);
 			String encryptedSessionKey = securityService.encrypt(new String(Base64.getEncoder().encode(keyPair.getPublic().getEncoded())), secretKey, ivParameterSpec);
 
-			KeyStore keyStore = keystoreService.getKeystore();
-			if (keyStore == null) {
+			KeyStore keystore = keystoreService.getKeystore();
+			if (keystore == null) {
 				return null;
 			}
 
 			RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-			keystoreService.addKey(keyStore, sessionId, privateKey);
-			keystoreService.saveKeystore(keyStore);
+			keystoreService.addKey(keystore, sessionId, privateKey);
+			keystoreService.saveKeystore(keystore);
 
-			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_TOKEN_EXPIRY, privateKey);
-			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_REFRESH_TOKEN_EXPIRY, privateKey);
+			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SecurityConfig.SESSION_TOKEN_EXPIRY, privateKey);
+			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SecurityConfig.SESSION_REFRESH_TOKEN_EXPIRY, privateKey);
 
 			acspUserSession.setSessionId(sessionId);
 			acspUserSession.setSessionKey(encryptedSessionKey);
