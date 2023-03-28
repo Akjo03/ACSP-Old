@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.backend.model;
+package com.akjostudios.acsp.backend.data.model;
 
 import lombok.Getter;
 

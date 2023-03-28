@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.backend.dto.auth;
+package com.akjostudios.acsp.backend.data.dto.auth;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -2,14 +2,16 @@ package com.akjostudios.acsp.backend.services.auth;
 
 import com.akjostudios.acsp.backend.config.ApplicationConfig;
 import com.akjostudios.acsp.backend.config.SecurityConfig;
-import com.akjostudios.acsp.backend.dto.auth.BeginLinkResponseDto;
-import com.akjostudios.acsp.backend.dto.auth.DiscordAuthCodeRequest;
-import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenRequest;
-import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenResponse;
-import com.akjostudios.acsp.backend.dto.discord.DiscordUserResponse;
+import com.akjostudios.acsp.backend.config.auth.AcspSecretConfiguration;
+import com.akjostudios.acsp.backend.data.dto.auth.BeginLinkResponseDto;
+import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthCodeRequest;
+import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenRequest;
+import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenResponse;
+import com.akjostudios.acsp.backend.data.dto.discord.DiscordUserResponse;
+import com.akjostudios.acsp.backend.data.model.*;
 import com.akjostudios.acsp.backend.model.*;
-import com.akjostudios.acsp.backend.repository.UserRepository;
-import com.akjostudios.acsp.backend.repository.UserSessionRepository;
+import com.akjostudios.acsp.backend.data.repository.UserRepository;
+import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.security.KeystoreService;
 import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.RequiredArgsConstructor;
@@ -52,6 +54,7 @@ public class BeginService {
 	private final SecurityService securityService;
 	private final KeystoreService keystoreService;
 	private final SecurityConfig securityConfig;
+	private final AcspSecretConfiguration acspSecretConfiguration;
 
 	private final UserRepository userRepository;
 	private final UserSessionRepository userSessionRepository;
@@ -79,9 +82,9 @@ public class BeginService {
 		return beginAuthResponseDto;
 	}
 
-	public BeginLinkResponseDto getBeginOnboardingLinkResponseDto() {
+	public BeginLinkResponseDto getBeginOnboardingLinkResponseDto(String userId) {
 		BeginLinkResponseDto beginOnboardingResponseDto = new BeginLinkResponseDto();
-		beginOnboardingResponseDto.setBeginLink(applicationConfig.getAppBaseUrl() + "/onboarding");
+		beginOnboardingResponseDto.setBeginLink(applicationConfig.getBaseUrl() + "/api/user/onboarding?userId=" + userId + "&secret=" + acspSecretConfiguration.getAcspBeginSecret());
 		return beginOnboardingResponseDto;
 	}
 
@@ -105,7 +108,7 @@ public class BeginService {
 			if (acspUserSession != null) { // User has an existing session
 				// Respond with the begin link based on the session status
 				BeginLinkResponseDto beginLinkResponseDto = acspUserSession.getStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())
-						? getBeginOnboardingLinkResponseDto()
+						? getBeginOnboardingLinkResponseDto(acspUser.getUserId())
 						: getBeginDashboardLinkResponseDto();
 				return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(beginLinkResponseDto);
 			} else { // User has no existing session

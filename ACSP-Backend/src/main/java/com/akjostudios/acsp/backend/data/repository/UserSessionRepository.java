@@ -1,6 +1,6 @@
-package com.akjostudios.acsp.backend.repository;
+package com.akjostudios.acsp.backend.data.repository;
 
-import com.akjostudios.acsp.backend.model.AcspUserSession;
+import com.akjostudios.acsp.backend.data.model.AcspUserSession;
 import org.jetbrains.annotations.Nullable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;

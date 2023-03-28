@@ -1,12 +1,13 @@
 package com.akjostudios.acsp.backend.security;
 
 import com.akjostudios.acsp.backend.config.SecurityConfig;
-import com.akjostudios.acsp.backend.model.AcspRole;
-import com.akjostudios.acsp.backend.model.AcspUser;
-import com.akjostudios.acsp.backend.model.AcspUserSession;
-import com.akjostudios.acsp.backend.repository.RoleRepository;
-import com.akjostudios.acsp.backend.repository.UserRepository;
-import com.akjostudios.acsp.backend.repository.UserSessionRepository;
+import com.akjostudios.acsp.backend.data.model.AcspRole;
+import com.akjostudios.acsp.backend.data.model.AcspUser;
+import com.akjostudios.acsp.backend.data.model.AcspUserSession;
+import com.akjostudios.acsp.backend.data.repository.RoleRepository;
+import com.akjostudios.acsp.backend.data.repository.UserRepository;
+import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
+import com.akjostudios.acsp.backend.services.security.KeystoreService;
 import com.akjostudios.acsp.backend.services.security.SecurityService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
@@ -27,7 +28,10 @@ import org.springframework.web.filter.GenericFilterBean;
 
 import javax.crypto.SecretKey;
 import java.io.IOException;
+import java.security.KeyStore;
+import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.util.Arrays;
 import java.util.HashSet;
 
 @RequiredArgsConstructor
@@ -36,6 +40,7 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 
 	private final SecurityConfig securityConfig;
 	private final SecurityService securityService;
+	private final KeystoreService keystoreService;
 	private final UserRepository userRepository;
 	private final UserSessionRepository userSessionRepository;
 	private final RoleRepository roleRepository;
@@ -70,14 +75,20 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 									SecretKey key = securityService.getKeyFromPassword(securityConfig.getSessionKeySecret(), encSalt);
 									PublicKey publicKey = securityService.getPublicKey(encPublicKey, key, securityService.getIv(encIv));
 
-									Claims claims = securityService.verifyToken(reqSessionToken, publicKey);
-									if (claims != null) {
-										if (claims.getIssuer().equals(user.getUserId())) {
-											AcspRole role = roleRepository.findByName(user.getRole());
-											HashSet<GrantedAuthority> authorities = new HashSet<>();
-											role.getPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));
-											UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUserId(), null, authorities);
-											SecurityContextHolder.getContext().setAuthentication(authentication);
+									KeyStore keystore = keystoreService.getKeystore();
+									PrivateKey privateKey = keystoreService.getPrivateKey(keystore, session.getSessionId());
+									PublicKey generatedPublicKey = securityService.getPublicKey(privateKey);
+
+									if (Arrays.equals(generatedPublicKey.getEncoded(), publicKey.getEncoded())) {
+										Claims claims = securityService.verifyToken(reqSessionToken, publicKey);
+										if (claims != null) {
+											if (claims.getIssuer().equals(user.getUserId())) {
+												AcspRole role = roleRepository.findByName(user.getRole());
+												HashSet<GrantedAuthority> authorities = new HashSet<>();
+												role.getPermissions().forEach(permission -> authorities.add(new SimpleGrantedAuthority(permission)));
+												UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user.getUserId(), null, authorities);
+												SecurityContextHolder.getContext().setAuthentication(authentication);
+											}
 										}
 									}
 								}

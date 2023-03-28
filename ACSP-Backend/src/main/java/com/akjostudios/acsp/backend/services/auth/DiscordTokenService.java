@@ -1,6 +1,6 @@
 package com.akjostudios.acsp.backend.services.auth;
 
-import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenRequest;
+import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;

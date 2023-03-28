@@ -1,11 +1,11 @@
 package com.akjostudios.acsp.backend.services.user;
 
-import com.akjostudios.acsp.backend.dto.user.UserDto;
-import com.akjostudios.acsp.backend.dto.user.UserSessionStatusDto;
-import com.akjostudios.acsp.backend.model.AcspUser;
-import com.akjostudios.acsp.backend.model.AcspUserSession;
-import com.akjostudios.acsp.backend.repository.UserRepository;
-import com.akjostudios.acsp.backend.repository.UserSessionRepository;
+import com.akjostudios.acsp.backend.data.dto.user.UserDto;
+import com.akjostudios.acsp.backend.data.dto.user.UserSessionStatusDto;
+import com.akjostudios.acsp.backend.data.model.AcspUser;
+import com.akjostudios.acsp.backend.data.model.AcspUserSession;
+import com.akjostudios.acsp.backend.data.repository.UserRepository;
+import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

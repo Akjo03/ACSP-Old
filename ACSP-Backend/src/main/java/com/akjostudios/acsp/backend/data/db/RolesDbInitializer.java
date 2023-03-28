@@ -1,8 +1,8 @@
-package com.akjostudios.acsp.backend.db;
+package com.akjostudios.acsp.backend.data.db;
 
-import com.akjostudios.acsp.backend.model.AcspRole;
-import com.akjostudios.acsp.backend.model.AcspRoles;
-import com.akjostudios.acsp.backend.repository.RoleRepository;
+import com.akjostudios.acsp.backend.data.model.AcspRole;
+import com.akjostudios.acsp.backend.data.model.AcspRoles;
+import com.akjostudios.acsp.backend.data.repository.RoleRepository;
 import com.akjostudios.acsp.backend.util.DbInitializer;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;

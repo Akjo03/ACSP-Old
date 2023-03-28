@@ -1,6 +1,6 @@
-package com.akjostudios.acsp.backend.dto.user;
+package com.akjostudios.acsp.backend.data.dto.user;
 
-import com.akjostudios.acsp.backend.model.AcspUser;
+import com.akjostudios.acsp.backend.data.model.AcspUser;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

@@ -1,6 +1,6 @@
-package com.akjostudios.acsp.backend.repository;
+package com.akjostudios.acsp.backend.data.repository;
 
-import com.akjostudios.acsp.backend.model.BeginRequest;
+import com.akjostudios.acsp.backend.data.model.BeginRequest;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
 

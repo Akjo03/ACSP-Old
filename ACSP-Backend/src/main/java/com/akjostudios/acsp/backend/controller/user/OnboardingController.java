@@ -1,8 +1,8 @@
 package com.akjostudios.acsp.backend.controller.user;
 
 import com.akjostudios.acsp.backend.config.auth.AcspSecretConfiguration;
-import com.akjostudios.acsp.backend.model.AcspUserSession;
-import com.akjostudios.acsp.backend.model.AcspUserSessionStatus;
+import com.akjostudios.acsp.backend.data.model.AcspUserSession;
+import com.akjostudios.acsp.backend.data.model.AcspUserSessionStatus;
 import com.akjostudios.acsp.backend.services.auth.BeginService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

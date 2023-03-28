@@ -1,10 +1,11 @@
 package com.akjostudios.acsp.backend.config;
 
-import com.akjostudios.acsp.backend.repository.RoleRepository;
-import com.akjostudios.acsp.backend.repository.UserRepository;
-import com.akjostudios.acsp.backend.repository.UserSessionRepository;
+import com.akjostudios.acsp.backend.data.repository.RoleRepository;
+import com.akjostudios.acsp.backend.data.repository.UserRepository;
+import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.security.BotAuthenticationFilter;
 import com.akjostudios.acsp.backend.security.SessionTokenAuthenticationFilter;
+import com.akjostudios.acsp.backend.services.security.KeystoreService;
 import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +38,7 @@ public class SecurityConfig {
 
 	private final ApplicationConfig applicationConfig;
 	private final SecurityService securityService;
+	private final KeystoreService keystoreService;
 	private final UserRepository userRepository;
 	private final UserSessionRepository userSessionRepository;
 	private final RoleRepository roleRepository;
@@ -52,7 +54,7 @@ public class SecurityConfig {
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(new BotAuthenticationFilter(botApiKey), BasicAuthenticationFilter.class)
-				.addFilterBefore(new SessionTokenAuthenticationFilter(this, securityService, userRepository, userSessionRepository, roleRepository), BasicAuthenticationFilter.class)
+				.addFilterBefore(new SessionTokenAuthenticationFilter(this, securityService, keystoreService, userRepository, userSessionRepository, roleRepository), BasicAuthenticationFilter.class)
 				.httpBasic().disable()
 				.formLogin().disable()
 				.cors().configurationSource(request -> {

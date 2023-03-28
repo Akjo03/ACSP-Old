@@ -1,16 +1,16 @@
 package com.akjostudios.acsp.backend.controller.auth;
 
 import com.akjostudios.acsp.backend.config.auth.AcspSecretConfiguration;
-import com.akjostudios.acsp.backend.dto.auth.BeginLinkResponseDto;
-import com.akjostudios.acsp.backend.dto.auth.DiscordAuthCodeRequest;
-import com.akjostudios.acsp.backend.dto.auth.DiscordAuthTokenResponse;
-import com.akjostudios.acsp.backend.dto.discord.DiscordUserResponse;
-import com.akjostudios.acsp.backend.model.AcspUser;
-import com.akjostudios.acsp.backend.model.AcspUserSession;
-import com.akjostudios.acsp.backend.model.BeginRequest;
-import com.akjostudios.acsp.backend.repository.BeginRequestRepository;
-import com.akjostudios.acsp.backend.repository.UserRepository;
-import com.akjostudios.acsp.backend.repository.UserSessionRepository;
+import com.akjostudios.acsp.backend.data.dto.auth.BeginLinkResponseDto;
+import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthCodeRequest;
+import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenResponse;
+import com.akjostudios.acsp.backend.data.dto.discord.DiscordUserResponse;
+import com.akjostudios.acsp.backend.data.model.AcspUser;
+import com.akjostudios.acsp.backend.data.model.AcspUserSession;
+import com.akjostudios.acsp.backend.data.model.BeginRequest;
+import com.akjostudios.acsp.backend.data.repository.BeginRequestRepository;
+import com.akjostudios.acsp.backend.data.repository.UserRepository;
+import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.auth.BeginService;
 import com.akjostudios.acsp.backend.services.security.SecurityService;
 import io.github.akjo03.lib.logging.Logger;

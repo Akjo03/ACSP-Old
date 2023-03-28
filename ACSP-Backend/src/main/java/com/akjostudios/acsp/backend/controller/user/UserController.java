@@ -1,6 +1,6 @@
 package com.akjostudios.acsp.backend.controller.user;
 
-import com.akjostudios.acsp.backend.dto.user.UserDto;
+import com.akjostudios.acsp.backend.data.dto.user.UserDto;
 import com.akjostudios.acsp.backend.services.user.UserSessionService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
