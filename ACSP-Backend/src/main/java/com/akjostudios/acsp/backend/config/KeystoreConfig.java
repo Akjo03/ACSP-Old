@@ -48,12 +48,13 @@ public class KeystoreConfig {
 
 	public void generateKeystore() {
 		Path keystorePath = Path.of(path);
-		LOGGER.success("Generated keystore at " + keystorePath.toAbsolutePath());
 		if (Files.exists(keystorePath)) {
 			return;
 		}
 
 		try {
+			Files.createDirectories(keystorePath.getParent());
+
 			KeyPairGenerator keyPairGenerator = KeyPairGenerator.getInstance("RSA");
 			keyPairGenerator.initialize(2048);
 			KeyPair keyPair = keyPairGenerator.generateKeyPair();
@@ -72,6 +73,8 @@ public class KeystoreConfig {
 		} catch (NoSuchAlgorithmException | KeyStoreException | CertificateException | IOException | OperatorCreationException e) {
 			e.printStackTrace();
 		}
+
+		LOGGER.success("Generated keystore at " + keystorePath.toAbsolutePath());
 	}
 
 	private Certificate createSelfSignedCertificate(@NotNull KeyPair keyPair) throws OperatorCreationException, CertificateException, IOException {

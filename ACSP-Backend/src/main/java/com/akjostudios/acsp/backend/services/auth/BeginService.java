@@ -10,9 +10,8 @@ import com.akjostudios.acsp.backend.dto.discord.DiscordUserResponse;
 import com.akjostudios.acsp.backend.model.*;
 import com.akjostudios.acsp.backend.repository.UserRepository;
 import com.akjostudios.acsp.backend.repository.UserSessionRepository;
-import com.akjostudios.acsp.backend.services.SecurityService;
-import io.github.akjo03.lib.logging.Logger;
-import io.github.akjo03.lib.logging.LoggerManager;
+import com.akjostudios.acsp.backend.services.security.KeystoreService;
+import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -51,6 +50,7 @@ public class BeginService {
 	private String discordRedirectUri;
 
 	private final SecurityService securityService;
+	private final KeystoreService keystoreService;
 	private final SecurityConfig securityConfig;
 
 	private final UserRepository userRepository;
@@ -79,13 +79,13 @@ public class BeginService {
 		return beginAuthResponseDto;
 	}
 
-	public BeginLinkResponseDto getBeginOnboardingLinkResponseDto(String userId) {
+	public BeginLinkResponseDto getBeginOnboardingLinkResponseDto() {
 		BeginLinkResponseDto beginOnboardingResponseDto = new BeginLinkResponseDto();
-		beginOnboardingResponseDto.setBeginLink(applicationConfig.getAppBaseUrl() + "/onboarding?userId=" + userId);
+		beginOnboardingResponseDto.setBeginLink(applicationConfig.getAppBaseUrl() + "/onboarding");
 		return beginOnboardingResponseDto;
 	}
 
-	public BeginLinkResponseDto getBeginDashboardLinkResponseDto(String userId) {
+	public BeginLinkResponseDto getBeginDashboardLinkResponseDto() {
 		String link = "#"; // TODO: Add dashboard link
 		BeginLinkResponseDto beginOnboardingResponseDto = new BeginLinkResponseDto();
 		beginOnboardingResponseDto.setBeginLink(link);
@@ -105,8 +105,8 @@ public class BeginService {
 			if (acspUserSession != null) { // User has an existing session
 				// Respond with the begin link based on the session status
 				BeginLinkResponseDto beginLinkResponseDto = acspUserSession.getStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())
-						? getBeginOnboardingLinkResponseDto(acspUser.getUserId())
-						: getBeginDashboardLinkResponseDto(acspUser.getUserId());
+						? getBeginOnboardingLinkResponseDto()
+						: getBeginDashboardLinkResponseDto();
 				return ResponseEntity.status(HttpStatus.ALREADY_REPORTED).body(beginLinkResponseDto);
 			} else { // User has no existing session
 				userRepository.delete(acspUser);
@@ -289,7 +289,14 @@ public class BeginService {
 			SecretKey secretKey = securityService.getKeyFromPassword(sessionKeySecret, salt);
 			String encryptedSessionKey = securityService.encrypt(new String(Base64.getEncoder().encode(keyPair.getPublic().getEncoded())), secretKey, ivParameterSpec);
 
+			KeyStore keyStore = keystoreService.getKeystore();
+			if (keyStore == null) {
+				return null;
+			}
+
 			RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
+			keystoreService.addKey(keyStore, sessionId, privateKey);
+			keystoreService.saveKeystore(keyStore);
 
 			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_TOKEN_EXPIRY, privateKey);
 			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SESSION_REFRESH_TOKEN_EXPIRY, privateKey);

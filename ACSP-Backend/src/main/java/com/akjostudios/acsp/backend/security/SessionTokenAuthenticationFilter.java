@@ -7,7 +7,7 @@ import com.akjostudios.acsp.backend.model.AcspUserSession;
 import com.akjostudios.acsp.backend.repository.RoleRepository;
 import com.akjostudios.acsp.backend.repository.UserRepository;
 import com.akjostudios.acsp.backend.repository.UserSessionRepository;
-import com.akjostudios.acsp.backend.services.SecurityService;
+import com.akjostudios.acsp.backend.services.security.SecurityService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import io.jsonwebtoken.Claims;

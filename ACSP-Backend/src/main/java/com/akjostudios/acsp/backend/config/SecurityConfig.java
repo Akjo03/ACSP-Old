@@ -5,7 +5,7 @@ import com.akjostudios.acsp.backend.repository.UserRepository;
 import com.akjostudios.acsp.backend.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.security.BotAuthenticationFilter;
 import com.akjostudios.acsp.backend.security.SessionTokenAuthenticationFilter;
-import com.akjostudios.acsp.backend.services.SecurityService;
+import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;

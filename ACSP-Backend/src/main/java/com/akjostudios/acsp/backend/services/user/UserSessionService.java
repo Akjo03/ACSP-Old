@@ -2,17 +2,14 @@ package com.akjostudios.acsp.backend.services.user;
 
 import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.dto.user.UserDto;
-import com.akjostudios.acsp.backend.dto.user.UserSessionRefreshDto;
 import com.akjostudios.acsp.backend.dto.user.UserSessionStatusDto;
 import com.akjostudios.acsp.backend.model.AcspUser;
 import com.akjostudios.acsp.backend.model.AcspUserSession;
 import com.akjostudios.acsp.backend.repository.UserRepository;
 import com.akjostudios.acsp.backend.repository.UserSessionRepository;
-import com.akjostudios.acsp.backend.services.SecurityService;
+import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
 
 @Service
 @RequiredArgsConstructor
@@ -54,14 +51,5 @@ public class UserSessionService {
 		UserDto userDto = new UserDto();
 		userDto.setUser(user);
 		return userDto;
-	}
-
-	public UserSessionRefreshDto getRefreshToken(String sessionId) {
-		AcspUserSession session = userSessionRepository.findBySessionId(sessionId);
-		if (session == null) {
-			return null;
-		}
-
-		return null;
 	}
 }

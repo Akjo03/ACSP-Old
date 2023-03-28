@@ -1,4 +1,4 @@
-package com.akjostudios.acsp.backend.services;
+package com.akjostudios.acsp.backend.services.security;
 
 import io.github.akjo03.lib.path.ProjectDirectory;
 import io.jsonwebtoken.Claims;

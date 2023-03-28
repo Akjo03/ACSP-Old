@@ -11,7 +11,7 @@ import com.akjostudios.acsp.backend.model.BeginRequest;
 import com.akjostudios.acsp.backend.repository.BeginRequestRepository;
 import com.akjostudios.acsp.backend.repository.UserRepository;
 import com.akjostudios.acsp.backend.repository.UserSessionRepository;
-import com.akjostudios.acsp.backend.services.SecurityService;
+import com.akjostudios.acsp.backend.services.security.SecurityService;
 import com.akjostudios.acsp.backend.services.auth.BeginService;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
@@ -165,7 +165,6 @@ public class BeginController {
 		}
 
 		// Respond to existing user and session
-		AcspUser acspUser = userRepository.findByUserId(beginRequest.getUserId());
 		AcspUserSession acspUserSession = userSessionRepository.findByUserId(beginRequest.getUserId());
 		ResponseEntity<String> existingUserResponse = beginService.getExistingUserAndSessionResponse(acspUserSession);
 		if (existingUserResponse != null) {
@@ -187,7 +186,7 @@ public class BeginController {
 		// Create user and session
 		createUserLock.lock();
 		try {
-			acspUser = userRepository.findByUserId(beginRequest.getUserId());
+			AcspUser acspUser = userRepository.findByUserId(beginRequest.getUserId());
 			acspUserSession = userSessionRepository.findByUserId(beginRequest.getUserId());
 
 			beginRequestRepository.delete(beginRequest);
