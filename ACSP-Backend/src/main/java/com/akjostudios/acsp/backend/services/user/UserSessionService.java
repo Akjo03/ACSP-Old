@@ -1,25 +1,17 @@
 package com.akjostudios.acsp.backend.services.user;
 
-import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.dto.user.UserDto;
 import com.akjostudios.acsp.backend.dto.user.UserSessionStatusDto;
 import com.akjostudios.acsp.backend.model.AcspUser;
 import com.akjostudios.acsp.backend.model.AcspUserSession;
 import com.akjostudios.acsp.backend.repository.UserRepository;
 import com.akjostudios.acsp.backend.repository.UserSessionRepository;
-import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class UserSessionService {
-	private static final int SESSION_TOKEN_EXPIRY = 60; // 1 minute
-	private static final int SESSION_REFRESH_TOKEN_EXPIRY = 60 * 60 * 24 * 7; // 1 week
-
-	private final SecurityConfig securityConfig;
-	private final SecurityService securityService;
-
 	private final UserSessionRepository userSessionRepository;
 	private final UserRepository userRepository;
 
