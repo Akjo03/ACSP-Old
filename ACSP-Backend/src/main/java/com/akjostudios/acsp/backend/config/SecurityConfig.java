@@ -27,8 +27,8 @@ import org.springframework.web.cors.CorsConfiguration;
 @EnableWebSecurity
 @EnableMethodSecurity
 public class SecurityConfig {
-	public static final int SESSION_TOKEN_EXPIRY = 60; // 1 minute
-	public static final int SESSION_REFRESH_TOKEN_EXPIRY = 60 * 60 * 24 * 7; // 1 week
+	public static final int SESSION_TOKEN_EXPIRY = 60 * 60;
+	public static final int SESSION_REFRESH_TOKEN_EXPIRY = 60 * 60 * 24 * 7;
 
 	@Value("${application.security.discord-encryption-key}")
 	private String discordEncryptionKey;
@@ -54,6 +54,7 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/begin/authenticate").permitAll()
 						.requestMatchers("/api/auth/begin/code").permitAll()
 						.requestMatchers("/api/user/onboarding").permitAll()
+						.requestMatchers("/proxy/**").permitAll()
 						.anyRequest().authenticated()
 				)
 				.addFilterBefore(new BotAuthenticationFilter(botApiKey), BasicAuthenticationFilter.class)
