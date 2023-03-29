@@ -49,6 +49,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 		return http
+				.requiresChannel(channel -> channel.anyRequest().requiresSecure())
 				.authorizeHttpRequests(auth -> auth
 						.requestMatchers("/api/auth/begin").permitAll()
 						.requestMatchers("/api/auth/begin/authenticate").permitAll()
@@ -69,8 +70,8 @@ public class SecurityConfig {
 					corsConfiguration.addAllowedMethod("*");
 					corsConfiguration.setAllowCredentials(true);
 					return corsConfiguration;
-				}).and()
-				.exceptionHandling()
+				})
+				.and().exceptionHandling()
 				.and().build();
 	}
 }

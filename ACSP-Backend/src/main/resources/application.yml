@@ -8,6 +8,12 @@ spring:
 
 server:
   port: 8080
+  ssl:
+    enabled: true
+    key-store-type: PKCS12
+    key-store: classpath:certs/acsp-backend-ssl.p12
+    key-store-password: ${SSL_KEYSTORE_KEY}
+    key-alias: acsp-backend-ssl
 
 application:
   base-url: ${BACKEND_BASE_URL}

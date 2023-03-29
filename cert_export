@@ -1,0 +1,2 @@
+keytool -v -importkeystore -srckeystore ".\ACSP-Backend\src\main\resources\certs\acsp-backend-ssl.p12" -srcstoretype PKCS12 -destkeystore "<PATH_TO_JDK>\lib\security\cacerts" -deststoretype JKS
+keytool -v -importkeystore -srckeystore ".\ACSP-Bot\src\main\resources\certs\acsp-bot-ssl.p12" -srcstoretype PKCS12 -destkeystore "<PATH_TO_JDK>\lib\security\cacerts" -deststoretype JKS

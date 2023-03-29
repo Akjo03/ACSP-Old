@@ -70,7 +70,9 @@ public class BeginCommand extends BotCommand {
 					.header(HttpHeaders.AUTHORIZATION, "Bot " + acspBotApiSecret)
 					.retrieve()
 					.bodyToMono(UserSessionStatusDto.class).block();
-		} catch (Exception ignored) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {
@@ -139,7 +141,9 @@ public class BeginCommand extends BotCommand {
 						});
 						return null;
 					}).bodyToMono(BeginLinkResponseDto.class).block();
-		} catch (Exception ignored) {}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 		if (beginLinkResponseDto == null) {
 			return;
 		}

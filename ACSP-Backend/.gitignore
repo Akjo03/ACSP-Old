@@ -4,3 +4,4 @@ target/
 *.iml
 .env
 keys/
+src/main/resources/certs/

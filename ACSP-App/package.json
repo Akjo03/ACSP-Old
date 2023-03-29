@@ -3,7 +3,7 @@
 	"description": "The main web application for Akjo's Computer Science Program.",
 	"version": "2023.1",
 	"scripts": {
-		"dev": "nuxt dev",
+		"dev": "nuxt dev --https --ssl-cert ./certs/localhost.pem --ssl-key ./certs/localhost-key.pem",
 		"build": "nuxt build",
 		"generate": "nuxt generate",
 		"start": "nuxt start"
