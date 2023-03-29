@@ -18,6 +18,13 @@
 
 ---
 
+## Requirements
+
+- Java 17 (Temurin / Adoptium)
+- Maven 3
+- Local MongoDB instance
+- mkcert for local HTTPS
+
 ## License
 
 Currently, this project does not have a license. We are working on adding one as soon as possible.
