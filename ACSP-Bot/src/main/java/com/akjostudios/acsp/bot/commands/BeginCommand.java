@@ -137,9 +137,7 @@ public class BeginCommand extends BotCommand {
 						});
 						return null;
 					}).bodyToMono(BeginLinkResponseDto.class).block();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception ignored) {}
 		if (beginLinkResponseDto == null) {
 			return;
 		}
