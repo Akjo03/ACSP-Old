@@ -23,8 +23,9 @@ onMounted(() => {
   };
 
   $fetch(config.public.backendUrl + "/proxy/user/@me", {
-    headers: headers,
-    method: "GET"
+      headers: headers,
+      method: "GET",
+      credentials: "include"
   }).then((response) => {
     userEmail.value = response.user.email;
   }).catch((error) => {
