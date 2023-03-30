@@ -6,10 +6,11 @@ server:
   port: 6700
   ssl:
     enabled: true
-    key-store-type: PKCS12
+    trust-store: classpath:certs/truststore.jks
+    trust-store-password: ${SSL_TRUSTSTORE_KEY}
     key-store: classpath:certs/acsp-bot-ssl.p12
-    key-store-password: ${SSL_KEYSTORE_KEY}
-    key-alias: acsp-bot-ssl
+    key-store-type: PKCS12
+    key-store-password: changeit
 
 application:
   locale:

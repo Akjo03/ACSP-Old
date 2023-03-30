@@ -5,6 +5,7 @@ import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.*;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -21,6 +22,7 @@ import java.util.Arrays;
 public class ProxyController {
 	private static final Logger LOGGER = LoggerManager.getLogger(ProxyController.class);
 
+	@Qualifier("selfClient")
 	private final WebClient selfClient;
 
 	private final ApplicationConfig applicationConfig;

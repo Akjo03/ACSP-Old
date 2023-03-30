@@ -50,9 +50,7 @@ public class BeginCommand extends BotCommand {
 
 	@Override
 	public void initialize(@NotNull BotCommandInitializer initializer) {
-		this.webClient = initializer.getBean(WebClient.Builder.class)
-				.baseUrl(backendBaseUrl)
-				.build();
+		this.webClient = initializer.getBean(WebClient.class);
 		this.discordMessageService = initializer.getBean(DiscordMessageService.class);
 		this.errorMessageService = initializer.getBean(ErrorMessageService.class);
 		this.botConfigService = initializer.getBean(BotConfigService.class);
@@ -70,9 +68,7 @@ public class BeginCommand extends BotCommand {
 					.header(HttpHeaders.AUTHORIZATION, "Bot " + acspBotApiSecret)
 					.retrieve()
 					.bodyToMono(UserSessionStatusDto.class).block();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		} catch (Exception ignored) {}
 
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {
