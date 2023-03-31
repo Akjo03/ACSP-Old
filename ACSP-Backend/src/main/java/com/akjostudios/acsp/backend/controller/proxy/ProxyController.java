@@ -31,11 +31,11 @@ public class ProxyController {
 	public ResponseEntity<byte[]> proxyRequest(
 			@CookieValue("session_id") String sessionId,
 			@CookieValue("session_token") String sessionToken,
+			@CookieValue("refresh_token") String refreshToken,
 			HttpMethod method,
 			HttpServletRequest request
 	) throws IOException {
 		String targetApiUrl = applicationConfig.getBaseUrl() + "/api" + request.getRequestURI().replace("/proxy", "");
-		LOGGER.info("Proxying request to " + targetApiUrl);
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set(HttpHeaders.AUTHORIZATION, "Session " + sessionToken);
@@ -45,6 +45,8 @@ public class ProxyController {
 
 		MultiValueMap<String, String> cookieList = new LinkedMultiValueMap<>();
 		Arrays.stream(request.getCookies()).forEach(cookie -> cookieList.add(cookie.getName(), cookie.getValue()));
+
+
 
 		return selfClient.method(method)
 				.uri(targetApiUrl)

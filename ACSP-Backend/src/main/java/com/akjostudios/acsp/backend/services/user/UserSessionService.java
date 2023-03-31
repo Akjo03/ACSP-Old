@@ -28,10 +28,6 @@ public class UserSessionService {
 	private final UserSessionRepository userSessionRepository;
 	private final UserRepository userRepository;
 
-	private final SecurityConfig securityConfig;
-	private final SecurityService securityService;
-	private final KeystoreService keystoreService;
-
 	public UserSessionStatusDto getUserSessionStatus(String userId) {
 		AcspUserSession acspUserSession = userSessionRepository.findByUserId(userId);
 		if (acspUserSession == null) {
@@ -60,52 +56,5 @@ public class UserSessionService {
 		UserDto userDto = new UserDto();
 		userDto.setUser(user);
 		return userDto;
-	}
-
-	public ResponseEntity<UserSessionRefreshDto> refreshUserSession(String sessionId) {
-		AcspUserSession session = userSessionRepository.findBySessionId(sessionId);
-		if (session == null) {
-			return ResponseEntity.notFound().build();
-		}
-
-		String salt = session.getSalt();
-		IvParameterSpec iv = new IvParameterSpec(session.getIv().getBytes());
-
-		RSAPrivateKey privateKey = null;
-		try {
-			String encSessionKey = session.getSessionKey();
-			String sessionKeySecret = securityConfig.getSessionKeySecret();
-
-			SecretKey sessionSecretKey = securityService.getKeyFromPassword(sessionKeySecret, salt);
-			PublicKey sessionKey = securityService.getPublicKey(encSessionKey, sessionSecretKey, iv);
-
-			KeyStore keystore = keystoreService.getKeystore();
-			privateKey = (RSAPrivateKey) keystoreService.getPrivateKey(keystore, session.getSessionId());
-
-			PublicKey generatedPublicKey = securityService.getPublicKey(privateKey);
-			if (!Arrays.equals(generatedPublicKey.getEncoded(), sessionKey.getEncoded())) {
-				return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-			}
-		} catch (Exception e) {
-			return ResponseEntity.internalServerError().build();
-		}
-		if (privateKey == null) {
-			return ResponseEntity.internalServerError().build();
-		}
-
-		String sessionToken = securityService.generateToken(sessionId, session.getUserId(), SecurityConfig.SESSION_TOKEN_EXPIRY,  privateKey);
-		String refreshToken = securityService.generateToken(sessionId, session.getUserId(), SecurityConfig.SESSION_REFRESH_TOKEN_EXPIRY, privateKey);
-
-		session.setSessionToken(sessionToken);
-		session.setRefreshToken(refreshToken);
-		userSessionRepository.save(session);
-
-		UserSessionRefreshDto userSessionRefreshDto = new UserSessionRefreshDto();
-		userSessionRefreshDto.setUserId(session.getUserId());
-		userSessionRefreshDto.setSessionId(session.getSessionId());
-		userSessionRefreshDto.setAccessToken(sessionToken);
-		userSessionRefreshDto.setRefreshToken(refreshToken);
-
-		return ResponseEntity.ok(userSessionRefreshDto);
 	}
 }

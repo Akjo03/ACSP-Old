@@ -122,6 +122,7 @@ public class BeginService {
 		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/onboarding");
 		redirectHeaders.add("Set-Cookie", "session_id=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; Secure");
 		redirectHeaders.add("Set-Cookie", "session_token=" + acspUserSession.getSessionToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
+		redirectHeaders.add("Set-Cookie", "refresh_token=" + acspUserSession.getSessionRefreshToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
