@@ -28,7 +28,12 @@ public class ProxyController {
 	private final ApplicationConfig applicationConfig;
 
 	@RequestMapping(method = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE})
-	public ResponseEntity<byte[]> proxyRequest(@CookieValue(value = "session_id") String sessionId, @CookieValue("session_token") String sessionToken, HttpMethod method, HttpServletRequest request) throws IOException {
+	public ResponseEntity<byte[]> proxyRequest(
+			@CookieValue("session_id") String sessionId,
+			@CookieValue("session_token") String sessionToken,
+			HttpMethod method,
+			HttpServletRequest request
+	) throws IOException {
 		String targetApiUrl = applicationConfig.getBaseUrl() + "/api" + request.getRequestURI().replace("/proxy", "");
 		LOGGER.info("Proxying request to " + targetApiUrl);
 
