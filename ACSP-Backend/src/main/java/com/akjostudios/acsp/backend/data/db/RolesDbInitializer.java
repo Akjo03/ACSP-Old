@@ -24,7 +24,8 @@ public class RolesDbInitializer implements DbInitializer {
 		if (roles.isEmpty()) {
 			roleRepository.saveAll(List.of(
 					new AcspRole(AcspRoles.USER.getRole(), List.of(
-							"ME_USER:READ"
+							"ME_USER:READ",
+							"ME_USER:ONBOARDING:ABORT"
 					))
 			));
 			LOGGER.success("Initialized roles table");

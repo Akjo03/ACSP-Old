@@ -8,7 +8,7 @@
     <AppFooter v-bind:links="[
       {
         name: 'Abort Onboarding',
-        url: '',
+        url: abortOnboardingUrl,
         danger: true
       }
     ]" />
@@ -26,6 +26,8 @@ import {useTheme} from "../composables/useTheme";
 
 const config = useRuntimeConfig();
 const { darkMode, initializeTheme } = useTheme();
+
+const abortOnboardingUrl = config.public.backendUrl + "/proxy/user/onboarding/abort";
 
 onMounted(() => {
     if (typeof window !== "undefined") {

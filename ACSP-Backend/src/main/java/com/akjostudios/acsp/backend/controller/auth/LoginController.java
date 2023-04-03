@@ -82,10 +82,12 @@ public class LoginController {
 
 		AcspUserSession acspUserSession = userSessionRepository.findByUserId(discordUserResponse.getId());
 		if (acspUserSession == null) {
+			loginRequestRepository.delete(acspLoginRequest);
 			return RedirectUtils.getRedirectResponse(applicationConfig.getDiscordServerUrl());
 		}
 		AcspUser acspUser = userRepository.findByUserId(discordUserResponse.getId());
 		if (acspUser == null) {
+			loginRequestRepository.delete(acspLoginRequest);
 			return RedirectUtils.getRedirectResponse(applicationConfig.getDiscordServerUrl());
 		}
 
