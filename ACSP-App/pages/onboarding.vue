@@ -8,6 +8,7 @@
 <script setup lang="ts">
 import {onMounted, ref} from 'vue';
 import {useCookie, useRuntimeConfig} from 'nuxt/app';
+import {getFromApi} from "../composables/fetch";
 
 const config = useRuntimeConfig();
 const sessionIdCookie = useCookie('session_id');
@@ -17,19 +18,8 @@ const userEmail = ref('');
 onMounted(() => {
   sessionId.value = sessionIdCookie.value || '';
 
-  const headers = {
-    "Accept": "application/json",
-    "X-Session-ID": sessionId.value
-  };
-
-  $fetch(config.public.backendUrl + "/proxy/user/@me", {
-      headers: headers,
-      method: "GET",
-      credentials: "include"
-  }).then((response) => {
+  getFromApi('/user/@me', sessionId.value).then((response) => {
     userEmail.value = response.user.email;
-  }).catch((error) => {
-    console.log(error);
   });
 });
 </script>
