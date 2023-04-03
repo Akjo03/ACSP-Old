@@ -14,9 +14,9 @@ import AppHeader from "../components/app/AppHeader.vue";
 import OnboardingWizard from "../components/onboarding/OnboardingWizard.vue";
 import AppFooter from "../components/app/AppFooter.vue";
 
-import { onMounted } from "vue";
-import { useRuntimeConfig } from "nuxt/app";
-import { useTheme } from "../composables/useTheme";
+import {onMounted} from "vue";
+import {useRuntimeConfig} from "nuxt/app";
+import {useTheme} from "../composables/useTheme";
 
 const config = useRuntimeConfig();
 const { darkMode, initializeTheme } = useTheme();

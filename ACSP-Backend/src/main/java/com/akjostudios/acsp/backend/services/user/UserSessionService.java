@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.security.KeyStore;
-import java.security.PrivateKey;
 import java.security.PublicKey;
 import java.security.interfaces.RSAPrivateKey;
 
@@ -31,7 +30,6 @@ public class UserSessionService {
 	private final UserRepository userRepository;
 
 	private final SecurityService securityService;
-	private final SecurityConfig securityConfig;
 	private final KeystoreService keystoreService;
 
 	public UserSessionStatusDto getUserSessionStatus(String userId) {

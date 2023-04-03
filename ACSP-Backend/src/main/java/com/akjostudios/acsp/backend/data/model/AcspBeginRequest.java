@@ -10,7 +10,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @RequiredArgsConstructor
 @Getter
 @Setter
-public class BeginRequest {
+public class AcspBeginRequest {
 	@Id
 	private String id;
 

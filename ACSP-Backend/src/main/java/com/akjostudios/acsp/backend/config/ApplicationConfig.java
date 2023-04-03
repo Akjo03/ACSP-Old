@@ -13,4 +13,5 @@ public class ApplicationConfig {
 	private String baseUrl;
 	private String discordBotUrl;
 	private String appBaseUrl;
+	private String discordServerUrl;
 }

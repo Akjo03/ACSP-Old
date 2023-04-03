@@ -54,6 +54,7 @@ public class SecurityConfig {
 						.requestMatchers("/api/auth/begin/authenticate").permitAll()
 						.requestMatchers("/api/auth/begin/code").permitAll()
 						.requestMatchers("/api/auth/login").permitAll()
+						.requestMatchers("/api/auth/login/code").permitAll()
 						.requestMatchers("/api/user/onboarding").permitAll()
 						.requestMatchers("/proxy/**").permitAll()
 						.anyRequest().authenticated()

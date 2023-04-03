@@ -5,8 +5,6 @@ import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.config.auth.AcspSecretConfiguration;
 import com.akjostudios.acsp.backend.constants.CookieConstants;
 import com.akjostudios.acsp.backend.data.dto.auth.BeginLinkResponseDto;
-import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthCodeRequest;
-import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenRequest;
 import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenResponse;
 import com.akjostudios.acsp.backend.data.dto.discord.DiscordUserResponse;
 import com.akjostudios.acsp.backend.data.model.*;
@@ -14,18 +12,15 @@ import com.akjostudios.acsp.backend.data.repository.UserRepository;
 import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.security.KeystoreService;
 import com.akjostudios.acsp.backend.services.security.SecurityService;
+import com.akjostudios.acsp.backend.util.RandomStrings;
 import io.github.akjo03.lib.logging.Logger;
 import io.github.akjo03.lib.logging.LoggerManager;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.client.WebClient;
 
 import javax.crypto.SecretKey;
 import javax.crypto.spec.IvParameterSpec;
@@ -34,9 +29,6 @@ import java.security.KeyStore;
 import java.security.interfaces.RSAPrivateKey;
 import java.util.Base64;
 import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.stream.Stream;
 
 @Service
 @RequiredArgsConstructor
@@ -46,12 +38,6 @@ public class BeginService {
 	@Value("${application.base-url}")
 	private String baseUrl;
 
-	@Value("${application.oauth2.discord.client-id}")
-	private String discordClientId;
-
-	@Value("${application.oauth2.discord.redirect-uri}")
-	private String discordRedirectUri;
-
 	private final SecurityService securityService;
 	private final KeystoreService keystoreService;
 	private final SecurityConfig securityConfig;
@@ -59,12 +45,6 @@ public class BeginService {
 
 	private final UserRepository userRepository;
 	private final UserSessionRepository userSessionRepository;
-
-	private final DiscordTokenService discordTokenService;
-	@Qualifier("discordTokenClient")
-	private final WebClient discordTokenClient;
-	@Qualifier("discordApiClient")
-	private final WebClient discordApiClient;
 
 	private final ApplicationConfig applicationConfig;
 
@@ -76,7 +56,7 @@ public class BeginService {
 		return input.replace("_", "/").replace("-", "+").replace("~", "=");
 	}
 
-	public BeginLinkResponseDto getBeginAuthLinkReponseDto(BeginRequest beginRequest) {
+	public BeginLinkResponseDto getBeginAuthLinkReponseDto(AcspBeginRequest beginRequest) {
 		String link = baseUrl + "/api/auth/begin/authenticate?userId=" + beginRequest.getUserId() + "&code=" + makeUrlSafe(beginRequest.getCode());
 		BeginLinkResponseDto beginAuthResponseDto = new BeginLinkResponseDto();
 		beginAuthResponseDto.setBeginLink(link);
@@ -96,8 +76,8 @@ public class BeginService {
 		return beginOnboardingResponseDto;
 	}
 
-	public BeginRequest createBeginRequest(String userId, String code, String salt) {
-		BeginRequest beginRequest = new BeginRequest();
+	public AcspBeginRequest createBeginRequest(String userId, String code, String salt) {
+		AcspBeginRequest beginRequest = new AcspBeginRequest();
 		beginRequest.setUserId(userId);
 		beginRequest.setCode(code);
 		beginRequest.setSalt(salt);
@@ -162,58 +142,6 @@ public class BeginService {
 		return "The auth system is either overloaded or the begin request is invalid."
 				+ "<br /><br />"
 				+ "Das Authentifizierungssystem ist entweder überlastet oder die Beginn-Anfrage ist ungültig.";
-	}
-
-	public DiscordAuthCodeRequest getDiscordAuthCodeRequest(String code) {
-		DiscordAuthCodeRequest discordAuthCodeRequest = new DiscordAuthCodeRequest();
-		discordAuthCodeRequest.setClientId(discordClientId);
-		discordAuthCodeRequest.setRedirectUri(discordRedirectUri);
-		discordAuthCodeRequest.setScope(Stream.of(
-				"identify", "email", "guilds"
-		).reduce((s1, s2) -> s1 + "%20" + s2).orElse(""));
-		discordAuthCodeRequest.setState(code);
-		return discordAuthCodeRequest;
-	}
-
-	public DiscordAuthTokenResponse getDiscordAuthTokenResponse(String code) {
-		DiscordAuthTokenRequest discordAuthTokenRequest = discordTokenService.getDiscordAuthTokenRequest(code);
-		if (discordAuthTokenRequest == null) {
-			return null;
-		}
-		DiscordAuthTokenResponse discordAuthTokenResponse;
-		try {
-			discordAuthTokenResponse = discordTokenClient.post()
-					.header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_FORM_URLENCODED_VALUE)
-					.body(BodyInserters.fromFormData(discordAuthTokenRequest.toMultiValueMap()))
-					.retrieve()
-					.bodyToMono(DiscordAuthTokenResponse.class)
-					.block();
-		} catch (Exception e) {
-			return null;
-		}
-		return discordAuthTokenResponse;
-	}
-
-	public DiscordUserResponse getDiscordUserResponse(DiscordAuthTokenResponse discordAuthTokenResponse) {
-		Optional<DiscordUserResponse> discordUserResponse;
-		try {
-			discordUserResponse = discordApiClient.get()
-					.uri("/users/@me")
-					.header(HttpHeaders.AUTHORIZATION, "Bearer " + discordAuthTokenResponse.getAccessToken())
-					.retrieve()
-					.bodyToMono(DiscordUserResponse.class)
-					.blockOptional();
-		} catch (Exception e) {
-			return null;
-		}
-		if (discordUserResponse.isEmpty()) {
-			return null;
-		}
-		DiscordUserResponse discordUser = discordUserResponse.get();
-		if (discordUser.getId() == null || discordUser.getUsername() == null || discordUser.getDiscriminator() == null) {
-			return null;
-		}
-		return discordUser;
 	}
 
 	public AcspUserSession getUserSessionForUser(String userId) {
@@ -286,7 +214,7 @@ public class BeginService {
 		}
 
 		try {
-			String sessionId = UUID.randomUUID().toString();
+			String sessionId = RandomStrings.generate(24);
 			KeyPair keyPair = securityService.generateKeyPair();
 			String sessionKeySecret = securityConfig.getSessionKeySecret();
 

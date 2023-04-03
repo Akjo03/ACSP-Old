@@ -12,5 +12,6 @@ import org.springframework.context.annotation.Configuration;
 public class DiscordOAuth2Configuration {
 	private String clientId;
 	private String clientSecret;
-	private String redirectUri;
+	private String beginRedirectUri;
+	private String loginRedirectUri;
 }

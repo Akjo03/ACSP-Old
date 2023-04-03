@@ -20,11 +20,13 @@ application:
   base-url: ${BACKEND_BASE_URL}
   discord-bot-url: ${DISCORD_BOT_URL}
   app-base-url: ${APP_BASE_URL}
+  discord-server-url: ${DISCORD_SERVER_URL}
   oauth2:
     discord:
       client-id: ${OAUTH_CLIENT_ID}
       client-secret: ${OAUTH_CLIENT_SECRET}
-      redirect-uri: ${OAUTH_REDIRECT_URI}
+      begin-redirect-uri: ${OAUTH_BEGIN_REDIRECT_URI}
+      login-redirect-uri: ${OAUTH_LOGIN_REDIRECT_URI}
   secrets:
     acsp-begin-secret: ${ACSP_BEGIN_KEY}
   security:

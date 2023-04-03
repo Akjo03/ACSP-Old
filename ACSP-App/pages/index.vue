@@ -10,8 +10,8 @@
 <script setup lang="ts">
 import HeroSection from "../components/index/HeroSection.vue";
 
-import { onMounted } from "vue";
-import { useTheme } from "../composables/useTheme";
+import {onMounted} from "vue";
+import {useTheme} from "../composables/useTheme";
 
 const { darkMode, initializeTheme } = useTheme();
 

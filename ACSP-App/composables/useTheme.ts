@@ -1,4 +1,4 @@
-import { ref } from "vue";
+import {ref} from "vue";
 
 type Theme = "light" | "dark";
 const LOCAL_STORAGE_THEME_KEY = "theme";
