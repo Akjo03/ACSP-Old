@@ -29,7 +29,7 @@ public class KeystoreService {
 		return keyStore;
 	}
 
-	public void addKey(KeyStore keyStore, String alias, Key key) throws KeyStoreException {
+	public void setKey(KeyStore keyStore, String alias, Key key) throws KeyStoreException {
 		X509Certificate certificate = (X509Certificate) keyStore.getCertificate(keystoreConfig.getAlias());
 		X509Certificate[] certificateChain = {certificate};
 		keyStore.setKeyEntry(alias, key, keystoreConfig.getPassword().toCharArray(), certificateChain);

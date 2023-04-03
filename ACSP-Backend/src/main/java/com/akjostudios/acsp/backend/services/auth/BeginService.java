@@ -297,7 +297,7 @@ public class BeginService {
 			}
 
 			RSAPrivateKey privateKey = (RSAPrivateKey) keyPair.getPrivate();
-			keystoreService.addKey(keystore, sessionId, privateKey);
+			keystoreService.setKey(keystore, sessionId, privateKey);
 			keystoreService.saveKeystore(keystore);
 
 			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SecurityConfig.SESSION_TOKEN_EXPIRY, privateKey);

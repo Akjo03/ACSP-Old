@@ -66,10 +66,6 @@ public class BeginChannelHandler extends ListenerAdapter implements AcspBotHandl
 
 	@Override
 	public void onMessageReceived(@NotNull MessageReceivedEvent event) {
-		if (event.getAuthor().isBot()) {
-			return;
-		}
-
 		if (event.getChannel().getIdLong() != AcspDiscordChannels.BEGIN_CHANNEL.getId()) {
 			return;
 		}
