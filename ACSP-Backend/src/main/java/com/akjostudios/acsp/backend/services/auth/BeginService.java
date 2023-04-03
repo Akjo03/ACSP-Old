@@ -3,6 +3,7 @@ package com.akjostudios.acsp.backend.services.auth;
 import com.akjostudios.acsp.backend.config.ApplicationConfig;
 import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.config.auth.AcspSecretConfiguration;
+import com.akjostudios.acsp.backend.constants.CookieConstants;
 import com.akjostudios.acsp.backend.data.dto.auth.BeginLinkResponseDto;
 import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthCodeRequest;
 import com.akjostudios.acsp.backend.data.dto.auth.DiscordAuthTokenRequest;
@@ -13,6 +14,8 @@ import com.akjostudios.acsp.backend.data.repository.UserRepository;
 import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.security.KeystoreService;
 import com.akjostudios.acsp.backend.services.security.SecurityService;
+import io.github.akjo03.lib.logging.Logger;
+import io.github.akjo03.lib.logging.LoggerManager;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -38,7 +41,7 @@ import java.util.stream.Stream;
 @Service
 @RequiredArgsConstructor
 public class BeginService {
-
+	private static final Logger LOGGER = LoggerManager.getLogger(BeginService.class);
 
 	@Value("${application.base-url}")
 	private String baseUrl;
@@ -120,9 +123,9 @@ public class BeginService {
 	public ResponseEntity<String> getOnboardingRedirectResponse(AcspUserSession acspUserSession) {
 		HttpHeaders redirectHeaders = new HttpHeaders();
 		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/onboarding");
-		redirectHeaders.add("Set-Cookie", "session_id=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; Secure");
-		redirectHeaders.add("Set-Cookie", "session_token=" + acspUserSession.getSessionToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
-		redirectHeaders.add("Set-Cookie", "refresh_token=" + acspUserSession.getSessionRefreshToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
+		redirectHeaders.add("Set-Cookie", CookieConstants.SESSION_ID + "=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; Secure");
+		redirectHeaders.add("Set-Cookie", CookieConstants.SESSION_TOKEN + "=" + acspUserSession.getSessionToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
+		redirectHeaders.add("Set-Cookie", CookieConstants.REFRESH_TOKEN + "=" + acspUserSession.getSessionRefreshToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
@@ -310,7 +313,7 @@ public class BeginService {
 
 			acspUserSession.setSessionId(sessionId);
 		} catch (Exception e) {
-			e.printStackTrace();
+			LOGGER.info("Error creating onboarding session!", e);
 			return null;
 		}
 

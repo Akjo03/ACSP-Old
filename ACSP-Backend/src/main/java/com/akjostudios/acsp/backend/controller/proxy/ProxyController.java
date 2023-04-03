@@ -1,15 +1,19 @@
 package com.akjostudios.acsp.backend.controller.proxy;
 
 import com.akjostudios.acsp.backend.config.ApplicationConfig;
-import io.github.akjo03.lib.logging.Logger;
-import io.github.akjo03.lib.logging.LoggerManager;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.*;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CookieValue;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
@@ -20,8 +24,6 @@ import java.util.Arrays;
 @RequiredArgsConstructor
 @RequestMapping("/proxy/**")
 public class ProxyController {
-	private static final Logger LOGGER = LoggerManager.getLogger(ProxyController.class);
-
 	@Qualifier("selfClient")
 	private final WebClient selfClient;
 
@@ -46,8 +48,16 @@ public class ProxyController {
 		MultiValueMap<String, String> cookieList = new LinkedMultiValueMap<>();
 		Arrays.stream(request.getCookies()).forEach(cookie -> cookieList.add(cookie.getName(), cookie.getValue()));
 
+		return executeRequest(method, targetApiUrl, headers, requestBodyMono, cookieList);
+	}
 
-
+	public ResponseEntity<byte[]> executeRequest(
+			HttpMethod method,
+			String targetApiUrl,
+			HttpHeaders headers,
+			Mono<byte[]> requestBodyMono,
+			MultiValueMap<String, String> cookieList
+	) {
 		return selfClient.method(method)
 				.uri(targetApiUrl)
 				.headers(httpHeaders -> httpHeaders.addAll(headers))

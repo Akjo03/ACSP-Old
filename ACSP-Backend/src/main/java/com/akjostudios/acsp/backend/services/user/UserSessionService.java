@@ -1,26 +1,13 @@
 package com.akjostudios.acsp.backend.services.user;
 
-import com.akjostudios.acsp.backend.config.SecurityConfig;
 import com.akjostudios.acsp.backend.data.dto.user.UserDto;
-import com.akjostudios.acsp.backend.data.dto.user.UserSessionRefreshDto;
 import com.akjostudios.acsp.backend.data.dto.user.UserSessionStatusDto;
 import com.akjostudios.acsp.backend.data.model.AcspUser;
 import com.akjostudios.acsp.backend.data.model.AcspUserSession;
 import com.akjostudios.acsp.backend.data.repository.UserRepository;
 import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
-import com.akjostudios.acsp.backend.services.security.KeystoreService;
-import com.akjostudios.acsp.backend.services.security.SecurityService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-
-import javax.crypto.SecretKey;
-import javax.crypto.spec.IvParameterSpec;
-import java.security.KeyStore;
-import java.security.PublicKey;
-import java.security.interfaces.RSAPrivateKey;
-import java.util.Arrays;
 
 @Service
 @RequiredArgsConstructor
