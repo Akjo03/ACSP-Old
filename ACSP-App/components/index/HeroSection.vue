@@ -1,7 +1,7 @@
 <template>
   <div class="relative isolate overflow-hidden">
     <header class="border-b-2 border-themeBorder">
-      <nav class="mx-auto flex items-center justify-between py-4 px-6 lg:px-12" aria-label="Global">
+      <nav class="mx-auto flex flex-row items-center justify-between py-4 px-6 lg:px-12">
         <div class="flex lg:flex-1">
 
         </div>
@@ -27,7 +27,7 @@
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
         </p>
         <div class="mt-10 flex items-center gap-x-6">
-          <a :href="discordServerLink" class="inline-flex items-center gap-x-2 rounded-md bg-themePrimary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themePrimaryHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themePrimaryHover transition-all">
+          <a :href="discordServerLink" class="inline-flex items-center gap-x-2 rounded-md bg-themeDiscord px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themeDiscordHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themeDiscordHover transition-all">
             <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 256.00 200.00" fill="#000000">
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>

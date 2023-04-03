@@ -1,6 +1,6 @@
 <template>
   <header class="border-b-2 border-themeBorder">
-    <nav class="mx-auto flex items-center justify-between py-4 px-6 lg:px-12" aria-label="Global">
+    <nav class="mx-auto flex flex-row items-center justify-between py-4 px-6 lg:px-12">
       <div class="flex lg:flex-1">
 
       </div>

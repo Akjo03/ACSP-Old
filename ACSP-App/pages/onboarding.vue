@@ -3,9 +3,15 @@
     'theme-light': !darkMode,
     'theme-dark': darkMode
   }" class="flex flex-col min-h-screen bg-themeBackground">
-      <AppHeader />
-      <OnboardingWizard />
-      <AppFooter />
+    <AppHeader />
+    <OnboardingWizard />
+    <AppFooter v-bind:links="[
+      {
+        name: 'Abort Onboarding',
+        url: '',
+        danger: true
+      }
+    ]" />
   </div>
 </template>
 
