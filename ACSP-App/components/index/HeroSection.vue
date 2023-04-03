@@ -5,7 +5,7 @@
         <div class="flex lg:flex-1">
 
         </div>
-        <a href="#" class="flex flex-row items-center -m-1.5 p-1.5">
+        <a href="/" class="flex flex-row items-center -m-1.5 p-1.5">
           <span class="sr-only">ACSP Logo</span>
           <img class="h-11" src="~/assets/img/logo_512_transparent.png" alt="" />
         </a>
@@ -24,7 +24,7 @@
           Akjo's Computer Science Program
         </h1>
         <p class="mt-6 text-lg leading-[1.8] text-themeText">
-          What the title says.
+            Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
         </p>
         <div class="mt-10 flex items-center gap-x-6">
           <a :href="config.public.discordServerLink" class="inline-flex items-center gap-x-2 rounded-md bg-themePrimary px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themePrimaryHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themePrimaryHover transition-all">

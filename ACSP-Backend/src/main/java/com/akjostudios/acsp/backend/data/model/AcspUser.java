@@ -18,5 +18,6 @@ public class AcspUser {
 
 	private String userId;
 	private String email;
+	private String avatar;
 	private String role;
 }

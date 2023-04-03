@@ -2,14 +2,15 @@
   <div :class="{
     'theme-light': !darkMode,
     'theme-dark': darkMode
-  }" class="min-h-screen bg-themeBackground">
+  }" class="flex flex-col min-h-screen bg-themeBackground">
     <HeroSection />
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
 import HeroSection from "../components/index/HeroSection.vue";
+
+import { onMounted } from "vue";
 import { useTheme } from "../composables/useTheme";
 
 const { darkMode, initializeTheme } = useTheme();

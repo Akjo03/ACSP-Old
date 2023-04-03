@@ -257,6 +257,7 @@ public class BeginService {
 		AcspUser acspUser = new AcspUser();
 		acspUser.setUserId(userResponse.getId());
 		acspUser.setEmail(userResponse.getEmail());
+		acspUser.setAvatar(userResponse.getAvatar());
 		acspUser.setRole(AcspRoles.USER.getRole());
 
 		return acspUser;

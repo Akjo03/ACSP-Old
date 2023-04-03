@@ -3,7 +3,7 @@ import { ref } from "vue";
 type Theme = "light" | "dark";
 const LOCAL_STORAGE_THEME_KEY = "theme";
 
-const darkMode = ref(false);
+const darkMode = ref(true);
 
 const setTheme = (newTheme: Theme) => {
     if (typeof window !== "undefined") {
