@@ -35,8 +35,12 @@ public class KeystoreService {
 		keyStore.setKeyEntry(alias, key, keystoreConfig.getPassword().toCharArray(), certificateChain);
 	}
 
-	public PrivateKey getPrivateKey(KeyStore keyStore, String alias) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
+	public PrivateKey getKey(KeyStore keyStore, String alias) throws UnrecoverableKeyException, NoSuchAlgorithmException, KeyStoreException {
 		return (PrivateKey) keyStore.getKey(alias, keystoreConfig.getPassword().toCharArray());
+	}
+
+	public void deleteKey(KeyStore keyStore, String alias) throws KeyStoreException {
+		keyStore.deleteEntry(alias);
 	}
 
 	public void saveKeystore(KeyStore keyStore) throws IOException, KeyStoreException, CertificateException, NoSuchAlgorithmException {

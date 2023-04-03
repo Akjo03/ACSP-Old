@@ -77,7 +77,7 @@ public class SessionTokenAuthenticationFilter extends GenericFilterBean {
 									PublicKey publicKey = securityService.getPublicKey(encPublicKey, key, securityService.getIv(encIv));
 
 									KeyStore keystore = keystoreService.getKeystore();
-									PrivateKey privateKey = keystoreService.getPrivateKey(keystore, session.getSessionId());
+									PrivateKey privateKey = keystoreService.getKey(keystore, session.getSessionId());
 									PublicKey generatedPublicKey = securityService.getPublicKey(privateKey);
 
 									if (Arrays.equals(generatedPublicKey.getEncoded(), publicKey.getEncoded())) {

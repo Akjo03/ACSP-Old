@@ -24,8 +24,8 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, ref } from "vue";
-import { copyrightYear } from "../../composables/globals";
+import {defineProps, ref} from "vue";
+import {copyrightYear} from "../../composables/globals";
 
 const props = defineProps<{
     links: {

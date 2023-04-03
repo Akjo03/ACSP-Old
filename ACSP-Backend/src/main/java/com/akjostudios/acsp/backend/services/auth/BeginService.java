@@ -144,6 +144,12 @@ public class BeginService {
 				+ "Das Authentifizierungssystem ist entweder überlastet oder die Beginn-Anfrage ist ungültig.";
 	}
 
+	public String getOldOnboardingLinkMessage() {
+		return "The onboarding link is no longer valid. Please issue the !begin command again."
+				+ "<br /><br />"
+				+ "Der Onboarding-Link ist nicht mehr gültig. Bitte führe den !begin Befehl erneut aus.";
+	}
+
 	public AcspUserSession getUserSessionForUser(String userId) {
 		return userSessionRepository.findByUserId(userId);
 	}

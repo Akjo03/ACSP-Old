@@ -8,6 +8,7 @@ import com.akjostudios.acsp.backend.data.model.AcspUserSessionStatus;
 import com.akjostudios.acsp.backend.data.repository.UserRepository;
 import com.akjostudios.acsp.backend.data.repository.UserSessionRepository;
 import com.akjostudios.acsp.backend.services.auth.BeginService;
+import com.akjostudios.acsp.backend.services.user.UserSessionService;
 import com.akjostudios.acsp.backend.util.RedirectUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,7 @@ public class OnboardingController {
 	private final AcspSecretConfiguration acspSecretConfiguration;
 
 	private final BeginService beginService;
+	private final UserSessionService userSessionService;
 
 	private final UserRepository userRepository;
 	private final UserSessionRepository userSessionRepository;
@@ -35,7 +37,7 @@ public class OnboardingController {
 
 		AcspUserSession userSession = beginService.getUserSessionForUser(userId);
 		if (userSession == null) {
-			return ResponseEntity.notFound().build();
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(beginService.getOldOnboardingLinkMessage());
 		}
 		if (!userSession.getStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())) {
 			return ResponseEntity.badRequest().build();
@@ -60,7 +62,7 @@ public class OnboardingController {
 			return ResponseEntity.notFound().build();
 		}
 
-		userSessionRepository.delete(userSession);
+		userSessionService.deleteUserSession(userSession.getSessionId());
 		userRepository.delete(user);
 
 		return RedirectUtils.getRedirectResponse(applicationConfig.getAppBaseUrl());

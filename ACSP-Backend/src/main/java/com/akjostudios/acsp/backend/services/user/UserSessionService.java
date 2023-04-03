@@ -74,7 +74,7 @@ public class UserSessionService {
 
 		try {
 			KeyStore keyStore = keystoreService.getKeystore();
-			RSAPrivateKey privateKey = (RSAPrivateKey) keystoreService.getPrivateKey(keyStore, acspUserSession.getSessionId());
+			RSAPrivateKey privateKey = (RSAPrivateKey) keystoreService.getKey(keyStore, acspUserSession.getSessionId());
 			PublicKey publicKey = securityService.getPublicKey(privateKey);
 
 			Claims claims = securityService.verifyToken(acspUserSession.getSessionRefreshToken(), publicKey);
@@ -102,5 +102,16 @@ public class UserSessionService {
 		}
 
 		return userSessionRefreshDto;
+	}
+
+	public void deleteUserSession(String sessionId) {
+		userSessionRepository.deleteBySessionId(sessionId);
+
+		try {
+			KeyStore keyStore = keystoreService.getKeystore();
+			keystoreService.deleteKey(keyStore, sessionId);
+		} catch (Exception e) {
+			LOGGER.error("Error while deleting user session: " + sessionId, e);
+		}
 	}
 }
