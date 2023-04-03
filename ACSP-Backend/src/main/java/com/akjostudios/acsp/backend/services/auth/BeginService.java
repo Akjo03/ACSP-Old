@@ -107,9 +107,9 @@ public class BeginService {
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
-	public ResponseEntity<String> getDashboardRedirectResponse() {
+	public ResponseEntity<String> getAppRedirectResponse() {
 		HttpHeaders redirectHeaders = new HttpHeaders();
-		redirectHeaders.add("Location", "#"); // TODO: Add dashboard link
+		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/app");
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
@@ -117,7 +117,7 @@ public class BeginService {
 		if (acspUserSession != null) {
 			return acspUserSession.getStatus().equals(AcspUserSessionStatus.ONBOARDING.getStatus())
 					? getOnboardingRedirectResponse(acspUserSession)
-					: getDashboardRedirectResponse();
+					: getAppRedirectResponse();
 		}
 		return null;
 	}
