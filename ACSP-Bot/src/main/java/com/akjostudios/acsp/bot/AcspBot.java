@@ -62,13 +62,10 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 
 	@Override
 	public void onApplicationEvent(@NotNull ApplicationReadyEvent event) {
-		// Retrieve the application context
 		applicationContext = event.getApplicationContext();
 
-		// Initialize the logger handler (needed for the EnableLogger annotation)
 		loggerHandler.initialize(event.getApplicationContext());
 
-		// Retrieve the deploy mode from the environment variable
 		try {
 			botDeployMode = BotDeployMode.getDeployMode(System.getenv("ACSP_DEPLOY_MODE"));
 		} catch (Exception e) {
@@ -76,7 +73,6 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			shutdown();
 		}
 
-		// Load the bot configuration from the bot_config.json file
 		try {
 			botConfigService.loadBotConfig();
 		} catch (Exception e) {
@@ -84,7 +80,6 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			shutdown();
 		}
 
-		// Create a JDA instance for interacting with the Discord API
 		try {
 			jdaInstance = JDABuilder.create(
 					System.getenv("ACSP_TOKEN"),
@@ -95,20 +90,15 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			shutdown();
 		}
 
-
-		// Find all beans that implement the BotCommand class and add them to the CommandsHandler
 		CommandsHandler.setAvailableCommands(
 				applicationContext.getBeansOfType(BotCommand.class).values().stream().toList()
 		);
 
-		// Add the CommandsHandler to the JDA instance listeners
 		jdaInstance.addEventListener(applicationContext.getBean(CommandsHandler.class).setup(jdaInstance));
 
-		// Await the JDA instance to be ready and then set the bot name
 		try { jdaInstance.awaitReady(); } catch (Exception e) { shutdown(); }
 		botName = jdaInstance.getSelfUser().getName();
 
-		// Initialize all commands
 		CommandsHandler.getAvailableCommands().forEach(command -> {
 			command.setupServices(
 					applicationContext.getBean(BotConfigService.class),
@@ -125,10 +115,8 @@ public class AcspBot implements ApplicationListener<ApplicationReadyEvent> {
 			}
 		});
 
-		// Add all other handlers
 		jdaInstance.addEventListener(applicationContext.getBean(BeginChannelHandler.class).setup(jdaInstance));
 
-		// Add all the controllers
 		applicationContext.getBean(BeginController.class).setup(jdaInstance);
 
 		LOGGER.success("AcspBot has successfully started in " + botDeployMode + " mode.");
