@@ -124,8 +124,6 @@ public class BeginService {
 		HttpHeaders redirectHeaders = new HttpHeaders();
 		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/onboarding");
 		redirectHeaders.add("Set-Cookie", CookieConstants.SESSION_ID + "=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; Secure");
-		redirectHeaders.add("Set-Cookie", CookieConstants.SESSION_TOKEN + "=" + acspUserSession.getSessionToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
-		redirectHeaders.add("Set-Cookie", CookieConstants.REFRESH_TOKEN + "=" + acspUserSession.getSessionRefreshToken() + "; Path=/; SameSite=Strict; HttpOnly; Secure");
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 
@@ -303,8 +301,18 @@ public class BeginService {
 			keystoreService.setKey(keystore, sessionId, privateKey);
 			keystoreService.saveKeystore(keystore);
 
-			String sessionToken = securityService.generateToken(sessionId, user.getUserId(), SecurityConfig.SESSION_TOKEN_EXPIRY, privateKey);
-			String sessionRefreshToken = securityService.generateToken(sessionId, user.getUserId(), SecurityConfig.SESSION_REFRESH_TOKEN_EXPIRY, privateKey);
+			String sessionToken = securityService.generateToken(
+					sessionId,
+					user.getUserId(),
+					SecurityConfig.SESSION_TOKEN_EXPIRY,
+					privateKey
+			);
+			String sessionRefreshToken = securityService.generateToken(
+					sessionId,
+					user.getUserId(),
+					SecurityConfig.SESSION_REFRESH_TOKEN_EXPIRY,
+					privateKey
+			);
 
 			acspUserSession.setSessionId(sessionId);
 			acspUserSession.setSessionKey(encryptedSessionKey);

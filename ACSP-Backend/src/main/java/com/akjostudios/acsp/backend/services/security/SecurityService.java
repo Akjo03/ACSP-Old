@@ -86,7 +86,7 @@ public class SecurityService {
 		return keyPairGenerator.generateKeyPair();
 	}
 
-	public String generateToken(String sessionId, String userId, int seconds, RSAPrivateKey privateKey) {
+	public String generateToken(String sessionId, String userId, long seconds, RSAPrivateKey privateKey) {
 		Instant now = Instant.now();
 		Instant expiration = now.plusSeconds(seconds);
 		HashMap<String, Object> claims = new HashMap<>();

@@ -10,6 +10,5 @@ import lombok.Setter;
 public class UserSessionRefreshDto {
 	private String userId;
 	private String sessionId;
-	private String accessToken;
-	private String refreshToken;
+	private String sessionToken;
 }
