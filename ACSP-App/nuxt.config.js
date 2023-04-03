@@ -10,6 +10,9 @@ export default {
             ]
         }
     },
+    modules: [
+        '@nuxt/image-edge'
+    ],
     css: ['~/assets/css/tailwind.css'],
     postcss: {
         plugins: {

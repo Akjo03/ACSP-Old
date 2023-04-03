@@ -4,7 +4,7 @@
       <div class="flex lg:flex-1">
 
       </div>
-      <a href="#" class="flex flex-row items-center -m-1.5 p-1.5">
+      <a href="/" class="flex flex-row items-center -m-1.5 p-1.5">
           <span class="sr-only">ACSP Logo</span>
           <img class="h-11" src="~/assets/img/logo_512_transparent.png" alt="" />
       </a>
@@ -19,14 +19,13 @@
 
 <script setup lang="ts">
 import {onMounted, ref} from "vue";
-import {useCookie, useRuntimeConfig} from "nuxt/app";
+import {useCookie} from "nuxt/app";
 import {getFromApi} from "../../composables/fetch";
 
-const config = useRuntimeConfig();
 const sessionIdCookie = useCookie("session_id");
 const sessionId = ref("");
 
-const userAvatar = ref("");
+const userAvatar = ref("https://ui-avatars.com/api");
 
 onMounted(() => {
     sessionId.value = sessionIdCookie.value || "";
