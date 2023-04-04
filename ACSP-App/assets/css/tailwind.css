@@ -4,6 +4,9 @@
 
 .theme-light {
     --background: #f8f8f8;
+    --backgroundGradientStart: #f8f8f8;
+    --backgroundGradientEnd: #e2e8f0;
+
     --text: #313131;
     --textHover: #2d2d2d;
     --textLink: #3e75aa;
@@ -18,6 +21,9 @@
 
 .theme-dark {
     --background: #313131;
+    --backgroundGradientStart: #313131;
+    --backgroundGradientEnd: #0d0d0d;
+
     --text: #f8f8f8;
     --textHover: #f1f1f1;
     --textLink: #3e75aa;

@@ -37,6 +37,9 @@ module.exports = {
       },
       colors: {
         themeBackground: 'var(--background)',
+        themeBackgroundGradientStart: 'var(--backgroundGradientStart)',
+        themeBackgroundGradientEnd: 'var(--backgroundGradientEnd)',
+
         themeText: 'var(--text)',
         themeTextHover: 'var(--textHover)',
         themeTextLink: 'var(--textLink)',
@@ -48,6 +51,9 @@ module.exports = {
         themeDiscordHover: 'var(--discordHover)',
         themeHover: 'var(--hover)',
       },
+      backgroundImage: {
+        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
+      }
     },
   },
   plugins: [

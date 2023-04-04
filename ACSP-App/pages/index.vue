@@ -2,7 +2,7 @@
     <div :class="{
         'theme-light': !darkMode,
         'theme-dark': darkMode
-    }" class="flex flex-col min-h-screen bg-themeBackground">
+    }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
         <HeroSection/>
     </div>
 </template>

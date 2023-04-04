@@ -2,9 +2,9 @@
     <footer class="border-t-2 border-themeBorder">
         <div class="mx-auto flex flex-row items-center justify-between py-4 px-6 lg:px-12">
             <div class="hidden sm:flex flex-row gap-4">
-                <a href="#" class="text-sm text-themeTextLink hover:text-themeTextLinkHover">Imprint</a>
+                <a href="#" class="text-xs lg:text-sm text-themeTextLink hover:text-themeTextLinkHover">Imprint</a>
                 <p class="text-xs lg:text-sm text-themeText select-none">•</p>
-                <a href="#" class="text-sm text-themeTextLink hover:text-themeTextLinkHover">Privacy Policy</a>
+                <a href="#" class="text-xs lg:text-sm text-themeTextLink hover:text-themeTextLinkHover">Privacy Policy</a>
             </div>
             <div v-if="props.links.length > 0" class="hidden sm:flex flex-row pl-4 pr-4">
                 <div v-for="link in links" :key="link.name" class="flex flex-row gap-4">

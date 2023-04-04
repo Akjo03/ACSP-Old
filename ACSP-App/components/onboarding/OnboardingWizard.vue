@@ -1,4 +1,9 @@
 <template>
+    <div class="flex flex-col py-4 items-center">
+        <div class="flex flex-row w-[50%] h-6 md:h-8 rounded-2xl shadow-2xl bg-white/5 ring-1 ring-white/10">
+
+        </div>
+    </div>
     <div class="flex flex-1">
         <component :is="currentPageComponent"/>
     </div>
