@@ -10,7 +10,7 @@
           <img class="h-11" src="~/assets/img/logo_512_transparent.png" alt="" />
         </a>
         <div class="flex flex-1 justify-end">
-          <a :href="loginLink" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-themeText hover:bg-themeHover hover:text-themeTextHover transition-all">
+          <a :href="loginLink" class="-mx-3 block rounded-lg py-2.5 px-3 text-base font-semibold leading-7 text-themeButtonText hover:bg-themeHover hover:text-themeTextHover transition-all">
             Log in
             <span class="pl-2" aria-hidden="true">&rarr;</span>
           </a>
@@ -27,7 +27,7 @@
             Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet.
         </p>
         <div class="mt-10 flex items-center gap-x-6">
-          <a :href="discordServerLink" class="inline-flex items-center gap-x-2 rounded-md bg-themeDiscord px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-themeDiscordHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themeDiscordHover transition-all">
+          <a :href="discordServerLink" class="inline-flex items-center gap-x-2 rounded-md bg-themeDiscord px-3.5 py-2.5 text-sm font-semibold text-themeButtonText shadow-sm hover:bg-themeDiscordHover focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:bg-themeDiscordHover transition-all">
             <svg class="-ml-0.5 h-5 w-5" viewBox="0 0 256.00 200.00" fill="#000000">
               <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
               <g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g>
@@ -39,7 +39,7 @@
             </svg>
             Get started
           </a>
-          <a href="#" class="text-sm font-semibold leading-6 rounded-md px-3.5 py-2.5 text-themeText hover:text-themeTextHover hover:bg-themeHover transition-all">
+          <a href="#" class="text-sm font-semibold leading-6 rounded-md px-3.5 py-2.5 text-themeButtonText hover:text-themeTextHover hover:bg-themeHover transition-all">
             Learn more <span class="pl-2" aria-hidden="true">→</span>
           </a>
         </div>

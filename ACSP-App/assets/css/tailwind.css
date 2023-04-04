@@ -17,6 +17,17 @@
     --discord: #6366f1;
     --discordHover: #4f46e5;
     --hover: #e2e8f0;
+
+    --button: #f8f8f8;
+    --buttonHover: #e2e8f0;
+    --buttonPrimary: #3e75aa;
+    --buttonPrimaryHover: #22629f;
+    --buttonDanger: #e53e3e;
+    --buttonDangerHover: #c53030;
+    --buttonSuccess: #38a169;
+    --buttonSuccessHover: #2f855a;
+
+    --buttontText: #f8f8f8;
 }
 
 .theme-dark {
@@ -34,4 +45,15 @@
     --discord: #6366f1;
     --discordHover: #4f46e5;
     --hover: #2d2d2d;
+
+    --button: #2d2d2d;
+    --buttonHover: #1a1a1a;
+    --buttonPrimary: #3e75aa;
+    --buttonPrimaryHover: #22629f;
+    --buttonDanger: #e53e3e;
+    --buttonDangerHover: #c53030;
+    --buttonSuccess: #38a169;
+    --buttonSuccessHover: #2f855a;
+
+    --buttontText: #f8f8f8;
 }

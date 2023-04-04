@@ -50,6 +50,17 @@ module.exports = {
         themeDiscord: 'var(--discord)',
         themeDiscordHover: 'var(--discordHover)',
         themeHover: 'var(--hover)',
+
+        themeButton: 'var(--button)',
+        themeButtonHover: 'var(--buttonHover)',
+        themeButtonPrimary: 'var(--buttonPrimary)',
+        themeButtonPrimaryHover: 'var(--buttonPrimaryHover)',
+        themeButtonDanger: 'var(--buttonDanger)',
+        themeButtonDangerHover: 'var(--buttonDangerHover)',
+        themeButtonSuccess: 'var(--buttonSuccess)',
+        themeButtonSuccessHover: 'var(--buttonSuccessHover)',
+
+        themeButtonText: 'var(--buttonText)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

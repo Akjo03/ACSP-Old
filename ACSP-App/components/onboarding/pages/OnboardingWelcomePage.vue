@@ -1,0 +1,11 @@
+<template>
+    <div class="flex flex-col flex-grow">
+        <div class="sm:mx-auto sm:w-full sm:max-w-md">
+            <h2 class="mt-12 text-center text-2xl lg:text-3xl font-semibold tracking-tight text-themeText">Welcome</h2>
+        </div>
+        <div class="flex flex-col items-center flex-grow"></div>
+    </div>
+</template>
+<script setup lang="ts">
+
+</script>
