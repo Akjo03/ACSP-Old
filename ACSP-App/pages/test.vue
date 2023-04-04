@@ -3,16 +3,18 @@
         'theme-light': !darkMode,
         'theme-dark': darkMode
     }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
+        <div class="flex flex-col flex-grow justify-center items-center pt-8">
+			<ButtonComponent text="Change Theme" type="primary" :onClicked="changeTheme" />
+		</div>
     </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted} from "vue";
-import {useRuntimeConfig} from "nuxt/app";
 import {useTheme} from "../composables/useTheme";
+import ButtonComponent from "../components/lib/ButtonComponent.vue";
 
-const config = useRuntimeConfig();
-const {darkMode, initializeTheme} = useTheme();
+const {darkMode, initializeTheme, setTheme} = useTheme();
 
 onMounted(() => {
     if (typeof window !== "undefined") {
@@ -20,4 +22,8 @@ onMounted(() => {
         initializeTheme(isDarkModePreferred);
     }
 });
+
+function changeTheme() {
+	setTheme(darkMode.value ? "light" : "dark");
+}
 </script>

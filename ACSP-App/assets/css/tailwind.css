@@ -3,57 +3,39 @@
 @tailwind utilities;
 
 .theme-light {
-    --background: #f8f8f8;
-    --backgroundGradientStart: #f8f8f8;
-    --backgroundGradientEnd: #e2e8f0;
+    --backgroundGradientStart: #eeeeee;
+    --backgroundGradientEnd: #d1d1d1;
 
-    --text: #313131;
-    --textHover: #2d2d2d;
-    --textLink: #3e75aa;
-    --textLinkHover: #22629f;
-    --textDangerLink: #e53e3e;
-    --textDangerLinkHover: #c53030;
-    --border: #f1f1f1;
-    --discord: #6366f1;
-    --discordHover: #4f46e5;
-    --hover: #e2e8f0;
+    --text: #070707;
 
-    --button: #f8f8f8;
-    --buttonHover: #e2e8f0;
-    --buttonPrimary: #3e75aa;
-    --buttonPrimaryHover: #22629f;
-    --buttonDanger: #e53e3e;
-    --buttonDangerHover: #c53030;
-    --buttonSuccess: #38a169;
-    --buttonSuccessHover: #2f855a;
+    /* Buttons */
 
-    --buttontText: #f8f8f8;
+    --buttonText: #f8f8f8;
+
+    --buttonPrimary: #0077c8;
+    --buttonPrimaryHover: #005a9e;
+    --buttonPrimaryActive: #003d74;
+
+    --buttonSecondary: #cccccc;
+    --buttonSecondaryHover: #b3b3b3;
+    --buttonSecondaryActive: #999999;
 }
 
 .theme-dark {
-    --background: #313131;
-    --backgroundGradientStart: #313131;
-    --backgroundGradientEnd: #0d0d0d;
+    --backgroundGradientStart: #2e2e2e;
+    --backgroundGradientEnd: #111111;
 
     --text: #f8f8f8;
-    --textHover: #f1f1f1;
-    --textLink: #3e75aa;
-    --textLinkHover: #22629f;
-    --textDangerLink: #e53e3e;
-    --textDangerLinkHover: #c53030;
-    --border: #2d2d2d;
-    --discord: #6366f1;
-    --discordHover: #4f46e5;
-    --hover: #2d2d2d;
 
-    --button: #2d2d2d;
-    --buttonHover: #1a1a1a;
-    --buttonPrimary: #3e75aa;
-    --buttonPrimaryHover: #22629f;
-    --buttonDanger: #e53e3e;
-    --buttonDangerHover: #c53030;
-    --buttonSuccess: #38a169;
-    --buttonSuccessHover: #2f855a;
+    /* Buttons */
 
     --buttonText: #f8f8f8;
+
+    --buttonPrimary: #0077c8;
+    --buttonPrimaryHover: #005a9e;
+    --buttonPrimaryActive: #003d74;
+
+    --buttonSecondary: #333333;
+    --buttonSecondaryHover: #3c3c3c;
+    --buttonSecondaryActive: #454545;
 }
