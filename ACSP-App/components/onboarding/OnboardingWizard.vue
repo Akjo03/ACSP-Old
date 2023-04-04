@@ -1,10 +1,10 @@
 <template>
     <div class="flex flex-col py-4 items-center">
-        <div class="flex flex-row w-[50%] max-w-2xl h-6 md:h-8 rounded-2xl shadow-2xl bg-white/5 ring-1 ring-white/10">
+        <div class="hidden md:flex flex-row gap-20 max-w-2xl h-6 md:h-8 rounded-2xl shadow-2xl bg-white/5 ring-1 ring-white/10">
             <div v-for="page in pages" :key="page.id" class="flex flex-row flex-1 items-center justify-center px-4 my-4">
-                <div class="flex flex-col justify-center flex-1">
-                    <div class="flex flex-col flex-grow">
-                        <div v-if="!page.completed" class="hidden md:flex flex-col justify-center items-center w-4 h-4 md:w-6 md:h-6 rounded-full bg-white/5 ring-1 ring-white/10">
+                <div class="flex flex-col justify-center">
+                    <div class="flex flex-col">
+                        <div v-if="!page.completed" class="flex flex-col justify-center items-center w-4 h-4 md:w-6 md:h-6 rounded-full bg-white/5 ring-1 ring-white/10">
                             <span class="text-xs md:text-sm text-center font-semibold text-themeText">{{page.index}}</span>
                         </div>
                         <div v-else class="hidden md:flex flex-col justify-center items-center w-4 h-4 md:w-6 md:h-6 rounded-full bg-white/5 ring-1 ring-white/10">
@@ -17,6 +17,9 @@
                         </div>
                     </div>
                 </div>
+                <div class="flex flex-col pl-4">
+                    <p class="text-xs md:text-sm font-semibold text-themeText">{{page.title}}</p>
+                </div>
             </div>
         </div>
     </div>
@@ -25,7 +28,7 @@
     </div>
     <div class="flex flex-row items-center justify-center">
         <div v-for="button in currentPageButtons" class="flex flex-row justify-center items-center">
-            <button @click="button.onClick()" class="flex py-4 mx-4 my-2 {{getButtonClass(button.type)}}">
+            <button @click="button.onClick()" :class="getButtonClass(button.type)">
                 <span class="text-sm md:text-md font-semibold text-themeButtonText">{{button.text}}</span>
             </button>
         </div>
@@ -51,6 +54,7 @@ interface Button {
 interface Page {
     index: number,
     id: string,
+    title: string,
     component: any,
     buttons: Button[],
     completed?: boolean
@@ -60,6 +64,7 @@ const pages: Page[] = [
     {
         index: 1,
         id: "languageSelect",
+        title: "Language",
         component: OnboardingLanguagePage,
         buttons: [
             {
@@ -75,6 +80,7 @@ const pages: Page[] = [
     {
         index: 2,
         id: "welcome",
+        title: "Welcome",
         component: OnboardingWelcomePage,
         buttons: []
     }
@@ -103,16 +109,17 @@ const currentPageButtons = computed(() => {
     return page ? page.buttons : [];
 });
 
-const getButtonClass = (type: string) => {
+function getButtonClass(type: "submit" | "cancel" | "primary" | "secondary") {
+    let base = "rounded-md px-3 py-2 m-4 text-sm font-semibold shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2"
     switch (type) {
         case "submit":
-            return "bg-themeButtonSuccess text-themeButtonText"
+            return base + " bg-themeButtonSuccess text-themeButtonText hover:bg-themeButtonSuccessHover transition-all focus-visible:outline-themeButtonSuccess"
         case "cancel":
-            return "bg-themeButtonDanger text-themeButtonText"
+            return base + " bg-themeButtonDanger text-themeButtonText hover:bg-themeButtonDangerHover transition-all focus-visible:outline-themeButtonDanger"
         case "primary":
-            return "bg-themeButtonPrimary text-themeButtonText"
+            return base + " bg-themeButtonPrimary text-themeButtonText hover:bg-themeButtonPrimaryHover transition-all focus-visible:outline-themeButtonPrimary"
         case "secondary":
-            return "bg-themeButton text-themeButtonText"
+            return base + " bg-themeButton text-themeButtonText hover:bg-themeButtonHover transition-all focus-visible:outline-themeButton"
     }
 }
 </script>
