@@ -4,7 +4,6 @@
             <h2 class="mt-12 text-center text-2xl lg:text-3xl font-semibold tracking-tight text-themeText">Language / Sprache</h2>
         </div>
         <div class="flex flex-col items-center flex-grow">
-
         </div>
     </div>
 </template>
