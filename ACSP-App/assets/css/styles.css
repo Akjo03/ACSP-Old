@@ -1,0 +1,75 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.theme-light {
+    --backgroundGradientStart: #eeeeee;
+    --backgroundGradientEnd: #d1d1d1;
+
+    --text: #070707;
+    --textDisabled: #999999;
+
+    /* Buttons */
+
+    --buttonText: #f8f8f8;
+    --buttonTextDisabled: #999999;
+    --buttonRing: #333333;
+
+    --buttonPrimary: #0077c8;
+    --buttonPrimaryHover: #005a9e;
+    --buttonPrimaryActive: #003d74;
+    --buttonPrimaryDisabled: #a3abbd;
+
+    --buttonSecondary: #cccccc;
+    --buttonSecondaryHover: #b3b3b3;
+    --buttonSecondaryActive: #999999;
+    --buttonSecondaryDisabled: #e6e6e6;
+
+    --buttonSuccess: #00893F;
+    --buttonSuccessHover: #00662c;
+    --buttonSuccessActive: #00441a;
+    --buttonSuccessDisabled: #9fafa1;
+
+    --buttonDanger: #ca473d;
+    --buttonDangerHover: #a73a31;
+    --buttonDangerActive: #7f2c25;
+    --buttonDangerDisabled: #bea6a1;
+
+    --buttonBorder: #bbbbbb;
+}
+
+.theme-dark {
+    --backgroundGradientStart: #2e2e2e;
+    --backgroundGradientEnd: #111111;
+
+    --text: #f8f8f8;
+    --textDisabled: #999999;
+
+    /* Buttons */
+
+    --buttonText: #f8f8f8;
+    --buttonTextDisabled: #999999;
+    --buttonRing: #f8f8f8;
+
+    --buttonPrimary: #0077c8;
+    --buttonPrimaryHover: #005a9e;
+    --buttonPrimaryActive: #003d74;
+    --buttonPrimaryDisabled: #a3abbd;
+
+    --buttonSecondary: #333333;
+    --buttonSecondaryHover: #3c3c3c;
+    --buttonSecondaryActive: #454545;
+    --buttonSecondaryDisabled: #4d4d4d;
+
+    --buttonSuccess: #00893F;
+    --buttonSuccessHover: #00662c;
+    --buttonSuccessActive: #00441a;
+    --buttonSuccessDisabled: #9fafa1;
+
+    --buttonDanger: #ca473d;
+    --buttonDangerHover: #a73a31;
+    --buttonDangerActive: #7f2c25;
+    --buttonDangerDisabled: #bea6a1;
+
+    --buttonBorder: #252525;
+}

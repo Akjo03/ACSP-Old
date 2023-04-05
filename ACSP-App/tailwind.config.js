@@ -40,14 +40,35 @@ module.exports = {
         themeBackgroundGradientEnd: 'var(--backgroundGradientEnd)',
 
         themeText: 'var(--text)',
+        themeTextDisabled: 'var(--textDisabled)',
+
+        /* Buttons */
 
         themeButtonText: 'var(--buttonText)',
+        themeButtonTextDisabled: 'var(--buttonTextDisabled)',
+        themeButtonRing: 'var(--buttonRing)',
+
         themeButtonPrimary: 'var(--buttonPrimary)',
         themeButtonPrimaryHover: 'var(--buttonPrimaryHover)',
         themeButtonPrimaryActive: 'var(--buttonPrimaryActive)',
+        themeButtonPrimaryDisabled: 'var(--buttonPrimaryDisabled)',
+
         themeButtonSecondary: 'var(--buttonSecondary)',
         themeButtonSecondaryHover: 'var(--buttonSecondaryHover)',
         themeButtonSecondaryActive: 'var(--buttonSecondaryActive)',
+        themeButtonSecondaryDisabled: 'var(--buttonSecondaryDisabled)',
+
+        themeButtonSuccess: 'var(--buttonSuccess)',
+        themeButtonSuccessHover: 'var(--buttonSuccessHover)',
+        themeButtonSuccessActive: 'var(--buttonSuccessActive)',
+        themeButtonSuccessDisabled: 'var(--buttonSuccessDisabled)',
+
+        themeButtonDanger: 'var(--buttonDanger)',
+        themeButtonDangerHover: 'var(--buttonDangerHover)',
+        themeButtonDangerActive: 'var(--buttonDangerActive)',
+        themeButtonDangerDisabled: 'var(--buttonDangerDisabled)',
+
+        themeButtonBorder: 'var(--buttonBorder)',
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

@@ -10,10 +10,13 @@ export default {
             ]
         }
     },
+    css: [
+        "@/assets/css/styles.css",
+        "@fortawesome/fontawesome-svg-core/styles.css"
+    ],
     modules: [
         '@nuxt/image-edge'
     ],
-    css: ['~/assets/css/tailwind.css'],
     postcss: {
         plugins: {
             tailwindcss: {},
