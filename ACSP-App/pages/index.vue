@@ -1,8 +1,10 @@
 <template>
-    <div :class="{
-        'theme-light': !darkMode,
-        'theme-dark': darkMode
-    }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
+    <div>
+        <div :class="{
+            'theme-light': !darkMode,
+            'theme-dark': darkMode
+        }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
+        </div>
     </div>
 </template>
 

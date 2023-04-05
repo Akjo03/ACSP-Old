@@ -8,6 +8,7 @@ module.exports = {
     "./plugins/**/*.{js,ts}",
     "./nuxt.config.{js,ts}",
     "./app.vue",
+    "./error.vue",
   ],
   theme: {
     extend: {
@@ -67,6 +68,11 @@ module.exports = {
         themeButtonDangerHover: 'var(--buttonDangerHover)',
         themeButtonDangerActive: 'var(--buttonDangerActive)',
         themeButtonDangerDisabled: 'var(--buttonDangerDisabled)',
+
+        themeButtonDiscord: 'var(--buttonDiscord)',
+        themeButtonDiscordHover: 'var(--buttonDiscordHover)',
+        themeButtonDiscordActive: 'var(--buttonDiscordActive)',
+        themeButtonDiscordDisabled: 'var(--buttonDiscordDisabled)',
 
         themeButtonBorder: 'var(--buttonBorder)',
       },

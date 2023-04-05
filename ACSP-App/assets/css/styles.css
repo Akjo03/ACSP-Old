@@ -71,5 +71,10 @@
     --buttonDangerActive: #7f2c25;
     --buttonDangerDisabled: #bea6a1;
 
+    --buttonDiscord: #7289da;
+    --buttonDiscordHover: #5f73bc;
+    --buttonDiscordActive: #4c5d9e;
+    --buttonDiscordDisabled: #a8aabc;
+
     --buttonBorder: #252525;
 }
