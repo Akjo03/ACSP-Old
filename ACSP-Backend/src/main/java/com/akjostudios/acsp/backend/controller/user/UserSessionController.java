@@ -17,7 +17,6 @@ public class UserSessionController {
 	private final UserSessionService userSessionService;
 
 	@GetMapping("/{userId}/session/status")
-	@PreAuthorize("hasRole('ROLE_BOT')")
 	public ResponseEntity<UserSessionStatusDto> getUserSessionStatus(@PathVariable String userId) {
 		UserSessionStatusDto userSessionStatusDto = userSessionService.getUserSessionStatus(userId);
 		if (userSessionStatusDto == null) {

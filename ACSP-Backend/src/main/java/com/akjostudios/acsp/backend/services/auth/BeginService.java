@@ -104,6 +104,7 @@ public class BeginService {
 		HttpHeaders redirectHeaders = new HttpHeaders();
 		redirectHeaders.add("Location", applicationConfig.getAppBaseUrl() + "/onboarding");
 		redirectHeaders.add("Set-Cookie", CookieConstants.SESSION_ID + "=" + acspUserSession.getSessionId() + "; Path=/; SameSite=Strict; Secure");
+		redirectHeaders.add("Set-Cookie", CookieConstants.USER_ID + "=" + acspUserSession.getUserId() + "; Path=/; SameSite=Strict; Secure");
 		return new ResponseEntity<>(redirectHeaders, HttpStatus.SEE_OTHER);
 	}
 

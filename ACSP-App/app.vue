@@ -1,18 +1,20 @@
 <template>
-	<div>
-        <div :class="{
+    <div :class="{
             'theme-light': !darkMode,
             'theme-dark': darkMode
         }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
-            <AppHeader />
-            <RouterView></RouterView>
-        </div>
-	</div>
+        <AppHeader />
+        <RouterView />
+        <AppFooter />
+    </div>
 </template>
 
 <script setup lang="ts">
 import {onMounted} from "vue";
 import {useTheme} from "./composables/useTheme";
+
+import AppHeader from "./components/global/AppHeader.vue";
+import AppFooter from "./components/global/AppFooter.vue";
 
 const {darkMode, initializeTheme} = useTheme();
 

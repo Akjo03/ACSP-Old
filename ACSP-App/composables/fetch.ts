@@ -1,6 +1,6 @@
 import {useRuntimeConfig} from "nuxt/app";
 
-export const getFromApi = async (endpoint: string, sessionId: string, headers: any = {}) => {
+export const getFromApi = async <T>(endpoint: string, sessionId: string, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
     console.log("Making GET request to: " + `${config.public.backendUrl}/proxy${endpoint}`);
@@ -15,7 +15,7 @@ export const getFromApi = async (endpoint: string, sessionId: string, headers: a
     });
 }
 
-export const getDirectFromApi = async (endpoint: string, headers: any = {}) => {
+export const getDirectFromApi = async <T>(endpoint: string, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
     console.log("Making GET request to: " + `${config.public.backendUrl}/api${endpoint}`);
@@ -29,7 +29,7 @@ export const getDirectFromApi = async (endpoint: string, headers: any = {}) => {
     });
 }
 
-export const postToApi = async (endpoint: string, sessionId: string, body: any, headers: any = {}) => {
+export const postToApi = async <T>(endpoint: string, sessionId: string, body: any, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
     console.log("Making POST request to: " + `${config.public.backendUrl}/proxy${endpoint}`);
@@ -45,7 +45,7 @@ export const postToApi = async (endpoint: string, sessionId: string, body: any, 
     });
 }
 
-export const postDirectToApi = async (endpoint: string, body: any, headers: any = {}) => {
+export const postDirectToApi = async <T>(endpoint: string, body: any, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
     console.log("Making POST request to: " + `${config.public.backendUrl}/api${endpoint}`);
