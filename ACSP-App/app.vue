@@ -4,7 +4,6 @@
             'theme-dark': darkMode
         }" class="flex flex-col min-h-screen min-w-fit bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
         <AppHeader />
-        <p class="text-themeText">{{sessionStatus}}</p>
         <RouterView />
         <AppFooter />
     </div>
@@ -20,7 +19,7 @@ import AppHeader from "./components/global/AppHeader.vue";
 import AppFooter from "./components/global/AppFooter.vue";
 
 const {darkMode, initializeTheme} = useTheme();
-const {sessionStatus, getSessionStatus} = useSession();
+const {getSessionStatus, getSessionUser} = useSession();
 
 onMounted(async () => {
     if (typeof window !== "undefined") {
@@ -29,5 +28,6 @@ onMounted(async () => {
     }
 
     await getSessionStatus();
+    await getSessionUser();
 });
 </script>
