@@ -8,11 +8,12 @@
             </div>
             <div v-if="footerLinks.length > 0" class="hidden sm:flex flex-row pl-4 pr-4 gap-4">
                 <p class="text-xs lg:text-sm text-themeText select-none">–</p>
-                <div v-for="link in footerLinks" :key="link.name" class="flex flex-row gap-4">
+                <div v-for="link in footerLinks" :key="link.index" class="flex flex-row gap-4">
                     <NuxtLink :href="link.url" :class="{
                         'text-xs lg:text-sm text-themeTextLink hover:text-themeTextLinkHover select-none': !link.danger,
                         'text-xs lg:text-sm text-themeTextLinkDanger hover:text-themeTextLinkDangerHover select-none': link.danger
                     }">{{ link.name }}</NuxtLink>
+                    <p v-if="link.index < footerLinks.length - 1" class="text-xs lg:text-sm text-themeText select-none">•</p>
                 </div>
             </div>
             <div class="hidden sm:flex flex-grow"></div>

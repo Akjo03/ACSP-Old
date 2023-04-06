@@ -1,6 +1,7 @@
 import {ref} from 'vue';
 
 export type FooterLink = {
+    index: number;
     name: string;
     url: string;
     danger: boolean;

@@ -12,6 +12,7 @@ const { setFooterLinks } = useFooter();
 
 setFooterLinks([
     {
+        index: 0,
         name: "Abort Onboarding",
         url: config.public.backendUrl + "/proxy/user/onboarding/abort",
         danger: true,
