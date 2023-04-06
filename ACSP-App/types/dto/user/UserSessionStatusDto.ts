@@ -1,5 +1,5 @@
 export interface UserSessionStatusDto {
     userId: string;
     sessionId: string;
-    sessionStatus: string;
+    sessionStatus: "active" | "inactive" | "onboarding"
 }

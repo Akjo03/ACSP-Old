@@ -2,24 +2,16 @@ import {ref} from 'vue';
 import {getDirectFromApi} from './fetch';
 import {UserSessionStatusDto} from '../types/dto/user/UserSessionStatusDto';
 
+const sessionStatus = ref("unknown" as "unknown" | "active" | "inactive" | "onboarding");
+
+const getSessionStatus = async () => {
+    try {
+        await getDirectFromApi<UserSessionStatusDto>(`/user/session/status`).then((res) => {
+            sessionStatus.value = res.sessionStatus;
+        });
+    } catch (ignored) { console.error("No user found or user id invalid.") }
+}
+
 export const useSession = () => {
-    const status = ref<UserSessionStatusDto | null>(null);
-
-    const getSessionStatus = async (userId: string | null) => {
-        if (userId === null || userId === undefined) {
-            status.value = null;
-            return;
-        }
-        try {
-            status.value = await getDirectFromApi<UserSessionStatusDto>(`/user/${userId}/session/status`);
-        } catch (e) {
-            console.error(e);
-            status.value = null;
-        }
-    };
-
-    return {
-        userSessionStatus: status,
-        getSessionStatus,
-    };
-};
+    return {sessionStatus, getSessionStatus}
+}
