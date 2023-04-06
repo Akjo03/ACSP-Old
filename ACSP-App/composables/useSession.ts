@@ -8,6 +8,7 @@ const sessionId = ref(null as string | null);
 const sessionStatus = ref("unknown" as "unknown" | "active" | "inactive" | "onboarding");
 const sessionUser = ref(null as AcspUser | null);
 const sessionUserAvatar = ref(null as string | null);
+const isUserLoggedIn = computed(() => sessionStatus.value !== "unknown" && sessionStatus.value !== "inactive");
 
 const getSessionStatus = async () => {
     try {
@@ -33,5 +34,5 @@ const getSessionUser = async () => {
 }
 
 export const useSession = () => {
-    return {sessionId, sessionStatus, sessionUser, sessionUserAvatar, getSessionStatus, getSessionUser}
+    return {sessionId, sessionStatus, sessionUser, sessionUserAvatar, isUserLoggedIn, getSessionStatus, getSessionUser}
 }

@@ -16,7 +16,6 @@
 </template>
 
 <script setup lang="ts">
-import {computed, onMounted, ref} from "vue";
 import {navigateTo, useRuntimeConfig} from "nuxt/app";
 import {faArrowRight} from "@fortawesome/pro-regular-svg-icons";
 
@@ -25,9 +24,7 @@ import {useSession} from "../../composables/useSession";
 import ButtonComponent from "../lib/ButtonComponent.vue";
 
 const config = useRuntimeConfig();
-const {sessionStatus, sessionUserAvatar} = useSession();
-
-const isUserLoggedIn = computed(() => sessionStatus.value !== "unknown");
+const {sessionUserAvatar, isUserLoggedIn} = useSession();
 
 const loginUrl = config.public.backendUrl + "/api/auth/login";
 const login = () => {
