@@ -70,9 +70,8 @@ public class BeginService {
 	}
 
 	public BeginLinkResponseDto getBeginDashboardLinkResponseDto() {
-		String link = "#"; // TODO: Add dashboard link
 		BeginLinkResponseDto beginOnboardingResponseDto = new BeginLinkResponseDto();
-		beginOnboardingResponseDto.setBeginLink(link);
+		beginOnboardingResponseDto.setBeginLink(applicationConfig.getBaseUrl() + "/api/user/dashboard");
 		return beginOnboardingResponseDto;
 	}
 

@@ -24,8 +24,12 @@ export default {
             default: "left"
         },
         iconSize: {
-            type: '2xs' | 'xs' | 'sm' | 'lg' | 'xl' | '2xl' | '1x' | '2x' | '3x' | '4x' | '5x' | '6x' | '7x' | '8x' | '9x' | '10x',
+            type: "2xs" | "xs" | "sm" | "lg" | "xl" | "2xl" | "1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x",
             default: "1x"
+        },
+        textSize: {
+            type: "text-xs" | "text-sm" | "text-md" | "text-lg" | "text-xl",
+            default: "text-md"
         },
         type: {
             type: "primary" | "secondary" | "success" | "danger" | "discord",
@@ -130,7 +134,8 @@ const props = defineProps<{
     text?: string;
     icon?: IconDefinition;
     iconPlacement?: "left" | "right";
-    iconSize?: '2xs' | 'xs' | 'sm' | 'lg' | 'xl' | '2xl' | '1x' | '2x' | '3x' | '4x' | '5x' | '6x' | '7x' | '8x' | '9x' | '10x';
+    iconSize?: "2xs" | "xs" | "sm" | "lg" | "xl" | "2xl" | "1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x";
+    textSize?: "text-xs" | "text-sm" | "text-md" | "text-lg" | "text-xl";
     type?: "primary" | "secondary" | "success" | "danger" | "discord";
     disabled?: boolean;
     onClicked?: () => Promise<void>;
@@ -153,8 +158,9 @@ const getButtonTextStyles = computed(() => {
     const hoverKey = buttonType.value ? buttonType.value.colorThemeTextHoverKey : "hover:text-themeText";
     const activeKey = buttonType.value ? buttonType.value.colorThemeTextActiveKey : "active:text-themeText";
     const disabledKey = buttonType.value ? buttonType.value.colorThemeTextDisabledKey : "disabled:text-themeTextDisabled";
+    const textSize = props.textSize ? props.textSize : "text-md";
 
-    return `${key} ${hoverKey} ${activeKey} ${disabledKey}`;
+    return `${key} ${hoverKey} ${activeKey} ${disabledKey} ${textSize}`;
 })
 
 const isLoading = ref(false);

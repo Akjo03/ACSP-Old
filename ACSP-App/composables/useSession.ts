@@ -1,6 +1,6 @@
-import {computed, ref} from 'vue';
-import {getDirectFromApi, getFromApi} from './fetch';
-import {UserSessionStatusDto} from '../types/dto/user/UserSessionStatusDto';
+import {computed, ref} from "vue";
+import {getDirectFromApi, getFromApi} from "./fetch";
+import {UserSessionStatusDto} from "../types/dto/user/UserSessionStatusDto";
 import {AcspUser} from "../types/model/AcspUser";
 import {UserDto} from "../types/dto/user/UserDto";
 

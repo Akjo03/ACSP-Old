@@ -1,7 +1,8 @@
 <template>
-	<h1 class="text-3xl font-semibold text-themeText text-center pt-4">Index</h1>
+	<HeroSection />
 </template>
 
 <script setup lang="ts">
 
+import HeroSection from "../components/index/HeroSection.vue";
 </script>

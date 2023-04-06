@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-row min-w-fit p-4 border-b-2 border-white/5">
+	<div class="flex flex-row p-4 border-b-2 border-white/5">
 		<div class="flex flex-row w-full">
             <div class="flex flex-row justify-center">
                 <NuxtLink class="p-2" href="/">

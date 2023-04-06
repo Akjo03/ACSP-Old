@@ -41,6 +41,7 @@ module.exports = {
         themeBackgroundGradientEnd: 'var(--backgroundGradientEnd)',
 
         themeText: 'var(--text)',
+        themeTextSubtle: 'var(--textSubtle)',
         themeTextDisabled: 'var(--textDisabled)',
 
         /* Buttons */
