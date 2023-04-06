@@ -2,6 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
+/*noinspection ALL*/
 .theme-light {
     --backgroundGradientStart: #eeeeee;
     --backgroundGradientEnd: #d1d1d1;
@@ -9,6 +10,7 @@
     --text: #070707;
     --textSubtle: #222222;
     --textDisabled: #999999;
+    --textLink: #0077c8;
 
     /* Buttons */
 
@@ -44,6 +46,7 @@
     --buttonBorder: #bbbbbb;
 }
 
+/*noinspection ALL*/
 .theme-dark {
     --backgroundGradientStart: #2e2e2e;
     --backgroundGradientEnd: #111111;
@@ -51,6 +54,10 @@
     --text: #f8f8f8;
     --textSubtle: #bcbcbc;
     --textDisabled: #999999;
+    --textLink: #0077c8;
+    --textLinkHover: #005a9e;
+    --textLinkDanger: #ca473d;
+    --textLinkDangerHover: #a73a31;
 
     /* Buttons */
 

@@ -43,6 +43,10 @@ module.exports = {
         themeText: 'var(--text)',
         themeTextSubtle: 'var(--textSubtle)',
         themeTextDisabled: 'var(--textDisabled)',
+        themeTextLink: 'var(--textLink)',
+        themeTextLinkHover: 'var(--textLinkHover)',
+        themeTextLinkDanger: 'var(--textLinkDanger)',
+        themeTextLinkDangerHover: 'var(--textLinkDangerHover)',
 
         /* Buttons */
 

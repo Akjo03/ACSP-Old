@@ -1,18 +1,16 @@
 <template>
-    <div>
-        <div :class="{
+    <div :class="{
         'theme-light': !darkMode,
         'theme-dark': darkMode
         }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
-            <div class="flex flex-col flex-grow justify-center items-center pt-8 gap-4 px-5 mx-auto my-8">
-                <div class="max-w-xl text-center">
-                    <h2 class="mb-8 font-extrabold text-9xl text-themeText">
-                        <span class="sr-only">Error</span>{{props.error.statusCode}}
-                    </h2>
-                    <p class="text-2xl md:text-3xl font-semibold text-themeText">{{subtitle}}</p>
-                    <p class="mt-4 mb-8 text-md md:text-lg text-themeText">{{text}}</p>
-                    <ButtonComponent text="Back to Homepage" type="primary" :onClicked="handleError" />
-                </div>
+        <div class="flex flex-col flex-grow justify-center items-center pt-8 gap-4 px-5 mx-auto my-8">
+            <div class="max-w-xl text-center">
+                <h2 class="mb-8 font-extrabold text-9xl text-themeText">
+                    <span class="sr-only">Error</span>{{props.error.statusCode}}
+                </h2>
+                <p class="text-2xl md:text-3xl font-semibold text-themeText">{{subtitle}}</p>
+                <p class="mt-4 mb-8 text-md md:text-lg text-themeText">{{text}}</p>
+                <ButtonComponent text="Back to Homepage" type="primary" :onClicked="handleError" />
             </div>
         </div>
     </div>

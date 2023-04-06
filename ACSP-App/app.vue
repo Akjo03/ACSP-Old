@@ -4,7 +4,9 @@
             'theme-dark': darkMode
         }" class="flex flex-col min-h-screen min-w-fit bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
         <AppHeader />
-        <RouterView />
+        <div class="flex flex-col flex-grow">
+            <RouterView />
+        </div>
         <AppFooter />
     </div>
 </template>
@@ -14,9 +16,11 @@ import { onMounted } from "vue";
 
 import { useTheme } from "./composables/useTheme";
 import { useSession } from "./composables/useSession";
+import { useFooter } from "./composables/useFooter";
 
 import AppHeader from "./components/global/AppHeader.vue";
 import AppFooter from "./components/global/AppFooter.vue";
+
 
 const {darkMode, initializeTheme} = useTheme();
 const {getSessionStatus, getSessionUser} = useSession();
