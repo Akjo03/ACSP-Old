@@ -4,19 +4,17 @@
             'theme-light': !darkMode,
             'theme-dark': darkMode
         }" class="flex flex-col min-h-screen bg-gradient-to-br from-themeBackgroundGradientStart to-themeBackgroundGradientEnd">
-            <ButtonComponent type="discord" :icon="faDiscord" text="Get started" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-import {onMounted} from "vue";
+import {onMounted, ref} from "vue";
 import {useTheme} from "../composables/useTheme";
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
 
 import ButtonComponent from "../components/lib/ButtonComponent.vue";
 
-const {darkMode, initializeTheme} = useTheme();
+const {darkMode, initializeTheme, setTheme} = useTheme();
 
 onMounted(() => {
     if (typeof window !== "undefined") {
