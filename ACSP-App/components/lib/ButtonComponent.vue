@@ -1,11 +1,9 @@
 <template>
-    <div>
-        <button @click="onClicked()" :disabled="disabled" :aria-disabled="disabled" :class="`inline-flex items-center justify-center gap-x-4 px-4 py-2 m-2 min-h-[2em] rounded-md shadow-sm transition-all select-none ${getButtonStyles} active:ring-2 active:ring-themeButtonRing disabled:active:ring-0 disabled:cursor-not-allowed disabled:opacity-90`">
-            <span v-if="icon && iconPlacement === 'left'"><font-awesome-icon :icon="icon" :size="iconSize" :class="`${getButtonTextStyles} text-center -ml-0.5`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
-            <span v-if="text" :class="`${getButtonTextStyles}`">{{text}}</span>
-            <span v-if="icon && iconPlacement === 'right'"><font-awesome-icon :icon="icon" :size="iconSize" :class="`${getButtonTextStyles} text-center -ml-0.5`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
-        </button>
-    </div>
+    <button @click="onClicked()" :disabled="disabled" :aria-disabled="disabled" :class="`inline-flex items-center justify-center gap-x-4 px-4 py-2 m-2 min-h-[2em] rounded-md shadow-sm transition-all select-none ${getButtonStyles} active:ring-2 active:ring-themeButtonRing disabled:active:ring-0 disabled:cursor-not-allowed disabled:opacity-90`">
+        <span v-if="icon && iconPlacement === 'left'"><font-awesome-icon :icon="icon" :size="iconSize" :class="`${getButtonTextStyles} text-center -ml-0.5`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
+        <span v-if="text" :class="`${getButtonTextStyles} font-semibold text-sm`">{{text}}</span>
+        <span v-if="icon && iconPlacement === 'right'"><font-awesome-icon :icon="icon" :size="iconSize" :class="`${getButtonTextStyles} text-center -ml-0.5`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
+    </button>
 </template>
 
 <script lang="ts">

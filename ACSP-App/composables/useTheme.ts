@@ -27,6 +27,6 @@ export const useTheme = () => {
     return {
         darkMode,
         setTheme,
-        initializeTheme,
+        initializeTheme
     };
 };

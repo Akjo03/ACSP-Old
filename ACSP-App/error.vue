@@ -19,17 +19,13 @@
 </template>
 
 <script setup lang="ts">
-import {onMounted} from "vue";
 import {useTheme} from "./composables/useTheme";
 import {clearError} from "nuxt/app";
 
 import ButtonComponent from "./components/lib/ButtonComponent.vue";
+import {onMounted} from "vue";
 
 const {darkMode, initializeTheme} = useTheme();
-
-const props = defineProps({
-    error: Object
-})
 
 onMounted(() => {
     if (typeof window !== "undefined") {
@@ -37,6 +33,10 @@ onMounted(() => {
         initializeTheme(isDarkModePreferred);
     }
 });
+
+const props = defineProps({
+    error: Object
+})
 
 const handleError = () => clearError({ redirect: '/' })
 </script>
