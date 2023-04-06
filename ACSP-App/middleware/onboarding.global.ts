@@ -1,5 +1,5 @@
-import { defineNuxtRouteMiddleware, navigateTo } from "nuxt/app";
-import { useSession } from "../composables/useSession";
+import {defineNuxtRouteMiddleware, navigateTo} from "nuxt/app";
+import {useSession} from "../composables/useSession";
 
 // noinspection JSUnusedGlobalSymbols
 export default defineNuxtRouteMiddleware(async (to, from) => {

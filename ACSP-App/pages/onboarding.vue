@@ -3,9 +3,9 @@
 </template>
 
 <script setup lang="ts">
-import { useRuntimeConfig } from "nuxt/app";
+import {useRuntimeConfig} from "nuxt/app";
 
-import { useFooter } from "../composables/useFooter";
+import {useFooter} from "../composables/useFooter";
 
 const config = useRuntimeConfig();
 const { setFooterLinks } = useFooter();

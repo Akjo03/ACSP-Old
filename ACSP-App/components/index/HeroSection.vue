@@ -17,10 +17,10 @@
 </template>
 
 <script setup lang="ts">
-import { useRuntimeConfig, navigateTo } from "nuxt/app";
+import {navigateTo, useRuntimeConfig} from "nuxt/app";
 
-import { faDiscord } from "@fortawesome/free-brands-svg-icons";
-import { faArrowRight } from "@fortawesome/pro-regular-svg-icons";
+import {faDiscord} from "@fortawesome/free-brands-svg-icons";
+import {faArrowRight} from "@fortawesome/pro-regular-svg-icons";
 
 import ButtonComponent from "../lib/ButtonComponent.vue";
 

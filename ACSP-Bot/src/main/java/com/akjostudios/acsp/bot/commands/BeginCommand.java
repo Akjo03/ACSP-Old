@@ -16,7 +16,6 @@ import io.github.akjo03.lib.logging.LoggerManager;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Component;
@@ -64,11 +63,11 @@ public class BeginCommand extends BotCommand {
 		UserSessionStatusDto userSessionStatusDto = null;
 		try {
 			userSessionStatusDto = webClient.get()
-					.uri("/api/user/" + event.getAuthor().getId() + "/session/status")
-					.header(HttpHeaders.AUTHORIZATION, "Bot " + acspBotApiSecret)
+					.uri("/api/user/session/status?userId=" + event.getAuthor().getId())
 					.retrieve()
 					.bodyToMono(UserSessionStatusDto.class).block();
 		} catch (Exception ignored) {}
+		LOGGER.info("User session status: " + userSessionStatusDto);
 
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {

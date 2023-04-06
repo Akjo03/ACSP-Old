@@ -12,11 +12,10 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted } from "vue";
+import {onMounted} from "vue";
 
-import { useTheme } from "./composables/useTheme";
-import { useSession } from "./composables/useSession";
-import { useFooter } from "./composables/useFooter";
+import {useTheme} from "./composables/useTheme";
+import {useSession} from "./composables/useSession";
 
 import AppHeader from "./components/global/AppHeader.vue";
 import AppFooter from "./components/global/AppFooter.vue";
