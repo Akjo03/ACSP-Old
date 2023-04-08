@@ -16,7 +16,7 @@ module.exports = {
         "sm": "480px",
         "md": "768px",
         "lg": "968px",
-        "xl": "1440px",
+        "xl": "1280px",
       },
       fontSize: {
         'xs': '0.75rem',
@@ -52,7 +52,6 @@ module.exports = {
 
         themeButtonText: 'var(--buttonText)',
         themeButtonTextDisabled: 'var(--buttonTextDisabled)',
-        themeButtonRing: 'var(--buttonRing)',
 
         themeButtonPrimary: 'var(--buttonPrimary)',
         themeButtonPrimaryHover: 'var(--buttonPrimaryHover)',

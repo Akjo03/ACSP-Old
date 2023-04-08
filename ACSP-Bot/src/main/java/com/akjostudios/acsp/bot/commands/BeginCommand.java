@@ -67,7 +67,6 @@ public class BeginCommand extends BotCommand {
 					.retrieve()
 					.bodyToMono(UserSessionStatusDto.class).block();
 		} catch (Exception ignored) {}
-		LOGGER.info("User session status: " + userSessionStatusDto);
 
 		BeginLinkResponseDto beginLinkResponseDto = null;
 		try {

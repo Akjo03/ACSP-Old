@@ -18,7 +18,7 @@
             </div>
             <div class="hidden sm:flex flex-grow"></div>
             <div class="flex flex-row flex-grow sm:flex-grow-0 justify-center sm:justify-end items-center">
-                <p class="text-xs lg:text-sm text-themeText">AkjoStudios © {{ copyrightYear }}</p>
+                <p class="text-xs lg:text-sm text-themeText select-none">AkjoStudios © {{ copyrightYear }}</p>
             </div>
         </div>
     </footer>

@@ -23,7 +23,6 @@ public class UserSessionController {
 			@CookieValue(value = CookieConstants.USER_ID, required = false) String cookieUserId
 	) {
 		String theUserId = userId == null ? (cookieUserId == null ? "" : cookieUserId) : userId;
-		LOGGER.info("getUserSessionStatus: userId = " + theUserId);
 		UserSessionStatusDto userSessionStatusDto = userSessionService.getUserSessionStatus(theUserId);
 		if (userSessionStatusDto == null) {
 			return ResponseEntity.notFound().build();

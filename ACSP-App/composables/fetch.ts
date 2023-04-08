@@ -3,7 +3,6 @@ import {useRuntimeConfig} from "nuxt/app";
 export const getFromApi = async <T>(endpoint: string, sessionId: string, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
-    console.log("Making GET request to: " + `${config.public.backendUrl}/proxy${endpoint}`);
     return await $fetch(`${config.public.backendUrl}/proxy${endpoint}`, {
         headers: {
             "Content-Type": "application/json",
@@ -18,7 +17,6 @@ export const getFromApi = async <T>(endpoint: string, sessionId: string, headers
 export const getDirectFromApi = async <T>(endpoint: string, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
-    console.log("Making GET request to: " + `${config.public.backendUrl}/api${endpoint}`);
     return await $fetch(`${config.public.backendUrl}/api${endpoint}`, {
         headers: {
             "Content-Type": "application/json",
@@ -32,7 +30,6 @@ export const getDirectFromApi = async <T>(endpoint: string, headers: any = {}): 
 export const postToApi = async <T>(endpoint: string, sessionId: string, body: any, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
-    console.log("Making POST request to: " + `${config.public.backendUrl}/proxy${endpoint}`);
     return $fetch(`${config.public.backendUrl}/proxy${endpoint}`, {
         headers: {
             "Content-Type": "application/json",
@@ -48,7 +45,6 @@ export const postToApi = async <T>(endpoint: string, sessionId: string, body: an
 export const postDirectToApi = async <T>(endpoint: string, body: any, headers: any = {}): Promise<T> => {
     const config = useRuntimeConfig();
 
-    console.log("Making POST request to: " + `${config.public.backendUrl}/api${endpoint}`);
     return $fetch(`${config.public.backendUrl}/api${endpoint}`, {
         headers: {
             "Content-Type": "application/json",
