@@ -1,7 +1,7 @@
 <template>
 	<div class="flex flex-row p-4 border-b-2 border-white/5">
 		<div class="flex flex-row w-full">
-            <div class="flex flex-row justify-center">
+            <div class="flex flex-row justify-center items-center">
                 <NuxtLink class="p-2" href="/">
                     <img src="~/assets/img/logo_512_transparent.png" alt="ACSP Logo" class="w-10 h-10">
                 </NuxtLink>
