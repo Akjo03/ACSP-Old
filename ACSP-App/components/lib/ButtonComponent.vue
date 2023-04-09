@@ -1,8 +1,8 @@
 <template>
-    <button @click="onClicked()" :disabled="disabled" :aria-disabled="disabled" :class="`inline-flex items-center justify-center gap-x-4 px-4 py-2 m-2 min-h-[2em] rounded-md shadow-sm transition-all select-none ${getButtonStyles} active:ring-2 active:ring-white/5 disabled:active:ring-0 disabled:cursor-not-allowed disabled:opacity-90`">
-        <span v-if="icon && iconPlacement === 'left'"><font-awesome-icon :icon="icon" :size="iconSize" :class="`${getButtonTextStyles} text-center -ml-0.5`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
-        <span v-if="text" :class="`${getButtonTextStyles} font-semibold text-sm`">{{text}}</span>
-        <span v-if="icon && iconPlacement === 'right'"><font-awesome-icon :icon="icon" :size="iconSize" :class="`${getButtonTextStyles} text-center -ml-0.5`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
+    <button @click="onClicked()" :disabled="disabled" :aria-disabled="disabled" :class="`inline-flex items-center justify-center gap-x-4 xl:gap-x-5 px-4 py-2 xl:px-5 xl:py-3 m-2 min-h-[2em] rounded-md shadow-sm transition-all select-none ${getButtonStyles} active:ring-2 active:ring-white/5 disabled:active:ring-0 disabled:cursor-not-allowed disabled:opacity-90`">
+        <span v-if="icon && iconPlacement === 'left'"><font-awesome-icon :icon="icon" :class="`${getButtonTextStyles} text-center -ml-0.5 text-base xl:text-lg`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
+        <span v-if="text" :class="`${getButtonTextStyles} font-semibold text-sm xl:text-base`">{{text}}</span>
+        <span v-if="icon && iconPlacement === 'right'"><font-awesome-icon :icon="icon" :class="`${getButtonTextStyles} text-center -ml-0.5 text-base xl:text-lg`" aria-hidden="true" :spin="isLoading" style="--fa-animation-duration: 1s;" /></span>
     </button>
 </template>
 
@@ -22,14 +22,6 @@ export default {
         iconPlacement: {
             type: "left" | "right",
             default: "left"
-        },
-        iconSize: {
-            type: "2xs" | "xs" | "sm" | "lg" | "xl" | "2xl" | "1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x",
-            default: "1x"
-        },
-        textSize: {
-            type: "text-xs" | "text-sm" | "text-md" | "text-lg" | "text-xl",
-            default: "text-md"
         },
         type: {
             type: "primary" | "secondary" | "success" | "danger" | "discord",
@@ -134,8 +126,6 @@ const props = defineProps<{
     text?: string;
     icon?: IconDefinition;
     iconPlacement?: "left" | "right";
-    iconSize?: "2xs" | "xs" | "sm" | "lg" | "xl" | "2xl" | "1x" | "2x" | "3x" | "4x" | "5x" | "6x" | "7x" | "8x" | "9x" | "10x";
-    textSize?: "text-xs" | "text-sm" | "text-md" | "text-lg" | "text-xl";
     type?: "primary" | "secondary" | "success" | "danger" | "discord";
     disabled?: boolean;
     onClicked?: () => Promise<void>;
@@ -158,9 +148,8 @@ const getButtonTextStyles = computed(() => {
     const hoverKey = buttonType.value ? buttonType.value.colorThemeTextHoverKey : "hover:text-themeText";
     const activeKey = buttonType.value ? buttonType.value.colorThemeTextActiveKey : "active:text-themeText";
     const disabledKey = buttonType.value ? buttonType.value.colorThemeTextDisabledKey : "disabled:text-themeTextDisabled";
-    const textSize = props.textSize ? props.textSize : "text-md";
 
-    return `${key} ${hoverKey} ${activeKey} ${disabledKey} ${textSize}`;
+    return `${key} ${hoverKey} ${activeKey} ${disabledKey}`;
 })
 
 const isLoading = ref(false);

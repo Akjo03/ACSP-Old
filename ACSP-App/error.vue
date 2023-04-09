@@ -9,7 +9,7 @@
                     <span class="sr-only">Error</span>{{props.error.statusCode}}
                 </h2>
                 <p class="text-2xl md:text-3xl font-semibold text-themeText">{{subtitle}}</p>
-                <p class="mt-4 mb-8 text-md md:text-lg text-themeText">{{text}}</p>
+                <p class="mt-4 mb-8 text-base md:text-lg text-themeText">{{text}}</p>
                 <ButtonComponent text="Back to Homepage" type="primary" :onClicked="handleError" />
             </div>
         </div>
@@ -36,7 +36,7 @@ const props = defineProps({
     error: Object
 })
 
-const handleError = () => clearError({ redirect: '/' })
+const handleError = async () => clearError({ redirect: '/' })
 
 const subtitle = computed(() => {
     if (props.error.statusCode === 404) {
