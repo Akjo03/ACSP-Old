@@ -9,14 +9,14 @@
             <div class="flex flex-1 flex-row justify-center"></div>
             <div class="flex flex-row justify-center items-center">
                 <img v-if="isUserLoggedIn && sessionUserAvatar" :src="sessionUserAvatar" class="w-10 h-10 rounded-full"  alt="User Avatar"/>
-				<ButtonComponent v-else text="Log in" :icon="faArrowRight" icon-placement="right" :onClicked="login" :disabled="isUserLoggedIn" />
+				<ButtonComponent v-if="!isUserLoggedIn" text="Log in" :icon="faArrowRight" icon-placement="right" :onClicked="login" :disabled="isUserLoggedIn" />
             </div>
 		</div>
 	</header>
 </template>
 
 <script setup lang="ts">
-import {navigateTo, useRuntimeConfig} from "nuxt/app";
+import {navigateTo, useRuntimeConfig, useRoute} from "nuxt/app";
 import {faArrowRight} from "@fortawesome/pro-regular-svg-icons";
 
 import {useSession} from "../../composables/useSession";
