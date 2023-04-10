@@ -7,7 +7,6 @@
         <div class="flex flex-col flex-grow">
             <RouterView />
         </div>
-        <CookieWarningComponent />
         <AppFooter />
     </div>
 </template>
@@ -20,7 +19,6 @@ import {useSession} from "./composables/useSession";
 
 import AppHeader from "./components/global/AppHeader.vue";
 import AppFooter from "./components/global/AppFooter.vue";
-import CookieWarningComponent from "./components/lib/CookieWarningComponent.vue";
 
 
 const {darkMode, initializeTheme} = useTheme();

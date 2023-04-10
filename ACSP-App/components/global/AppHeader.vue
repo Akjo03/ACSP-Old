@@ -1,5 +1,5 @@
 <template>
-	<div class="flex flex-row p-4 border-b-2 border-white/5">
+	<header class="flex flex-row p-4 border-b-2 border-white/5">
 		<div class="flex flex-row w-full">
             <div class="flex flex-row justify-center items-center">
                 <NuxtLink class="p-2" href="/">
@@ -12,7 +12,7 @@
 				<ButtonComponent v-else text="Log in" :icon="faArrowRight" icon-placement="right" :onClicked="login" :disabled="isUserLoggedIn" />
             </div>
 		</div>
-	</div>
+	</header>
 </template>
 
 <script setup lang="ts">
