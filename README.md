@@ -23,7 +23,6 @@
 - Java 17 (Temurin / Adoptium)
 - Maven 3
 - Local MongoDB instance
-- mkcert for local HTTPS
 
 ## License
 
